@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class BulletManager : MonoBehaviour
 {
-    [HideInInspector,Tooltip("’eŠÛ‚ªÁ–Å‚·‚é‚Ü‚Å‚ÌŠÔ")]
-    public float inBullet_bulletDestroyTime = 5;
+    [ReadOnly, Tooltip("’eŠÛ‚ªÁ–Å‚·‚é‚Ü‚Å‚ÌŠÔ")]
+    public float inBullet_bulletDestroyTime;
     void Start()
     {
         Invoke("Destroy", inBullet_bulletDestroyTime);

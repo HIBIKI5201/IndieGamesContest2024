@@ -25,11 +25,11 @@ public class PlayerController : MonoBehaviour
     float _jumpPower;
     [Tooltip("接地していてジャンプが可能かの判定")]
     bool _groundJump;
-    [SerializeField,Tooltip("壁に当たっている時の法線水平方向")]
+    [Tooltip("壁に当たっている時の法線水平方向")]
     float _wallTouch;
 
     [Header("攻撃ステータス")]
-    [SerializeField, Tooltip("近接判定")]
+    [SerializeField, Tooltip("近接判定を持つオブジェクト")]
     GameObject AttackRangeObject;
 
     [SerializeField, Tooltip("次の攻撃を行えるまでのリキャストタイム")]
@@ -41,14 +41,37 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField, Tooltip("発射する弾丸プレハブ")]
     GameObject Bullet;
+
     [SerializeField, Tooltip("次の射撃を行えるまでのリキャストタイム")]
     float _fireSpeed;
     [Tooltip("射撃リキャストタイマー")]
     float _fireTimer;
+
     [SerializeField, Tooltip("弾丸のスピード")]
     float _bulletVelocity;
     [SerializeField, Tooltip("弾丸が消滅するまでの時間")]
-    float _bulletDestroyTime = 5;
+    float _bulletDestroyTime;
+
+    [Header("スキル")]
+
+    [SerializeField, Tooltip("朱雀スキルクールタイム")]
+    float _skillOneCT;
+    [Tooltip("朱雀スキルクールタイムタイマー")]
+    float _skillOneCTtimer;
+
+    [Space]
+
+    [SerializeField, Tooltip("白虎スキルクールタイム")]
+    float _skillTwoCT;
+    [Tooltip("白虎スキルクールタイムタイマー")]
+    float _skillTwoCTtimer;
+
+    [SerializeField, Tooltip("白虎スキルのダッシュ速度")]
+    float _skillTwoDashSpeed;
+    [SerializeField, Tooltip("白虎スキル発動時に何秒間操作不能にするか")]
+    float _skillTwoWaitTime;
+    [Tooltip("白虎スキルが発動されているか")]
+    bool _skillTwoActive;
 
     void Start()
     {
@@ -58,15 +81,17 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         float horizontal = Input.GetAxisRaw("Horizontal");
-
-        if (_wallTouch  == 0 || _wallTouch == horizontal)
+        if (!_skillTwoActive)
         {
-            PlayerRigidBody.velocity = new Vector2(horizontal * _moveSpeed, PlayerRigidBody.velocity.y);
-        }
+            if (_wallTouch  == 0 || _wallTouch == horizontal)
+            {
+                PlayerRigidBody.velocity = new Vector2(horizontal * _moveSpeed, PlayerRigidBody.velocity.y);
+            }
 
-        if (horizontal != 0)
-        {
-            transform.localScale = new Vector2(horizontal, transform.localScale.y);
+            if (horizontal != 0)
+            {
+                transform.localScale = new Vector2(horizontal, transform.localScale.y);
+            }
         }
         
         
@@ -93,6 +118,39 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return))
         {
             StartCoroutine(Attack());
+        }
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            if (_playerMode == PlayerMode.Sun && _skillOneCT + _skillOneCTtimer < Time.time)
+            {
+                StartCoroutine(SkillOne());
+            }
+            else if (_playerMode == PlayerMode.Moon)
+            {
+                StartCoroutine(SkillThree());
+            }
+            else
+            {
+                Debug.Log("スキル１ リキャストタイム中");
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            if (_playerMode == PlayerMode.Sun && _skillTwoCT + _skillTwoCTtimer < Time.time)
+            {
+                StartCoroutine(SkillTwo(horizontal));
+                
+            }
+            else if (_playerMode == PlayerMode.Moon)
+            {
+                StartCoroutine(SkillFour());
+            }
+            else
+            {
+                Debug.Log("スキル２ リキャストタイム中");
+            }
         }
     }
 
@@ -134,10 +192,13 @@ public class PlayerController : MonoBehaviour
             
             AttackRangeObject.SetActive(false);
         }
-        else if (_playerMode == PlayerMode.Moon)
+        else if (_playerMode == PlayerMode.Moon && _fireTimer + _fireSpeed < Time.time)
         {
+            _fireTimer = Time.time;
             Debug.Log("遠距離攻撃発動");
+
             GameObject bullet = Instantiate(Bullet, transform.position, Quaternion.Euler(0, 0, -90 * Mathf.Sign(transform.localScale.x)));
+            
             bullet.GetComponent<BulletManager>().inBullet_bulletDestroyTime = _bulletDestroyTime;
             bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(_bulletVelocity * Mathf.Sign(transform.localScale.x), 0);
         }
@@ -145,5 +206,38 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("通常攻撃 リキャストタイム中");
         }
+    }
+
+    IEnumerator SkillOne()
+    {
+        _skillOneCTtimer = Time.time;
+        Debug.Log("朱雀スキル発動");
+        return null;
+    }
+
+    IEnumerator SkillTwo(float horizontal)
+    {
+        _skillTwoCTtimer = Time.time;
+        Debug.Log("白虎スキル発動");
+        _skillTwoActive = true;
+        PlayerRigidBody.velocity = new Vector2(horizontal * _skillTwoDashSpeed, 0);
+
+        yield return new WaitForSeconds(_skillTwoWaitTime);
+
+        _skillTwoActive = false;
+    }
+
+    IEnumerator SkillThree()
+    {
+        Debug.Log("青龍スキル発動");
+
+        return null;
+    }
+
+    IEnumerator SkillFour()
+    {
+        Debug.Log("玄武スキル発動");
+
+        return null;
     }
 }
