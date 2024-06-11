@@ -83,6 +83,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        //移動系
+        #region
         float horizontal = Input.GetAxisRaw("Horizontal");
         if (!_skillTwoActive)
         {
@@ -103,7 +105,18 @@ public class PlayerController : MonoBehaviour
             PlayerRigidBody.velocity = new Vector2(PlayerRigidBody.velocity.x, 0);
             PlayerRigidBody.AddForce(Vector2.up * _jumpPower, ForceMode2D.Impulse);
         }
+        #endregion
 
+        //攻撃系
+        #region
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            StartCoroutine(Attack());
+        }
+        #endregion
+
+        //スキル系
+        #region
         if (Input.GetKeyDown(KeyCode.RightShift))
         {
             if (_playerMode == PlayerMode.Sun)
@@ -116,11 +129,6 @@ public class PlayerController : MonoBehaviour
                 _playerMode = PlayerMode.Sun;
                 Debug.Log("陽形態に変形");
             }
-        }
-
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            StartCoroutine(Attack());
         }
 
         if (Input.GetKeyDown(KeyCode.Z))
@@ -155,6 +163,7 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("スキル２ リキャストタイム中");
             }
         }
+        #endregion
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
