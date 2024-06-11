@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     [Header("移動ステータス")]
     [SerializeField]
     Rigidbody2D PlayerRigidBody;
+    float _gravity;
 
     [SerializeField,Tooltip("移動速度")]
     float _moveSpeed;
@@ -76,6 +77,8 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         _playerMode = PlayerMode.Sun;
+
+        _gravity = PlayerRigidBody.gravityScale;
     }
 
     void Update()
@@ -221,9 +224,11 @@ public class PlayerController : MonoBehaviour
         Debug.Log("白虎スキル発動");
         _skillTwoActive = true;
         PlayerRigidBody.velocity = new Vector2(horizontal * _skillTwoDashSpeed, 0);
+        PlayerRigidBody.gravityScale = 0.5f;
 
         yield return new WaitForSeconds(_skillTwoWaitTime);
 
+        PlayerRigidBody.gravityScale = _gravity;
         _skillTwoActive = false;
     }
 
