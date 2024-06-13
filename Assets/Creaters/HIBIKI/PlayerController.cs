@@ -58,6 +58,9 @@ public class PlayerController : MonoBehaviour
     [Tooltip("攻撃リキャストタイムのタイマー")]
     float _attackTimer;
 
+    [Tooltip("近接のダメージ")]
+    public float _attackDamage;
+
     [Space]
 
     [SerializeField, Tooltip("発射する弾丸プレハブ")]
@@ -134,6 +137,8 @@ public class PlayerController : MonoBehaviour
     float _skillFourRestraintTime;
     [SerializeField, Tooltip("玄武スキルのシールド維持時間")]
     float _skillFourShieldTime;
+    [SerializeField, Tooltip("玄武スキルの効果範囲")]
+    float _skillFourRange;
 
     void Start()
     {
@@ -392,7 +397,13 @@ public class PlayerController : MonoBehaviour
 
         foreach (GameObject obj in enemy)
         {
-            obj.GetComponent<EnemyManager>()._moveActive = false;
+            if (Vector2.Distance(obj.transform.position, transform.position) < _skillFourRange)
+            {
+                obj.GetComponent<EnemyManager>()._moveActive = false;
+            } else
+            {
+                Debug.Log($"{obj.gameObject.name}は効果範囲外");
+            }
         }
 
         //効果時間終了の処理

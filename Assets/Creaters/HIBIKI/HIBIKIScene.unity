@@ -4140,7 +4140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 612b4e0bf6eab754fb17e64bf6e515a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealth: 10
+  _maxHealth: 1500
   _currentHealth: 0
   PlayerRigidBody: {fileID: 1212906471}
   _isGround: 0
@@ -4152,6 +4152,7 @@ MonoBehaviour:
   _moveActive: 1
   AttackRangeObject: {fileID: 1291674115}
   _attackSpeed: 0.25
+  _attackDamage: 50
   Bullet: {fileID: 6640036996467145792, guid: 6ca5e4a571d78884a8c13caa85f48e62, type: 3}
   _fireSpeed: 0.5
   _bulletVelocity: 10
@@ -4174,6 +4175,7 @@ MonoBehaviour:
   _skillFourCT: 1
   _skillFourRestraintTime: 3
   _skillFourShieldTime: 5
+  _skillFourRange: 5
 --- !u!1 &1254127274
 GameObject:
   m_ObjectHideFlags: 0
@@ -4319,9 +4321,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1291674117}
   - component: {fileID: 1291674116}
+  - component: {fileID: 1291674118}
   m_Layer: 0
   m_Name: AttackRange
-  m_TagString: Untagged
+  m_TagString: Melee
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4393,6 +4396,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1212906470}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &1291674118
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1291674115}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!1 &1296908308
 GameObject:
   m_ObjectHideFlags: 0

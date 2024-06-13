@@ -15,7 +15,7 @@ public class BulletManager : MonoBehaviour
     public float inBullet_bulletAttenuation;
 
     [Tooltip("’eŠÛ‚ª”­ŽË‚³‚ê‚½’n“_")]
-    Vector2 firstPos;
+    public Vector2 firstPos;
     void Start()
     {
         firstPos = transform.position;
@@ -27,16 +27,6 @@ public class BulletManager : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            EnemyManager enemyManager = collision.GetComponent<EnemyManager>();
-            enemyManager._currentHealth -= Mathf.Clamp(Vector2.Distance(firstPos, transform.position) / inBullet_bulletAttenuation * inBullet_bulletMaxDamage, inBullet_bulletMinDamage, inBullet_bulletMaxDamage);
-
-            Debug.Log(Mathf.Clamp(Vector2.Distance(firstPos, transform.position) / inBullet_bulletAttenuation * inBullet_bulletMaxDamage, inBullet_bulletMinDamage, inBullet_bulletMaxDamage));
-        }
-    }
 
     private void Destroy()
     {
