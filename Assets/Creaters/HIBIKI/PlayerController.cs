@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -14,20 +15,29 @@ public class PlayerController : MonoBehaviour
         Moon
     }
 
+    [Header("体力ステータス")]
+    [SerializeField, Tooltip("最大ヘルス")]
+    float _maxHealth;
+    [SerializeField, ReadOnly, Tooltip("現在のヘルス")]
+    float _currentHealth;
+
     [Header("移動ステータス")]
     [SerializeField]
     Rigidbody2D PlayerRigidBody;
     float _gravity;
 
-    [SerializeField,Tooltip("移動速度")]
+    [SerializeField, Tooltip("移動速度")]
     float _moveSpeed;
 
-    [SerializeField,Tooltip("ジャンプ力")]
+    [SerializeField, Tooltip("ジャンプ力")]
     float _jumpPower;
     [Tooltip("接地していてジャンプが可能かの判定")]
     bool _groundJump;
     [Tooltip("壁に当たっている時の法線水平方向")]
     float _wallTouch;
+
+    [SerializeField,ReadOnly, Tooltip("移動可能な状態か")]
+    bool _moveActive = true;
 
     [Header("攻撃ステータス")]
     [SerializeField, Tooltip("近接判定を持つオブジェクト")]
@@ -60,6 +70,18 @@ public class PlayerController : MonoBehaviour
     [Tooltip("朱雀スキルクールタイムタイマー")]
     float _skillOneCTtimer;
 
+    [SerializeField, Tooltip("朱雀スキルのオブジェクト")]
+    GameObject _skillOneObjecct;
+    [SerializeField, Tooltip("朱雀スキルのチャージ時間")]
+    float _skillOneChargeTime;
+
+    [SerializeField, Tooltip("青龍のスキル効果時間")]
+    float _skillOneDuration;
+    [SerializeField, Tooltip("朱雀スキルの攻撃範囲")]
+    float _skillOneRange;
+    [SerializeField, Tooltip("炎ダメージを与える間隔")]
+    float _skillOneFireInterval;
+
     [Space]
 
     [SerializeField, Tooltip("白虎スキルクールタイム")]
@@ -71,24 +93,50 @@ public class PlayerController : MonoBehaviour
     float _skillTwoDashSpeed;
     [SerializeField, Tooltip("白虎スキル発動時に何秒間操作不能にするか")]
     float _skillTwoWaitTime;
-    [Tooltip("白虎スキルが発動されているか")]
-    bool _skillTwoActive;
+
+    [Space]
+
+    [SerializeField, Tooltip("青龍スキルクールタイム")]
+    float _skillThreeCT;
+    [Tooltip("青龍スキルクールタイムタイマー")]
+    float _skillThreeCTtimer;
+
+    [SerializeField, Tooltip("回復トーテムのオブジェクト")]
+    GameObject SkillThreeObject;
+    [SerializeField, Tooltip("青龍のスキル効果時間")]
+    float _skillThreeDuration;
+
+    [Space]
+
+    [SerializeField, Tooltip("玄武スキルクールタイム")]
+    float _skillFourCT;
+    [Tooltip("玄武スキルクールタイムタイマー")]
+    float _skillFourCTtimer;
+
+    [SerializeField, Tooltip("玄武スキルの拘束時間")]
+    float _skillFourRestraintTime;
+    [SerializeField, Tooltip("玄武スキルのシールド維持時間")]
+    float _skillFourShieldTime;
 
     void Start()
     {
         _playerMode = PlayerMode.Sun;
+        _currentHealth = _maxHealth;
+        _moveActive = true;
 
         _gravity = PlayerRigidBody.gravityScale;
     }
 
     void Update()
     {
-        //移動系
+        
         #region
         float horizontal = Input.GetAxisRaw("Horizontal");
-        if (!_skillTwoActive)
+
+        if (_moveActive)
         {
-            if (_wallTouch  == 0 || _wallTouch == horizontal)
+            //移動系
+            if (_wallTouch == 0 || _wallTouch == horizontal)
             {
                 PlayerRigidBody.velocity = new Vector2(horizontal * _moveSpeed, PlayerRigidBody.velocity.y);
             }
@@ -97,75 +145,78 @@ public class PlayerController : MonoBehaviour
             {
                 transform.localScale = new Vector2(horizontal, transform.localScale.y);
             }
-        }
-        
-        
-        if (Input.GetKeyDown(KeyCode.W) && _groundJump)
-        {
-            PlayerRigidBody.velocity = new Vector2(PlayerRigidBody.velocity.x, 0);
-            PlayerRigidBody.AddForce(Vector2.up * _jumpPower, ForceMode2D.Impulse);
-        }
-        #endregion
 
-        //攻撃系
-        #region
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            StartCoroutine(Attack());
-        }
-        #endregion
 
-        //スキル系
-        #region
-        if (Input.GetKeyDown(KeyCode.RightShift))
-        {
-            if (_playerMode == PlayerMode.Sun)
-            {
-                _playerMode = PlayerMode.Moon;
-                Debug.Log("陰形態に変形");
-            }
-            else
-            {
-                _playerMode = PlayerMode.Sun;
-                Debug.Log("陽形態に変形");
-            }
-        }
 
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            if (_playerMode == PlayerMode.Sun && _skillOneCT + _skillOneCTtimer < Time.time)
+            if (Input.GetKeyDown(KeyCode.W) && _groundJump)
             {
-                StartCoroutine(SkillOne());
+                PlayerRigidBody.velocity = new Vector2(PlayerRigidBody.velocity.x, 0);
+                PlayerRigidBody.AddForce(Vector2.up * _jumpPower, ForceMode2D.Impulse);
             }
-            else if (_playerMode == PlayerMode.Moon)
-            {
-                StartCoroutine(SkillThree());
-            }
-            else
-            {
-                Debug.Log("スキル１ リキャストタイム中");
-            }
-        }
+            #endregion
 
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            if (_playerMode == PlayerMode.Sun && _skillTwoCT + _skillTwoCTtimer < Time.time)
+            //攻撃系
+            #region
+            if (Input.GetKeyDown(KeyCode.Return))
             {
-                StartCoroutine(SkillTwo(horizontal));
-                
+                StartCoroutine(Attack());
             }
-            else if (_playerMode == PlayerMode.Moon)
+            #endregion
+
+            //スキル系
+            #region
+            if (Input.GetKeyDown(KeyCode.RightShift))
             {
-                StartCoroutine(SkillFour());
+                if (_playerMode == PlayerMode.Sun)
+                {
+                    _playerMode = PlayerMode.Moon;
+                    Debug.Log("陰形態に変形");
+                }
+                else
+                {
+                    _playerMode = PlayerMode.Sun;
+                    Debug.Log("陽形態に変形");
+                }
             }
-            else
+
+            if (Input.GetKeyDown(KeyCode.Z))
             {
-                Debug.Log("スキル２ リキャストタイム中");
+                if (_playerMode == PlayerMode.Sun && _skillOneCT + _skillOneCTtimer < Time.time)
+                {
+                    StartCoroutine(SkillOne());
+                }
+                else if (_playerMode == PlayerMode.Moon && _skillThreeCT + _skillThreeCTtimer < Time.time)
+                {
+                    SkillThree();
+                }
+                else
+                {
+                    Debug.Log("スキル１ リキャストタイム中");
+                }
             }
+
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                if (_playerMode == PlayerMode.Sun && _skillTwoCT + _skillTwoCTtimer < Time.time)
+                {
+                    StartCoroutine(SkillTwo(horizontal));
+
+                }
+                else if (_playerMode == PlayerMode.Moon && _skillFourCT + _skillFourCTtimer < Time.time)
+                {
+                    StartCoroutine(SkillFour());
+                }
+                else
+                {
+                    Debug.Log("スキル２ リキャストタイム中");
+                }
+            }
+            #endregion
         }
-        #endregion
     }
 
+    //当たり判定処理
+    #region
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
@@ -190,6 +241,7 @@ public class PlayerController : MonoBehaviour
             _wallTouch = 0;
         }
     }
+    #endregion
 
     IEnumerator Attack()
     {
@@ -224,34 +276,71 @@ public class PlayerController : MonoBehaviour
     {
         _skillOneCTtimer = Time.time;
         Debug.Log("朱雀スキル発動");
-        return null;
+
+        _moveActive = false;
+
+        yield return new WaitForSeconds(_skillOneChargeTime);
+
+        _moveActive = true;
+
+        GameObject skillObject = Instantiate(_skillOneObjecct, transform.position + new Vector3(_skillOneRange / 2 * Mathf.Sign(transform.localScale.x), 0, 0), Quaternion.identity);
+
+        SkillOneManager skillManager = skillObject.GetComponent<SkillOneManager>();
+        skillManager._skillOneDuration = _skillOneDuration;
+        skillManager._fireTime = _skillOneFireInterval;
+        skillObject.transform.localScale = new Vector3(_skillOneRange, 1, 1);
+
+
     }
 
     IEnumerator SkillTwo(float horizontal)
     {
         _skillTwoCTtimer = Time.time;
         Debug.Log("白虎スキル発動");
-        _skillTwoActive = true;
+        _moveActive = false;
         PlayerRigidBody.velocity = new Vector2(horizontal * _skillTwoDashSpeed, 0);
         PlayerRigidBody.gravityScale = 0.5f;
 
         yield return new WaitForSeconds(_skillTwoWaitTime);
 
         PlayerRigidBody.gravityScale = _gravity;
-        _skillTwoActive = false;
+        _moveActive = true;
     }
 
-    IEnumerator SkillThree()
+    void SkillThree()
     {
+        _skillThreeCTtimer = Time.time;
         Debug.Log("青龍スキル発動");
 
-        return null;
+        GameObject skillObject = Instantiate(SkillThreeObject, transform.position, Quaternion.identity);
+        skillObject.GetComponent<SkillThreeManager>()._skillThreeDuration = _skillThreeDuration;
     }
 
     IEnumerator SkillFour()
     {
+        _skillFourCTtimer = Time.time;
         Debug.Log("玄武スキル発動");
 
-        return null;
+        if (_skillFourRestraintTime < _skillFourShieldTime)
+        {
+        yield return new WaitForSeconds(_skillFourRestraintTime);
+
+        Debug.Log("玄武スキルの拘束時間終了");
+
+        yield return new WaitForSeconds(_skillFourShieldTime - _skillFourRestraintTime);
+
+        Debug.Log("玄武スキルのシールド維持時間終了");
+        } else
+        {
+            yield return new WaitForSeconds(_skillFourShieldTime);
+
+            Debug.Log("玄武スキルのシールド維持時間終了");
+
+            yield return new WaitForSeconds(_skillFourRestraintTime - _skillFourShieldTime);
+
+            Debug.Log("玄武スキルの拘束時間終了");
+        }
+
+
     }
 }
