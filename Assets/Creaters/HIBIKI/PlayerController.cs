@@ -1,7 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -16,7 +13,7 @@ public class PlayerController : MonoBehaviour
     }
 
     [Header("体力ステータス")]
-    [SerializeField, Tooltip("最大ヘルス")]
+    [SerializeField, Tooltip("プレイヤーの最大ヘルス")]
     float _maxHealth;
     [SerializeField, ReadOnly, Tooltip("現在のヘルス")]
     float _currentHealth;
@@ -24,19 +21,32 @@ public class PlayerController : MonoBehaviour
     [Header("移動ステータス")]
     [SerializeField]
     Rigidbody2D PlayerRigidBody;
+    [Tooltip("重力の初期値")]
     float _gravity;
+    [SerializeField,ReadOnly,Tooltip("地面に付いているかの判定")]
+    bool _isGround;
 
     [SerializeField, Tooltip("移動速度")]
     float _moveSpeed;
 
     [SerializeField, Tooltip("ジャンプ力")]
     float _jumpPower;
-    [Tooltip("接地していてジャンプが可能かの判定")]
-    bool _groundJump;
+    [SerializeField, Tooltip("ジャンプ入力の長押し最長時間")]
+    float _jumpMaxTime;
+    [Tooltip("ジャンプ入力のタイマー")]
+    float _jumpTimer;
+    [SerializeField, Tooltip("ジャンプ長押し入力中の重力低下量")]
+    float _jumpGravity;
+
+
+    [SerializeField,ReadOnly,Tooltip("ジャンプが可能な状態か")]
+    bool _canJump;
+    [Tooltip("ジャンプの最初の処理")]
+    bool firstJump;
     [Tooltip("壁に当たっている時の法線水平方向")]
     float _wallTouch;
 
-    [SerializeField,ReadOnly, Tooltip("移動可能な状態か")]
+    [SerializeField, ReadOnly, Tooltip("移動可能な状態か")]
     bool _moveActive = true;
 
     [Header("攻撃ステータス")]
@@ -62,6 +72,13 @@ public class PlayerController : MonoBehaviour
     float _bulletVelocity;
     [SerializeField, Tooltip("弾丸が消滅するまでの時間")]
     float _bulletDestroyTime;
+
+    [SerializeField, Tooltip("弾丸の最大ダメージ")]
+    float _bulletMaxDamage;
+    [SerializeField, Tooltip("弾丸の最小ダメージ")]
+    float _bulletMinDamage;
+    [SerializeField, Tooltip("弾丸の距離減衰")]
+    float _bulletAttenuation;
 
     [Header("スキル")]
 
@@ -123,19 +140,21 @@ public class PlayerController : MonoBehaviour
         _playerMode = PlayerMode.Sun;
         _currentHealth = _maxHealth;
         _moveActive = true;
+        _canJump = true;
 
         _gravity = PlayerRigidBody.gravityScale;
     }
 
     void Update()
     {
+
         
-        #region
         float horizontal = Input.GetAxisRaw("Horizontal");
 
         if (_moveActive)
         {
             //移動系
+            #region
             if (_wallTouch == 0 || _wallTouch == horizontal)
             {
                 PlayerRigidBody.velocity = new Vector2(horizontal * _moveSpeed, PlayerRigidBody.velocity.y);
@@ -147,16 +166,37 @@ public class PlayerController : MonoBehaviour
             }
 
 
-
-            if (Input.GetKeyDown(KeyCode.W) && _groundJump)
+            if (Input.GetKeyDown(KeyCode.W) && _canJump)
             {
                 PlayerRigidBody.velocity = new Vector2(PlayerRigidBody.velocity.x, 0);
                 PlayerRigidBody.AddForce(Vector2.up * _jumpPower, ForceMode2D.Impulse);
+
+                PlayerRigidBody.gravityScale = _gravity - _jumpGravity;
             }
+            if (Input.GetKey(KeyCode.W))
+            {
+                _jumpTimer += Time.deltaTime;
+
+                if (_jumpTimer > _jumpMaxTime && !_isGround) 
+                {
+                    _canJump = false;
+                    PlayerRigidBody.gravityScale = _gravity;
+                }
+            }
+            if (Input.GetKeyUp(KeyCode.W))
+            {
+                if (!_isGround)
+                {
+                    _canJump = false;
+                    PlayerRigidBody.gravityScale = _gravity;
+                }
+            }
+            
             #endregion
 
             //攻撃系
             #region
+            //通常攻撃
             if (Input.GetKeyDown(KeyCode.Return))
             {
                 StartCoroutine(Attack());
@@ -165,6 +205,7 @@ public class PlayerController : MonoBehaviour
 
             //スキル系
             #region
+            //陰陽切り替え
             if (Input.GetKeyDown(KeyCode.RightShift))
             {
                 if (_playerMode == PlayerMode.Sun)
@@ -179,6 +220,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
+            //スキル１(Zキー)
             if (Input.GetKeyDown(KeyCode.Z))
             {
                 if (_playerMode == PlayerMode.Sun && _skillOneCT + _skillOneCTtimer < Time.time)
@@ -195,6 +237,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
+            //スキル２(Xキー)
             if (Input.GetKeyDown(KeyCode.X))
             {
                 if (_playerMode == PlayerMode.Sun && _skillTwoCT + _skillTwoCTtimer < Time.time)
@@ -219,11 +262,15 @@ public class PlayerController : MonoBehaviour
     #region
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        //地面に当たったらジャンプ回数を回復
+        //地面の側面に当たったら反発する
         if (collision.gameObject.CompareTag("Ground"))
         {
             if (collision.contacts[0].normal.y > 0.8f)
             {
-                _groundJump = true;
+                _isGround = true;
+                _canJump = true;
+                _jumpTimer = 0;
                 _wallTouch = 0;
             }
             if (Mathf.Abs(collision.contacts[0].normal.x) > 0.8f)
@@ -237,33 +284,42 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            _groundJump = false;
+            _isGround = false;
             _wallTouch = 0;
         }
     }
     #endregion
 
+
     IEnumerator Attack()
     {
+        //近接攻撃
         if (_playerMode == PlayerMode.Sun && _attackTimer + _attackSpeed < Time.time)
         {
             _attackTimer = Time.time;
             Debug.Log("近接攻撃発動");
 
+            //近接攻撃当たり判定を出現
             AttackRangeObject.SetActive(true);
-            
+
             yield return new WaitForSeconds(0.05f);
-            
+
             AttackRangeObject.SetActive(false);
         }
+        //遠距離攻撃
         else if (_playerMode == PlayerMode.Moon && _fireTimer + _fireSpeed < Time.time)
         {
             _fireTimer = Time.time;
             Debug.Log("遠距離攻撃発動");
 
+            //弾丸を発射
             GameObject bullet = Instantiate(Bullet, transform.position, Quaternion.Euler(0, 0, -90 * Mathf.Sign(transform.localScale.x)));
-            
-            bullet.GetComponent<BulletManager>().inBullet_bulletDestroyTime = _bulletDestroyTime;
+
+            BulletManager bulletManager = bullet.GetComponent<BulletManager>();
+            bulletManager.inBullet_bulletDestroyTime = _bulletDestroyTime;
+            bulletManager.inBullet_bulletMaxDamage = _bulletMaxDamage;
+            bulletManager.inBullet_bulletMinDamage = _bulletMinDamage;
+            bulletManager.inBullet_bulletAttenuation = _bulletAttenuation;
             bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(_bulletVelocity * Mathf.Sign(transform.localScale.x), 0);
         }
         else
@@ -278,11 +334,15 @@ public class PlayerController : MonoBehaviour
         Debug.Log("朱雀スキル発動");
 
         _moveActive = false;
+        PlayerRigidBody.gravityScale += 1f;
 
+        //攻撃チャージ時間
         yield return new WaitForSeconds(_skillOneChargeTime);
 
         _moveActive = true;
+        PlayerRigidBody.gravityScale = _gravity;
 
+        //攻撃範囲 兼 炎のオブジェクトを配置
         GameObject skillObject = Instantiate(_skillOneObjecct, transform.position + new Vector3(_skillOneRange / 2 * Mathf.Sign(transform.localScale.x), 0, 0), Quaternion.identity);
 
         SkillOneManager skillManager = skillObject.GetComponent<SkillOneManager>();
@@ -297,8 +357,11 @@ public class PlayerController : MonoBehaviour
     {
         _skillTwoCTtimer = Time.time;
         Debug.Log("白虎スキル発動");
+
         _moveActive = false;
-        PlayerRigidBody.velocity = new Vector2(horizontal * _skillTwoDashSpeed, 0);
+
+        //進行方向に向けて加速
+        PlayerRigidBody.velocity = new Vector2(Mathf.Sign(transform.localScale.x) * _skillTwoDashSpeed, 0);
         PlayerRigidBody.gravityScale = 0.5f;
 
         yield return new WaitForSeconds(_skillTwoWaitTime);
@@ -312,6 +375,7 @@ public class PlayerController : MonoBehaviour
         _skillThreeCTtimer = Time.time;
         Debug.Log("青龍スキル発動");
 
+        //スキルのオブジェクトを出現させる
         GameObject skillObject = Instantiate(SkillThreeObject, transform.position, Quaternion.identity);
         skillObject.GetComponent<SkillThreeManager>()._skillThreeDuration = _skillThreeDuration;
     }
@@ -321,16 +385,32 @@ public class PlayerController : MonoBehaviour
         _skillFourCTtimer = Time.time;
         Debug.Log("玄武スキル発動");
 
+        //敵を全て取得し処理
+        GameObject[] enemy = GameObject.FindGameObjectsWithTag("Enemy");
+
+        Debug.Log($"玄武スキルに当たった敵は{enemy.Length}体");
+
+        foreach (GameObject obj in enemy)
+        {
+            obj.GetComponent<EnemyManager>()._moveActive = false;
+        }
+
+        //効果時間終了の処理
         if (_skillFourRestraintTime < _skillFourShieldTime)
         {
-        yield return new WaitForSeconds(_skillFourRestraintTime);
+            yield return new WaitForSeconds(_skillFourRestraintTime);
 
-        Debug.Log("玄武スキルの拘束時間終了");
+            Debug.Log("玄武スキルの拘束時間終了");
+            foreach (GameObject obj in enemy)
+            {
+                obj.GetComponent<EnemyManager>()._moveActive = true;
+            }
 
-        yield return new WaitForSeconds(_skillFourShieldTime - _skillFourRestraintTime);
+            yield return new WaitForSeconds(_skillFourShieldTime - _skillFourRestraintTime);
 
-        Debug.Log("玄武スキルのシールド維持時間終了");
-        } else
+            Debug.Log("玄武スキルのシールド維持時間終了");
+        }
+        else
         {
             yield return new WaitForSeconds(_skillFourShieldTime);
 
@@ -339,8 +419,12 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(_skillFourRestraintTime - _skillFourShieldTime);
 
             Debug.Log("玄武スキルの拘束時間終了");
+
+            foreach (GameObject obj in enemy)
+            {
+                obj.GetComponent<EnemyManager>()._moveActive = true;
+            }
         }
-
-
     }
+
 }
