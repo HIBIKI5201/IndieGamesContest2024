@@ -3256,7 +3256,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 50, y: 10.2}
+  m_Size: {x: 70, y: 10.2}
   m_EdgeRadius: 0
 --- !u!4 &473344988
 Transform:
@@ -3267,7 +3267,7 @@ Transform:
   m_GameObject: {fileID: 473344984}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.55, y: -0.01, z: -4.931179}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3312,20 +3312,20 @@ CompositeCollider2D:
   m_ColliderPaths:
   - m_Collider: {fileID: 473344987}
     m_ColliderPaths:
-    - - X: 250000000
+    - - X: 350000000
         Y: 51000000
-      - X: -250000000
+      - X: -350000000
         Y: 51000000
-      - X: -250000000
+      - X: -350000000
         Y: -51000000
-      - X: 250000000
+      - X: 350000000
         Y: -51000000
   m_CompositePaths:
     m_Paths:
-    - - {x: 24.999971, y: -5.1}
-      - {x: 24.999971, y: 5.1}
-      - {x: -25, y: 5.099971}
-      - {x: -24.999971, y: -5.1}
+    - - {x: 34.999973, y: -5.1}
+      - {x: 34.999973, y: 5.1}
+      - {x: -35, y: 5.099971}
+      - {x: -34.999973, y: -5.1}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
@@ -3444,7 +3444,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.04, y: -0.010000229, z: -10}
+  m_LocalPosition: {x: 0.039999045, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4328,7 +4328,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &1291674116
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4761,7 +4761,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

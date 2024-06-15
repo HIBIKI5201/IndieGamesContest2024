@@ -8,7 +8,7 @@ public class EnemyManager : MonoBehaviour
     [SerializeField,ReadOnly,Tooltip("“G‚ÌÅ‘å‘Ì—Í")]
     float _maxHealth;
     [ReadOnly, Tooltip("Œ»İ‚Ì‘Ì—Í")]
-    public float _currentHealth;
+    float _currentHealth;
 
     public bool _moveActive;
 
