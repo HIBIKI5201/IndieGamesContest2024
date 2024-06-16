@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class PlayerController : MonoBehaviour
 {
@@ -391,11 +393,12 @@ public class PlayerController : MonoBehaviour
         Debug.Log("玄武スキル発動");
 
         //敵を全て取得し処理
-        GameObject[] enemy = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject[] closestEnemies = GameObject.FindGameObjectsWithTag("Enemy")
+            .OrderBy(go => Vector2.Distance(go.transform.position, transform.position))
+            .Take(5)
+            .ToArray();
 
-        Debug.Log($"玄武スキルに当たった敵は{enemy.Length}体");
-
-        foreach (GameObject obj in enemy)
+        foreach (GameObject obj in closestEnemies)
         {
             if (Vector2.Distance(obj.transform.position, transform.position) < _skillFourRange)
             {
@@ -412,7 +415,7 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(_skillFourRestraintTime);
 
             Debug.Log("玄武スキルの拘束時間終了");
-            foreach (GameObject obj in enemy)
+            foreach (GameObject obj in closestEnemies)
             {
                 obj.GetComponent<EnemyManager>()._moveActive = true;
             }
@@ -431,7 +434,7 @@ public class PlayerController : MonoBehaviour
 
             Debug.Log("玄武スキルの拘束時間終了");
 
-            foreach (GameObject obj in enemy)
+            foreach (GameObject obj in closestEnemies)
             {
                 obj.GetComponent<EnemyManager>()._moveActive = true;
             }
