@@ -5,25 +5,39 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
-    [SerializeField,ReadOnly,Tooltip("“G‚ÌÅ‘å‘Ì—Í")]
-    float _maxHealth;
-    [ReadOnly, Tooltip("Œ»İ‚Ì‘Ì—Í")]
-    float _currentHealth;
-
-    public bool _moveActive;
-
+    Rigidbody2D _rigidbody2D;
     SpriteRenderer _spriteRenderer;
-
+    GameObject _player;
     PlayerController _playerController;
 
+    [Header("ƒGƒlƒ~[‚ÌŠT—v")]
+    public EnemyKind _enemyKind;
+    public enum EnemyKind
+    {
+        MeleeEnemy,
+        ShootEnemy
+    }
 
+    [Header("‘Ì—ÍŒn")]
+    [ReadOnly,Tooltip("“G‚ÌÅ‘å‘Ì—Í")]
+    public float _maxHealth;
+    [SerializeField,ReadOnly,Tooltip("Œ»İ‚Ì‘Ì—Í")]
+    float _currentHealth;
+    public bool _moveActive;
+
+    [Header("ˆÚ“®Œn")]
+    [SerializeField, Tooltip("ˆÚ“®‘¬“x")]
+    float _moveSpeed;
     void Start()
     {
         _currentHealth = _maxHealth;
         _moveActive = true;
 
+        _rigidbody2D = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+
+        _player = GameObject.Find("Player");
+        _playerController = _player.GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
@@ -32,6 +46,14 @@ public class EnemyManager : MonoBehaviour
         if (_moveActive)
         {
             _spriteRenderer.color = Color.white;
+
+            if (_player.transform.position.x - transform.position.x > 0)
+            {
+                _rigidbody2D.velocity = new Vector2(_moveSpeed, _rigidbody2D.velocity.y);
+            } else
+            {
+                _rigidbody2D.velocity = new Vector2(-_moveSpeed, _rigidbody2D.velocity.y);
+            }
         } else
         {
             _spriteRenderer.color = Color.red;

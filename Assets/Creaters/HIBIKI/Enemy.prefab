@@ -171,6 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1103a79c492c63847999adb929d783b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _enemyKind: 0
   _maxHealth: 10
-  _currentHealth: 0
   _moveActive: 0
+  _moveSpeed: 1

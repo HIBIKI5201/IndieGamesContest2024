@@ -6,8 +6,8 @@ using System.Linq;
 public class PlayerController : MonoBehaviour
 {
     [Header("プレイヤー")]
-    [Tooltip("陰陽の形態")]
-    public static PlayerMode _playerMode;
+    [ReadOnly, Tooltip("陰陽の形態")]
+    public PlayerMode _playerMode;
     public enum PlayerMode
     {
         Sun,
@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("体力ステータス")]
     [SerializeField, Tooltip("プレイヤーの最大ヘルス")]
-    float _maxHealth;
+    float _maxHealth = 1500;
     [SerializeField, ReadOnly, Tooltip("現在のヘルス")]
     float _currentHealth;
 
@@ -28,17 +28,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField,ReadOnly,Tooltip("地面に付いているかの判定")]
     bool _isGround;
 
+    [Space]
+
     [SerializeField, Tooltip("移動速度")]
-    float _moveSpeed;
+    float _moveSpeed = 5;
 
     [SerializeField, Tooltip("ジャンプ力")]
-    float _jumpPower;
+    float _jumpPower = 8;
     [SerializeField, Tooltip("ジャンプ入力の長押し最長時間")]
-    float _jumpMaxTime;
+    float _jumpMaxTime = 0.5f;
     [Tooltip("ジャンプ入力のタイマー")]
     float _jumpTimer;
     [SerializeField, Tooltip("ジャンプ長押し入力中の重力低下量")]
-    float _jumpGravity;
+    float _jumpGravity = 0.8f;
 
 
     [SerializeField,ReadOnly,Tooltip("ジャンプが可能な状態か")]
@@ -56,12 +58,12 @@ public class PlayerController : MonoBehaviour
     GameObject AttackRangeObject;
 
     [SerializeField, Tooltip("次の攻撃を行えるまでのリキャストタイム")]
-    float _attackSpeed;
+    float _attackSpeed = 0.25f;
     [Tooltip("攻撃リキャストタイムのタイマー")]
     float _attackTimer;
 
     [Tooltip("近接のダメージ")]
-    public float _attackDamage;
+    public float _attackDamage = 50;
 
     [Space]
 
@@ -69,78 +71,78 @@ public class PlayerController : MonoBehaviour
     GameObject Bullet;
 
     [SerializeField, Tooltip("次の射撃を行えるまでのリキャストタイム")]
-    float _fireSpeed;
+    float _fireSpeed = 0.1f;
     [Tooltip("射撃リキャストタイマー")]
     float _fireTimer;
 
     [SerializeField, Tooltip("弾丸のスピード")]
-    float _bulletVelocity;
+    float _bulletVelocity = 10;
     [SerializeField, Tooltip("弾丸が消滅するまでの時間")]
-    float _bulletDestroyTime;
+    float _bulletDestroyTime = 10;
 
     [SerializeField, Tooltip("弾丸の最大ダメージ")]
-    float _bulletMaxDamage;
+    float _bulletMaxDamage = 100;
     [SerializeField, Tooltip("弾丸の最小ダメージ")]
-    float _bulletMinDamage;
+    float _bulletMinDamage = 30;
     [SerializeField, Tooltip("弾丸の距離減衰")]
-    float _bulletAttenuation;
+    float _bulletAttenuation = 5;
 
     [Header("スキル")]
 
     [SerializeField, Tooltip("朱雀スキルクールタイム")]
-    float _skillOneCT;
+    float _skillOneCT = 10;
     [Tooltip("朱雀スキルクールタイムタイマー")]
     float _skillOneCTtimer;
 
     [SerializeField, Tooltip("朱雀スキルのオブジェクト")]
     GameObject _skillOneObjecct;
     [SerializeField, Tooltip("朱雀スキルのチャージ時間")]
-    float _skillOneChargeTime;
+    float _skillOneChargeTime = 1;
 
     [SerializeField, Tooltip("青龍のスキル効果時間")]
-    float _skillOneDuration;
+    float _skillOneDuration = 5;
     [SerializeField, Tooltip("朱雀スキルの攻撃範囲")]
-    float _skillOneRange;
+    float _skillOneRange = 3;
     [SerializeField, Tooltip("炎ダメージを与える間隔")]
-    float _skillOneFireInterval;
+    float _skillOneFireInterval = 0.2f;
 
     [Space]
 
     [SerializeField, Tooltip("白虎スキルクールタイム")]
-    float _skillTwoCT;
+    float _skillTwoCT = 10;
     [Tooltip("白虎スキルクールタイムタイマー")]
     float _skillTwoCTtimer;
 
     [SerializeField, Tooltip("白虎スキルのダッシュ速度")]
-    float _skillTwoDashSpeed;
+    float _skillTwoDashSpeed = 25;
     [SerializeField, Tooltip("白虎スキル発動時に何秒間操作不能にするか")]
-    float _skillTwoWaitTime;
+    float _skillTwoWaitTime = 0.5f;
 
     [Space]
 
     [SerializeField, Tooltip("青龍スキルクールタイム")]
-    float _skillThreeCT;
+    float _skillThreeCT = 10;
     [Tooltip("青龍スキルクールタイムタイマー")]
     float _skillThreeCTtimer;
 
     [SerializeField, Tooltip("回復トーテムのオブジェクト")]
     GameObject SkillThreeObject;
     [SerializeField, Tooltip("青龍のスキル効果時間")]
-    float _skillThreeDuration;
+    float _skillThreeDuration = 8;
 
     [Space]
 
     [SerializeField, Tooltip("玄武スキルクールタイム")]
-    float _skillFourCT;
+    float _skillFourCT = 10;
     [Tooltip("玄武スキルクールタイムタイマー")]
     float _skillFourCTtimer;
 
     [SerializeField, Tooltip("玄武スキルの拘束時間")]
-    float _skillFourRestraintTime;
+    float _skillFourRestraintTime = 6;
     [SerializeField, Tooltip("玄武スキルのシールド維持時間")]
-    float _skillFourShieldTime;
+    float _skillFourShieldTime = 10;
     [SerializeField, Tooltip("玄武スキルの効果範囲")]
-    float _skillFourRange;
+    float _skillFourRange = 5;
 
     void Start()
     {
@@ -321,12 +323,10 @@ public class PlayerController : MonoBehaviour
 
             //弾丸を発射
             GameObject bullet = Instantiate(Bullet, transform.position, Quaternion.Euler(0, 0, -90 * Mathf.Sign(transform.localScale.x)));
-
             BulletManager bulletManager = bullet.GetComponent<BulletManager>();
-            bulletManager.inBullet_bulletDestroyTime = _bulletDestroyTime;
-            bulletManager.inBullet_bulletMaxDamage = _bulletMaxDamage;
-            bulletManager.inBullet_bulletMinDamage = _bulletMinDamage;
-            bulletManager.inBullet_bulletAttenuation = _bulletAttenuation;
+            bulletManager.StartDestroy(_bulletDestroyTime);
+            bulletManager.SetProperty(_bulletMaxDamage, _bulletMinDamage, _bulletAttenuation);
+
             bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(_bulletVelocity * Mathf.Sign(transform.localScale.x), 0);
         }
         else

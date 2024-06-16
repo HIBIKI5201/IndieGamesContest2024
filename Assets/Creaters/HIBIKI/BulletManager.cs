@@ -1,12 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Properties;
 using UnityEngine;
 
 public class BulletManager : MonoBehaviour
 {
-    [ReadOnly, Tooltip("弾丸が消滅するまでの時間")]
-    public float inBullet_bulletDestroyTime;
-
     [ReadOnly, Tooltip("弾丸の最大ダメージ")]
     public float inBullet_bulletMaxDamage;
     [ReadOnly, Tooltip("弾丸の最小ダメージ")]
@@ -16,17 +14,21 @@ public class BulletManager : MonoBehaviour
 
     [Tooltip("弾丸が発射された地点")]
     public Vector2 firstPos;
-    void Start()
+
+    public void StartDestroy(float bulletDestroyTime)
     {
         firstPos = transform.position;
-        Invoke("Destroy", inBullet_bulletDestroyTime);
+        Invoke("Destroy",bulletDestroyTime);
     }
 
-    void Update()
+    public void SetProperty(float bulletMaxDamage, float bulletMinDamage, float bulletAttenuation)
     {
-        
-    }
+        inBullet_bulletMaxDamage = bulletMaxDamage;
 
+        inBullet_bulletMinDamage = bulletMinDamage;
+
+        inBullet_bulletAttenuation = bulletAttenuation;
+    }
 
     private void Destroy()
     {
