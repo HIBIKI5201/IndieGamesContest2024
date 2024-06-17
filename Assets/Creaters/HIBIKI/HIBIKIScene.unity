@@ -3496,7 +3496,7 @@ GameObject:
   - component: {fileID: 728240485}
   - component: {fileID: 728240484}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: SkillFourIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3534,7 +3534,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.06056956, g: 0.6830188, b: 0.13012388, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3571,7 +3571,7 @@ GameObject:
   - component: {fileID: 841096801}
   - component: {fileID: 841096800}
   m_Layer: 5
-  m_Name: Image (3)
+  m_Name: SkillOneIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3609,7 +3609,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.439602, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3800,7 +3800,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.6981132, g: 0.6981132, b: 0.6981132, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4140,10 +4140,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 612b4e0bf6eab754fb17e64bf6e515a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test: 0
   _playerMode: 0
   _maxHealth: 1500
   _currentHealth: 0
-  HealthImage: {fileID: 1512193574}
+  HealthGauge: {fileID: 1512193574}
   PlayerRigidBody: {fileID: 1212906471}
   _isGround: 0
   _moveSpeed: 5
@@ -4163,18 +4164,22 @@ MonoBehaviour:
   _bulletMinDamage: 30
   _bulletAttenuation: 5
   _skillOneCT: 1
+  SkillOneIconGauge: {fileID: 841096800}
   _skillOneObjecct: {fileID: 1305652823737791865, guid: e1f201484549cf54c95cfe7d019863a4, type: 3}
   _skillOneChargeTime: 2
   _skillOneDuration: 4
   _skillOneRange: 3
   _skillOneFireInterval: 0.25
-  _skillTwoCT: 1
+  _skillTwoCT: 5
+  SkillTwoIconGauge: {fileID: 1296908310}
   _skillTwoDashSpeed: 25
   _skillTwoWaitTime: 0.5
   _skillThreeCT: 1
+  SkillThreeIconGauge: {fileID: 1037660410}
   SkillThreeObject: {fileID: 534348758503967792, guid: 5270d7c7f11e9854198a95a4d2b834e2, type: 3}
   _skillThreeDuration: 8
   _skillFourCT: 1
+  SkillFourIconGauge: {fileID: 728240484}
   _skillFourRestraintTime: 3
   _skillFourShieldTime: 5
   _skillFourRange: 5
@@ -4455,7 +4460,7 @@ GameObject:
   - component: {fileID: 1296908311}
   - component: {fileID: 1296908310}
   m_Layer: 5
-  m_Name: Image (4)
+  m_Name: SkillTwoIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4493,7 +4498,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0.89849854, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

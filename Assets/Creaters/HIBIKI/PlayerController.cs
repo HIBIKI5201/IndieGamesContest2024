@@ -4,9 +4,13 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
 using DG.Tweening;
+using Unity.VisualScripting;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField, ReadOnly]
+    float test;
+
     [Header("プレイヤー")]
     [ReadOnly, Tooltip("陰陽の形態")]
     public PlayerMode _playerMode;
@@ -24,7 +28,7 @@ public class PlayerController : MonoBehaviour
 
     [Space]
     [SerializeField]
-    Image HealthImage;
+    Image HealthGauge;
 
     [Header("移動ステータス")]
     [SerializeField]
@@ -99,6 +103,8 @@ public class PlayerController : MonoBehaviour
     float _skillOneCT = 10;
     [Tooltip("朱雀スキルクールタイムタイマー")]
     float _skillOneCTtimer;
+    [SerializeField]
+    Image SkillOneIconGauge;
 
     [SerializeField, Tooltip("朱雀スキルのオブジェクト")]
     GameObject _skillOneObjecct;
@@ -118,6 +124,8 @@ public class PlayerController : MonoBehaviour
     float _skillTwoCT = 10;
     [Tooltip("白虎スキルクールタイムタイマー")]
     float _skillTwoCTtimer;
+    [SerializeField]
+    Image SkillTwoIconGauge;
 
     [SerializeField, Tooltip("白虎スキルのダッシュ速度")]
     float _skillTwoDashSpeed = 25;
@@ -130,6 +138,8 @@ public class PlayerController : MonoBehaviour
     float _skillThreeCT = 10;
     [Tooltip("青龍スキルクールタイムタイマー")]
     float _skillThreeCTtimer;
+    [SerializeField]
+    Image SkillThreeIconGauge;
 
     [SerializeField, Tooltip("回復トーテムのオブジェクト")]
     GameObject SkillThreeObject;
@@ -142,6 +152,8 @@ public class PlayerController : MonoBehaviour
     float _skillFourCT = 10;
     [Tooltip("玄武スキルクールタイムタイマー")]
     float _skillFourCTtimer;
+    [SerializeField]
+    Image SkillFourIconGauge;
 
     [SerializeField, Tooltip("玄武スキルの拘束時間")]
     float _skillFourRestraintTime = 6;
@@ -257,7 +269,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (_playerMode == PlayerMode.Sun && _skillTwoCT + _skillTwoCTtimer < Time.time)
                 {
-                    StartCoroutine(SkillTwo(horizontal));
+                    StartCoroutine(SkillTwo());
 
                 }
                 else if (_playerMode == PlayerMode.Moon && _skillFourCT + _skillFourCTtimer < Time.time)
@@ -297,7 +309,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             HitDamage(10);
-            HealthImage.fillAmount = _currentHealth / _maxHealth;
+            HealthGauge.fillAmount = _currentHealth / _maxHealth;
         }
     }
 
@@ -355,6 +367,8 @@ public class PlayerController : MonoBehaviour
         _moveActive = false;
         PlayerRigidBody.gravityScale += 1f;
 
+        DOTween.To(() => (float)0, x => SkillOneIconGauge.fillAmount = x, 1, _skillOneCT).SetEase(Ease.Linear);
+
         //攻撃チャージ時間
         yield return new WaitForSeconds(_skillOneChargeTime);
 
@@ -372,7 +386,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    IEnumerator SkillTwo(float horizontal)
+    IEnumerator SkillTwo()
     {
         _skillTwoCTtimer = Time.time;
         Debug.Log("白虎スキル発動");
@@ -382,6 +396,8 @@ public class PlayerController : MonoBehaviour
         //進行方向に向けて加速
         PlayerRigidBody.velocity = new Vector2(Mathf.Sign(transform.localScale.x) * _skillTwoDashSpeed, 0);
         PlayerRigidBody.gravityScale = 0.5f;
+
+        DOTween.To(() => (float)0, x => SkillTwoIconGauge.fillAmount = x, 1, _skillTwoCT).SetEase(Ease.Linear);
 
         yield return new WaitForSeconds(_skillTwoWaitTime);
 
@@ -397,6 +413,8 @@ public class PlayerController : MonoBehaviour
         //スキルのオブジェクトを出現させる
         GameObject skillObject = Instantiate(SkillThreeObject, transform.position, Quaternion.identity);
         skillObject.GetComponent<SkillThreeManager>()._skillThreeDuration = _skillThreeDuration;
+
+        DOTween.To(() => (float)0, x => SkillThreeIconGauge.fillAmount = x, 1, _skillThreeCT).SetEase(Ease.Linear);
     }
 
     IEnumerator SkillFour()
@@ -420,6 +438,8 @@ public class PlayerController : MonoBehaviour
                 Debug.Log($"{obj.gameObject.name}は効果範囲外");
             }
         }
+
+        DOTween.To(() => (float)0, x => SkillFourIconGauge.fillAmount = x, 1, _skillFourCT).SetEase(Ease.Linear);
 
         //効果時間終了の処理
         if (_skillFourRestraintTime < _skillFourShieldTime)
