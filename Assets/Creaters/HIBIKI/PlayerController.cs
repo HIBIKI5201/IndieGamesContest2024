@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -19,6 +20,10 @@ public class PlayerController : MonoBehaviour
     float _maxHealth = 1500;
     [SerializeField, ReadOnly, Tooltip("現在のヘルス")]
     float _currentHealth;
+
+    [Space]
+    [SerializeField]
+    Image HealthImage;
 
     [Header("移動ステータス")]
     [SerializeField]
@@ -287,6 +292,12 @@ public class PlayerController : MonoBehaviour
                 _wallTouch = Mathf.Sign(collision.contacts[0].normal.x);
             }
         }
+
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            HitDamage(10);
+            HealthImage.fillAmount = _currentHealth / _maxHealth;
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -439,6 +450,12 @@ public class PlayerController : MonoBehaviour
                 obj.GetComponent<EnemyManager>()._moveActive = true;
             }
         }
+    }
+
+    void HitDamage(float Damage)
+    {
+        _currentHealth -= Damage;
+
     }
 
 }

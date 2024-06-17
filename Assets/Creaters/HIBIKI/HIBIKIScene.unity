@@ -4143,6 +4143,7 @@ MonoBehaviour:
   _playerMode: 0
   _maxHealth: 1500
   _currentHealth: 0
+  HealthImage: {fileID: 1512193574}
   PlayerRigidBody: {fileID: 1212906471}
   _isGround: 0
   _moveSpeed: 5
@@ -4724,7 +4725,7 @@ GameObject:
   - component: {fileID: 1512193575}
   - component: {fileID: 1512193574}
   m_Layer: 5
-  m_Name: Image
+  m_Name: HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4796,7 +4797,7 @@ SceneRoots:
   - {fileID: 473344988}
   - {fileID: 935595628}
   - {fileID: 1254127276}
-  - {fileID: 1212906470}
   - {fileID: 1422203658}
+  - {fileID: 1212906470}
   - {fileID: 1094378423}
   - {fileID: 236807458}
