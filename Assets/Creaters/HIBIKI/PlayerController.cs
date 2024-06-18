@@ -315,7 +315,6 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             HitDamage(10);
-            HealthGauge.fillAmount = _currentHealth / _maxHealth;
         }
     }
 
@@ -482,7 +481,7 @@ public class PlayerController : MonoBehaviour
     void HitDamage(float Damage)
     {
         _currentHealth -= Damage;
-
+        HealthGauge.fillAmount = _currentHealth / _maxHealth;
     }
 
 }
