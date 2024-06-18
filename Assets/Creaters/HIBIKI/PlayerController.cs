@@ -162,6 +162,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Tooltip("玄武スキルの効果範囲")]
     float _skillFourRange = 5;
 
+    [Header("UI")]
+    [SerializeField]
+    Animator ModeAnimator;
+
     void Start()
     {
         _playerMode = PlayerMode.Sun;
@@ -239,11 +243,13 @@ public class PlayerController : MonoBehaviour
                 {
                     _playerMode = PlayerMode.Moon;
                     Debug.Log("陰形態に変形");
+                    ModeAnimator.SetBool("Exchange", true);
                 }
                 else
                 {
                     _playerMode = PlayerMode.Sun;
                     Debug.Log("陽形態に変形");
+                    ModeAnimator.SetBool("Exchange", false);
                 }
             }
 

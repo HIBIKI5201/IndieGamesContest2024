@@ -30,6 +30,8 @@ public class EnemyManager : MonoBehaviour
     float _moveSpeed;
     void Start()
     {
+        _maxHealth = 500;
+
         _currentHealth = _maxHealth;
         _moveActive = true;
 
@@ -66,17 +68,30 @@ public class EnemyManager : MonoBehaviour
         {
             _currentHealth -= _playerController._attackDamage;
 
+            HitDamage(_playerController._attackDamage);
+
             Debug.Log($"åªç›ÇÃëÃóÕÇÕ{_currentHealth}");
         }
 
         if (collision.gameObject.CompareTag("Bullet"))
         {
             BulletManager bulletManager = collision.GetComponent<BulletManager>();
-            _currentHealth -= Mathf.Clamp(Vector2.Distance(bulletManager.firstPos, transform.position) / bulletManager.inBullet_bulletAttenuation * bulletManager.inBullet_bulletMaxDamage, bulletManager.inBullet_bulletMinDamage, bulletManager.inBullet_bulletMaxDamage);
+            HitDamage(Mathf.Clamp(Vector2.Distance(bulletManager.firstPos, transform.position) / bulletManager.inBullet_bulletAttenuation * bulletManager.inBullet_bulletMaxDamage, bulletManager.inBullet_bulletMinDamage, bulletManager.inBullet_bulletMaxDamage));
+
+
 
             Debug.Log(Mathf.Clamp(Vector2.Distance(bulletManager.firstPos, transform.position) / bulletManager.inBullet_bulletAttenuation * bulletManager.inBullet_bulletMaxDamage, bulletManager.inBullet_bulletMinDamage, bulletManager.inBullet_bulletMaxDamage));
 
             Debug.Log($"åªç›ÇÃëÃóÕÇÕ{_currentHealth}");
+        }
+    }
+
+    void HitDamage(float damage)
+    {
+        _currentHealth -= damage;
+        if (_currentHealth <= 0)
+        {
+            Destroy(this.gameObject);
         }
     }
 }
