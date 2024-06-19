@@ -15,7 +15,8 @@ public class EnemyManager : MonoBehaviour
     public enum EnemyKind
     {
         MeleeEnemy,
-        ShootEnemy
+        ShootEnemyOne,
+        ShootEnemyTwo
     }
 
     [Header("‘Ì—ÍŒn")]
@@ -28,6 +29,18 @@ public class EnemyManager : MonoBehaviour
     [Header("ˆÚ“®Œn")]
     [SerializeField, Tooltip("ˆÚ“®‘¬“x")]
     float _moveSpeed;
+
+    [Header("UŒ‚Œn")]
+    [SerializeField]
+    GameObject EnemyBullet;
+
+    [SerializeField, Tooltip("UŒ‚ŠÔŠu")]
+    float _attackInterval;
+    [Tooltip("UŒ‚ŠÔŠu‚Ìƒ^ƒCƒ}[")]
+    float _attackIntervalTimer;
+
+    [SerializeField, Tooltip("—U“±’eƒ_ƒ[ƒW")]
+    float _bulletTwoDamage;
     void Start()
     {
         _maxHealth = 500;
@@ -40,9 +53,10 @@ public class EnemyManager : MonoBehaviour
 
         _player = GameObject.Find("Player");
         _playerController = _player.GetComponent<PlayerController>();
+
+        _attackIntervalTimer = Time.time;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (_moveActive)
@@ -59,6 +73,24 @@ public class EnemyManager : MonoBehaviour
         } else
         {
             _spriteRenderer.color = Color.red;
+        }
+
+        if (_attackIntervalTimer + _attackInterval < Time.time)
+        {
+            if (_enemyKind == EnemyKind.ShootEnemyOne)
+            {
+
+            }
+            else if (_enemyKind == EnemyKind.ShootEnemyTwo)
+            {
+                AttackTwo();
+            }
+            else if (_enemyKind == EnemyKind.MeleeEnemy)
+            {
+
+            }
+
+            _attackIntervalTimer = Time.time;
         }
     }
 
@@ -93,5 +125,12 @@ public class EnemyManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+    }
+
+
+    void AttackTwo()
+    {
+        GameObject bullet = Instantiate(EnemyBullet, transform.position, Quaternion.identity);
+        bullet.GetComponent<EnemyBulletManager>()._bulletDamage = _bulletTwoDamage;
     }
 }

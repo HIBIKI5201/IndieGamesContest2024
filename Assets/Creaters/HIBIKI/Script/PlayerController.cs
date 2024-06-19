@@ -52,7 +52,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Tooltip("ÉWÉÉÉìÉví∑âüÇµì¸óÕíÜÇÃèdóÕí·â∫ó ")]
     float _jumpGravity = 0.8f;
 
-
     [SerializeField,ReadOnly,Tooltip("ÉWÉÉÉìÉvÇ™â¬î\Ç»èÛë‘Ç©")]
     bool _canJump;
     [Tooltip("ÉWÉÉÉìÉvÇÃç≈èâÇÃèàóù")]
@@ -169,11 +168,18 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         _playerMode = PlayerMode.Sun;
+
         _currentHealth = _maxHealth;
+
         _moveActive = true;
         _canJump = true;
 
         _gravity = PlayerRigidBody.gravityScale;
+
+        _skillOneCTtimer = _skillOneCT;
+        _skillTwoCTtimer = _skillTwoCT;
+        _skillThreeCTtimer = _skillThreeCT;
+        _skillFourCTtimer = _skillFourCT;
     }
 
     void Update()
@@ -184,46 +190,8 @@ public class PlayerController : MonoBehaviour
 
         if (_moveActive)
         {
-            //à⁄ìÆån
-            #region
-            if (_wallTouch == 0 || _wallTouch == horizontal)
-            {
-                PlayerRigidBody.velocity = new Vector2(horizontal * _moveSpeed, PlayerRigidBody.velocity.y);
-            }
-
-            if (horizontal != 0)
-            {
-                transform.localScale = new Vector2(horizontal, transform.localScale.y);
-            }
-
-
-            if (Input.GetKeyDown(KeyCode.W) && _canJump)
-            {
-                PlayerRigidBody.velocity = new Vector2(PlayerRigidBody.velocity.x, 0);
-                PlayerRigidBody.AddForce(Vector2.up * _jumpPower, ForceMode2D.Impulse);
-
-                PlayerRigidBody.gravityScale = _gravity - _jumpGravity;
-            }
-            if (Input.GetKey(KeyCode.W))
-            {
-                _jumpTimer += Time.deltaTime;
-
-                if (_jumpTimer > _jumpMaxTime && !_isGround) 
-                {
-                    _canJump = false;
-                    PlayerRigidBody.gravityScale = _gravity;
-                }
-            }
-            if (Input.GetKeyUp(KeyCode.W))
-            {
-                if (!_isGround)
-                {
-                    _canJump = false;
-                    PlayerRigidBody.gravityScale = _gravity;
-                }
-            }
-            
-            #endregion
+            //à⁄ìÆ
+            Move(horizontal);
 
             //çUåÇån
             #region
@@ -311,11 +279,6 @@ public class PlayerController : MonoBehaviour
                 _wallTouch = Mathf.Sign(collision.contacts[0].normal.x);
             }
         }
-
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            HitDamage(10);
-        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -326,8 +289,62 @@ public class PlayerController : MonoBehaviour
             _wallTouch = 0;
         }
     }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            HitDamage(50);
+        }
+
+        if (collision.gameObject.CompareTag("EnemyBullet"))
+        {
+            HitDamage(collision.gameObject.GetComponent<EnemyBulletManager>()._bulletDamage);
+            Destroy(collision.gameObject);
+        }
+    }
     #endregion
 
+    //à⁄ìÆån
+    void Move(float horizontal)
+    {
+        if (_wallTouch == 0 || _wallTouch == horizontal)
+        {
+            PlayerRigidBody.velocity = new Vector2(horizontal * _moveSpeed, PlayerRigidBody.velocity.y);
+        }
+
+        if (horizontal != 0)
+        {
+            transform.localScale = new Vector2(horizontal, transform.localScale.y);
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.W) && _canJump)
+        {
+            PlayerRigidBody.velocity = new Vector2(PlayerRigidBody.velocity.x, 0);
+            PlayerRigidBody.AddForce(Vector2.up * _jumpPower, ForceMode2D.Impulse);
+
+            PlayerRigidBody.gravityScale = _gravity - _jumpGravity;
+        }
+        if (Input.GetKey(KeyCode.W))
+        {
+            _jumpTimer += Time.deltaTime;
+
+            if (_jumpTimer > _jumpMaxTime && !_isGround)
+            {
+                _canJump = false;
+                PlayerRigidBody.gravityScale = _gravity;
+            }
+        }
+        if (Input.GetKeyUp(KeyCode.W))
+        {
+            if (!_isGround)
+            {
+                _canJump = false;
+                PlayerRigidBody.gravityScale = _gravity;
+            }
+        }
+    }
 
     IEnumerator Attack()
     {
