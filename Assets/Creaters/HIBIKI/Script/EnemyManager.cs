@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static EnemyBulletManager;
 
 public class EnemyManager : MonoBehaviour
 {
@@ -39,8 +40,10 @@ public class EnemyManager : MonoBehaviour
     [Tooltip("攻撃間隔のタイマー")]
     float _attackIntervalTimer;
 
-    [SerializeField, Tooltip("誘導弾ダメージ")]
-    float _bulletTwoDamage;
+    [SerializeField, Tooltip("弾ダメージ")]
+    float _bulletDamage;
+    [SerializeField, Tooltip("弾スピード")]
+    float _bulletSpeed;
     void Start()
     {
         _maxHealth = 500;
@@ -66,9 +69,11 @@ public class EnemyManager : MonoBehaviour
             if (_player.transform.position.x - transform.position.x > 0)
             {
                 _rigidbody2D.velocity = new Vector2(_moveSpeed, _rigidbody2D.velocity.y);
+                transform.localScale = new Vector2(1, transform.localScale.y);
             } else
             {
                 _rigidbody2D.velocity = new Vector2(-_moveSpeed, _rigidbody2D.velocity.y);
+                transform.localScale = new Vector2(-1, transform.localScale.y);
             }
         } else
         {
@@ -77,13 +82,18 @@ public class EnemyManager : MonoBehaviour
 
         if (_attackIntervalTimer + _attackInterval < Time.time)
         {
+            GameObject bullet = Instantiate(EnemyBullet, transform.position, Quaternion.Euler(0, 0, -90 * Mathf.Sign(transform.localScale.x)));
+            EnemyBulletManager bulletManager = bullet.GetComponent<EnemyBulletManager>();
+            bulletManager._bulletDamage = _bulletDamage;
+
             if (_enemyKind == EnemyKind.ShootEnemyOne)
             {
-
+                bulletManager._enemyBulletKind = EnemyBulletKind.normalBullet;
+                bulletManager._bulletSpeed = _bulletSpeed * Mathf.Sign(transform.localScale.x);
             }
             else if (_enemyKind == EnemyKind.ShootEnemyTwo)
             {
-                AttackTwo();
+                bulletManager._enemyBulletKind = EnemyBulletKind.followBullet;
             }
             else if (_enemyKind == EnemyKind.MeleeEnemy)
             {
@@ -125,12 +135,5 @@ public class EnemyManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-    }
-
-
-    void AttackTwo()
-    {
-        GameObject bullet = Instantiate(EnemyBullet, transform.position, Quaternion.identity);
-        bullet.GetComponent<EnemyBulletManager>()._bulletDamage = _bulletTwoDamage;
     }
 }

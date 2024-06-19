@@ -356,10 +356,12 @@ public class PlayerController : MonoBehaviour
 
             //‹ßÚUŒ‚“–‚½‚è”»’è‚ğoŒ»
             AttackRangeObject.SetActive(true);
+            _moveActive = false;
 
             yield return new WaitForSeconds(0.05f);
 
             AttackRangeObject.SetActive(false);
+            _moveActive = true;
         }
         //‰“‹——£UŒ‚
         else if (_playerMode == PlayerMode.Moon && _fireTimer + _fireSpeed < Time.time)
