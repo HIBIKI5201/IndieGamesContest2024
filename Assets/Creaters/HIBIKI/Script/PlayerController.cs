@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
         Sun,
         Moon
     }
+    [Tooltip("陰陽変形のタイマー")]
+    float _modeTimer;
 
     [Header("体力ステータス")]
     [SerializeField, Tooltip("プレイヤーの最大ヘルス")]
@@ -161,7 +163,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Tooltip("玄武スキルの効果範囲")]
     float _skillFourRange = 5;
 
-    [Header("UI")]
+    [Header("アニメーション関係")]
+    [SerializeField]
+    Animator PlayerAnimator;
+
     [SerializeField]
     Animator ModeAnimator;
 
@@ -191,21 +196,21 @@ public class PlayerController : MonoBehaviour
         if (_moveActive)
         {
             //移動
-            Move(horizontal);
+            StartCoroutine(Move(horizontal));
 
             //攻撃系
             #region
             //通常攻撃
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                StartCoroutine(Attack());
+                StartCoroutine(Attack(horizontal));
             }
             #endregion
 
             //スキル系
             #region
             //陰陽切り替え
-            if (Input.GetKeyDown(KeyCode.RightShift))
+            if (Input.GetKeyDown(KeyCode.RightShift) && _modeTimer + 1 < Time.time)
             {
                 if (_playerMode == PlayerMode.Sun)
                 {
@@ -219,6 +224,8 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("陽形態に変形");
                     ModeAnimator.SetBool("Exchange", false);
                 }
+
+                _modeTimer = Time.time;
             }
 
             //スキル１(Zキー)
@@ -256,6 +263,20 @@ public class PlayerController : MonoBehaviour
                 }
             }
             #endregion
+
+            //アニメーション系
+            if (AttackRangeObject.activeSelf)
+            {
+                PlayerAnimator.SetInteger("AnimationNumber", 2);
+            }
+
+            else if (horizontal != 0)
+            {
+                PlayerAnimator.SetInteger("AnimationNumber", 1);
+            } else
+            {
+                PlayerAnimator.SetInteger("AnimationNumber", 0);
+            }
         }
     }
 
@@ -306,7 +327,7 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     //移動系
-    void Move(float horizontal)
+    IEnumerator Move(float horizontal)
     {
         if (_wallTouch == 0 || _wallTouch == horizontal)
         {
@@ -325,6 +346,12 @@ public class PlayerController : MonoBehaviour
             PlayerRigidBody.AddForce(Vector2.up * _jumpPower, ForceMode2D.Impulse);
 
             PlayerRigidBody.gravityScale = _gravity - _jumpGravity;
+
+            _moveActive = false;
+
+            yield return new WaitForSeconds(0.1f);
+
+            _moveActive = true;
         }
         if (Input.GetKey(KeyCode.W))
         {
@@ -346,7 +373,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    IEnumerator Attack()
+    IEnumerator Attack(float horizontal)
     {
         //近接攻撃
         if (_playerMode == PlayerMode.Sun && _attackTimer + _attackSpeed < Time.time)
@@ -358,7 +385,9 @@ public class PlayerController : MonoBehaviour
             AttackRangeObject.SetActive(true);
             _moveActive = false;
 
-            yield return new WaitForSeconds(0.05f);
+            PlayerRigidBody.AddForce(Vector2.left * horizontal * 3, ForceMode2D.Impulse);
+
+            yield return new WaitForSeconds(0.2f);
 
             AttackRangeObject.SetActive(false);
             _moveActive = true;
