@@ -75,9 +75,6 @@ public class EnemyManager : MonoBehaviour
                 _rigidbody2D.velocity = new Vector2(-_moveSpeed, _rigidbody2D.velocity.y);
                 transform.localScale = new Vector2(-1, transform.localScale.y);
             }
-        } else
-        {
-            _spriteRenderer.color = Color.red;
         }
 
         if (_attackIntervalTimer + _attackInterval < Time.time)
@@ -119,10 +116,6 @@ public class EnemyManager : MonoBehaviour
         {
             BulletManager bulletManager = collision.GetComponent<BulletManager>();
             HitDamage(Mathf.Clamp(Vector2.Distance(bulletManager.firstPos, transform.position) / bulletManager.inBullet_bulletAttenuation * bulletManager.inBullet_bulletMaxDamage, bulletManager.inBullet_bulletMinDamage, bulletManager.inBullet_bulletMaxDamage));
-
-
-
-            Debug.Log(Mathf.Clamp(Vector2.Distance(bulletManager.firstPos, transform.position) / bulletManager.inBullet_bulletAttenuation * bulletManager.inBullet_bulletMaxDamage, bulletManager.inBullet_bulletMinDamage, bulletManager.inBullet_bulletMaxDamage));
 
             Debug.Log($"åªç›ÇÃëÃóÕÇÕ{_currentHealth}");
         }

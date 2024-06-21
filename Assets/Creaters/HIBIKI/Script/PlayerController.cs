@@ -181,10 +181,10 @@ public class PlayerController : MonoBehaviour
 
         _gravity = PlayerRigidBody.gravityScale;
 
-        _skillOneCTtimer = _skillOneCT;
-        _skillTwoCTtimer = _skillTwoCT;
-        _skillThreeCTtimer = _skillThreeCT;
-        _skillFourCTtimer = _skillFourCT;
+        DOTween.To(() => (float)0, x => SkillOneIconGauge.fillAmount = x, 1, _skillOneCT).SetEase(Ease.Linear);
+        DOTween.To(() => (float)0, x => SkillTwoIconGauge.fillAmount = x, 1, _skillTwoCT).SetEase(Ease.Linear);
+        DOTween.To(() => (float)0, x => SkillThreeIconGauge.fillAmount = x, 1, _skillThreeCT).SetEase(Ease.Linear);
+        DOTween.To(() => (float)0, x => SkillFourIconGauge.fillAmount = x, 1, _skillFourCT).SetEase(Ease.Linear);
     }
 
     void Update()
@@ -205,19 +205,21 @@ public class PlayerController : MonoBehaviour
             {
                 StartCoroutine(Attack(horizontal));
             }
-            #endregion
+            
 
             //スキル系
             #region
             //陰陽切り替え
             if (Input.GetKeyDown(KeyCode.RightShift) && _modeTimer + 1 < Time.time)
             {
+                //陰形態に変形
                 if (_playerMode == PlayerMode.Sun)
                 {
                     _playerMode = PlayerMode.Moon;
                     Debug.Log("陰形態に変形");
                     ModeAnimator.SetBool("Exchange", true);
                 }
+                //陽形態に変形
                 else
                 {
                     _playerMode = PlayerMode.Sun;
@@ -228,15 +230,17 @@ public class PlayerController : MonoBehaviour
                 _modeTimer = Time.time;
             }
 
-            //スキル１(Zキー)
-            if (Input.GetKeyDown(KeyCode.Z))
+            //スキル１
+            if (Input.GetKeyDown(KeyCode.Backslash))
             {
                 if (_playerMode == PlayerMode.Sun && _skillOneCT + _skillOneCTtimer < Time.time)
                 {
+                    //朱雀スキルを発動
                     StartCoroutine(SkillOne());
                 }
                 else if (_playerMode == PlayerMode.Moon && _skillThreeCT + _skillThreeCTtimer < Time.time)
                 {
+                    //青龍スキルを発動
                     SkillThree();
                 }
                 else
@@ -245,16 +249,18 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            //スキル２(Xキー)
-            if (Input.GetKeyDown(KeyCode.X))
+            //スキル２
+            if (Input.GetKeyDown(KeyCode.RightBracket))
             {
                 if (_playerMode == PlayerMode.Sun && _skillTwoCT + _skillTwoCTtimer < Time.time)
                 {
+                    //白虎スキルを発動
                     StartCoroutine(SkillTwo());
 
                 }
                 else if (_playerMode == PlayerMode.Moon && _skillFourCT + _skillFourCTtimer < Time.time)
                 {
+                    //玄武スキルを発動
                     StartCoroutine(SkillFour());
                 }
                 else
@@ -262,6 +268,7 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("スキル２ リキャストタイム中");
                 }
             }
+            #endregion
             #endregion
 
             //アニメーション系
@@ -295,6 +302,8 @@ public class PlayerController : MonoBehaviour
                 _jumpTimer = 0;
                 _wallTouch = 0;
             }
+
+            //壁に当たった時に方向を保存する
             if (Mathf.Abs(collision.contacts[0].normal.x) > 0.8f)
             {
                 _wallTouch = Mathf.Sign(collision.contacts[0].normal.x);
@@ -329,17 +338,18 @@ public class PlayerController : MonoBehaviour
     //移動系
     IEnumerator Move(float horizontal)
     {
+        //移動
         if (_wallTouch == 0 || _wallTouch == horizontal)
         {
             PlayerRigidBody.velocity = new Vector2(horizontal * _moveSpeed, PlayerRigidBody.velocity.y);
         }
-
+        //移動方向に合わせてキャラクターの方向を変更
         if (horizontal != 0)
         {
             transform.localScale = new Vector2(horizontal, transform.localScale.y);
         }
 
-
+        //ジャンプ
         if (Input.GetKeyDown(KeyCode.W) && _canJump)
         {
             PlayerRigidBody.velocity = new Vector2(PlayerRigidBody.velocity.x, 0);
@@ -457,6 +467,7 @@ public class PlayerController : MonoBehaviour
         PlayerRigidBody.gravityScale = _gravity;
         _moveActive = true;
     }
+
 
     void SkillThree()
     {

@@ -36,6 +36,7 @@ public class EnemyBulletManager : MonoBehaviour
 
     void Update()
     {
+        //’Ç”ö’e‚È‚çƒvƒŒƒCƒ„[‚ğ’Ç”ö‚·‚é
         if (_enemyBulletKind == EnemyBulletKind.followBullet)
         {
             Vector2 axis = PlayerPos.position - transform.position;
@@ -47,6 +48,7 @@ public class EnemyBulletManager : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //‹ßÚUŒ‚‚É“–‚½‚Á‚½‚ç”j‰ó‚³‚ê‚é
         if (collision.gameObject.CompareTag("Melee"))
         {
             Destroy(gameObject);
