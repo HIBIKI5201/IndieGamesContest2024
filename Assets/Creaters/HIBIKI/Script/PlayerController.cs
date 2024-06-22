@@ -317,16 +317,12 @@ public class PlayerController : MonoBehaviour
         {
             _isGround = false;
             _wallTouch = 0;
+            _canJump = false;
         }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            HitDamage(50);
-        }
-
         if (collision.gameObject.CompareTag("EnemyBullet"))
         {
             HitDamage(collision.gameObject.GetComponent<EnemyBulletManager>()._bulletDamage);
@@ -363,6 +359,7 @@ public class PlayerController : MonoBehaviour
 
             _moveActive = true;
         }
+
         if (Input.GetKey(KeyCode.W))
         {
             _jumpTimer += Time.deltaTime;
@@ -373,12 +370,18 @@ public class PlayerController : MonoBehaviour
                 PlayerRigidBody.gravityScale = _gravity;
             }
         }
+
+        else if (PlayerRigidBody.gravityScale != _gravity)
+        {
+            PlayerRigidBody.gravityScale = _gravity;
+        }
+
         if (Input.GetKeyUp(KeyCode.W))
         {
             if (!_isGround)
             {
                 _canJump = false;
-                PlayerRigidBody.gravityScale = _gravity;
+                PlayerRigidBody.gravityScale = _gravity;   
             }
         }
     }

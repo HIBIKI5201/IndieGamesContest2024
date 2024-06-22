@@ -75,9 +75,14 @@ public class EnemyManager : MonoBehaviour
                 _rigidbody2D.velocity = new Vector2(-_moveSpeed, _rigidbody2D.velocity.y);
                 transform.localScale = new Vector2(-1, transform.localScale.y);
             }
+
+            if (_enemyKind == EnemyKind.MeleeEnemy)
+            {
+
+            }
         }
 
-        if (_attackIntervalTimer + _attackInterval < Time.time)
+        if (_attackIntervalTimer + _attackInterval < Time.time && (_enemyKind == EnemyKind.ShootEnemyOne || _enemyKind == EnemyKind.ShootEnemyTwo))
         {
             GameObject bullet = Instantiate(EnemyBullet, transform.position, Quaternion.Euler(0, 0, -90 * Mathf.Sign(transform.localScale.x)));
             EnemyBulletManager bulletManager = bullet.GetComponent<EnemyBulletManager>();
