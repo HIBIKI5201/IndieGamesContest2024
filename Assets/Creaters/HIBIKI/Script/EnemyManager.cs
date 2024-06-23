@@ -30,6 +30,8 @@ public class EnemyManager : MonoBehaviour
     [Header("ˆÚ“®Œn")]
     [SerializeField, Tooltip("ˆÚ“®‘¬“x")]
     float _moveSpeed;
+    [Tooltip("‰Šú‚ÌƒXƒP[ƒ‹")]
+    Vector2 _firstScale;
 
     [Header("UŒ‚Œn")]
     [SerializeField]
@@ -50,6 +52,8 @@ public class EnemyManager : MonoBehaviour
 
         _currentHealth = _maxHealth;
         _moveActive = true;
+
+        _firstScale = transform.localScale;
 
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -120,7 +124,7 @@ public class EnemyManager : MonoBehaviour
         if (collision.gameObject.CompareTag("Bullet"))
         {
             BulletManager bulletManager = collision.GetComponent<BulletManager>();
-            HitDamage(Mathf.Clamp(Vector2.Distance(bulletManager.firstPos, transform.position) / bulletManager.inBullet_bulletAttenuation * bulletManager.inBullet_bulletMaxDamage, bulletManager.inBullet_bulletMinDamage, bulletManager.inBullet_bulletMaxDamage));
+            HitDamage(Mathf.Clamp(Vector2.Distance(bulletManager._firstPos, transform.position) / bulletManager.inBullet_bulletAttenuation * bulletManager.inBullet_bulletMaxDamage, bulletManager.inBullet_bulletMinDamage, bulletManager.inBullet_bulletMaxDamage));
 
             Debug.Log($"Œ»İ‚Ì‘Ì—Í‚Í{_currentHealth}");
         }

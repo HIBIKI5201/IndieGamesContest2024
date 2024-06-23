@@ -33,7 +33,6 @@ public class PlayerController : MonoBehaviour
     Image HealthGauge;
 
     [Header("移動ステータス")]
-    [SerializeField]
     Rigidbody2D PlayerRigidBody;
     [Tooltip("重力の初期値")]
     float _gravity;
@@ -63,6 +62,9 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField, ReadOnly, Tooltip("移動可能な状態か")]
     bool _moveActive = true;
+
+    [SerializeField, Tooltip("初期の大きさ")]
+    Vector2 _firstScale;
 
     [Header("攻撃ステータス")]
     [SerializeField, Tooltip("近接判定を持つオブジェクト")]
@@ -128,7 +130,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     Image SkillTwoIconGauge;
 
-    [SerializeField, Tooltip("白虎スキルのダッシュ速度")]
+    [SerializeField, Tooltip("白虎スキルのダッシュ速度倍率")]
     float _skillTwoDashSpeed = 25;
     [SerializeField, Tooltip("白虎スキル発動時に何秒間操作不能にするか")]
     float _skillTwoWaitTime = 0.5f;
@@ -164,14 +166,23 @@ public class PlayerController : MonoBehaviour
     float _skillFourRange = 5;
 
     [Header("アニメーション関係")]
-    [SerializeField]
     Animator PlayerAnimator;
 
     [SerializeField]
     Animator ModeAnimator;
 
+    //プロパティ
+    [HideInInspector, Tooltip("プレイヤーの移動速度")]
+    public float PlayerSpeed { get { return _moveSpeed;} }
+    [HideInInspector, Tooltip("プレイヤーの移動制限")]
+    public bool PlayerMoveActive { get { return _moveActive;} }
+
+
     void Start()
     {
+        PlayerRigidBody = GetComponent<Rigidbody2D>();
+        PlayerAnimator = GetComponent<Animator>();
+
         _playerMode = PlayerMode.Sun;
 
         _currentHealth = _maxHealth;
@@ -180,6 +191,7 @@ public class PlayerController : MonoBehaviour
         _canJump = true;
 
         _gravity = PlayerRigidBody.gravityScale;
+        _firstScale = transform.localScale;
 
         DOTween.To(() => (float)0, x => SkillOneIconGauge.fillAmount = x, 1, _skillOneCT).SetEase(Ease.Linear);
         DOTween.To(() => (float)0, x => SkillTwoIconGauge.fillAmount = x, 1, _skillTwoCT).SetEase(Ease.Linear);
@@ -342,7 +354,7 @@ public class PlayerController : MonoBehaviour
         //移動方向に合わせてキャラクターの方向を変更
         if (horizontal != 0)
         {
-            transform.localScale = new Vector2(horizontal, transform.localScale.y);
+            transform.localScale = new Vector2(horizontal * _firstScale.x, _firstScale.y);
         }
 
         //ジャンプ
@@ -460,7 +472,8 @@ public class PlayerController : MonoBehaviour
         _moveActive = false;
 
         //進行方向に向けて加速
-        PlayerRigidBody.velocity = new Vector2(Mathf.Sign(transform.localScale.x) * _skillTwoDashSpeed, 0);
+        PlayerRigidBody.velocity = new Vector2(Mathf.Sign(transform.localScale.x) *　_moveSpeed * _skillTwoDashSpeed, 0);
+
         PlayerRigidBody.gravityScale = 0.5f;
 
         DOTween.To(() => (float)0, x => SkillTwoIconGauge.fillAmount = x, 1, _skillTwoCT).SetEase(Ease.Linear);

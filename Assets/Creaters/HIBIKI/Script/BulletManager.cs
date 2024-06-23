@@ -12,12 +12,12 @@ public class BulletManager : MonoBehaviour
     [ReadOnly, Tooltip("’eŠÛ‚Ì‹——£Œ¸Š")]
     public float inBullet_bulletAttenuation;
 
-    [Tooltip("’eŠÛ‚ª”­Ë‚³‚ê‚½’n“_")]
-    public Vector2 firstPos;
+    [ReadOnly, Tooltip("’eŠÛ‚ª”­Ë‚³‚ê‚½’n“_")]
+    public Vector2 _firstPos;
 
     public void StartDestroy(float bulletDestroyTime)
     {
-        firstPos = transform.position;
+        _firstPos = transform.position;
         Invoke("Destroy",bulletDestroyTime);
     }
 
