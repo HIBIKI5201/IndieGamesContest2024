@@ -22,7 +22,7 @@ public class EnemyManager : MonoBehaviour
 
     [Header("ëÃóÕån")]
     [ReadOnly,Tooltip("ìGÇÃç≈ëÂëÃóÕ")]
-    public float _maxHealth;
+    float _maxHealth;
     [SerializeField,ReadOnly,Tooltip("åªç›ÇÃëÃóÕ")]
     float _currentHealth;
     public bool _moveActive;
@@ -46,6 +46,12 @@ public class EnemyManager : MonoBehaviour
     float _bulletDamage;
     [SerializeField, Tooltip("íeÉXÉsÅ[Éh")]
     float _bulletSpeed;
+    [SerializeField, Tooltip("çUåÇîÕàÕ")]
+    float _attackRange;
+
+    [SerializeField]
+    ParticleSystem particleSystem;
+    bool _particleActive;
     void Start()
     {
         _maxHealth = 500;
@@ -86,23 +92,12 @@ public class EnemyManager : MonoBehaviour
             }
         }
 
-        if (_attackIntervalTimer + _attackInterval < Time.time && (_enemyKind == EnemyKind.ShootEnemyOne || _enemyKind == EnemyKind.ShootEnemyTwo))
+        if ((_enemyKind == EnemyKind.ShootEnemyOne || _enemyKind == EnemyKind.ShootEnemyTwo) &&
+            _attackIntervalTimer + _attackInterval < Time.time &&
+            Vector2.Distance(transform.position, _player.transform.position) < _attackRange)
         {
-            GameObject bullet = Instantiate(EnemyBullet, transform.position, Quaternion.Euler(0, 0, -90 * Mathf.Sign(transform.localScale.x)));
-            EnemyBulletManager bulletManager = bullet.GetComponent<EnemyBulletManager>();
-            bulletManager._bulletDamage = _bulletDamage;
-
-            if (_enemyKind == EnemyKind.ShootEnemyOne)
-            {
-                bulletManager._enemyBulletKind = EnemyBulletKind.normalBullet;
-                bulletManager._bulletSpeed = _bulletSpeed * Mathf.Sign(transform.localScale.x);
-            }
-            else if (_enemyKind == EnemyKind.ShootEnemyTwo)
-            {
-                bulletManager._enemyBulletKind = EnemyBulletKind.followBullet;
-            }
-
             _attackIntervalTimer = Time.time;
+            StartCoroutine(Shoot());
         }
     }
 
@@ -124,6 +119,30 @@ public class EnemyManager : MonoBehaviour
 
             Debug.Log($"åªç›ÇÃëÃóÕÇÕ{_currentHealth}");
         }
+    }
+
+    IEnumerator Shoot()
+    {
+            particleSystem.Play();
+            _particleActive = false;
+
+        yield return new WaitForSeconds(3);
+
+        GameObject bullet = Instantiate(EnemyBullet, transform.position, Quaternion.Euler(0, 0, -90 * Mathf.Sign(transform.localScale.x)));
+        EnemyBulletManager bulletManager = bullet.GetComponent<EnemyBulletManager>();
+        bulletManager._bulletDamage = _bulletDamage;
+
+        if (_enemyKind == EnemyKind.ShootEnemyOne)
+        {
+            bulletManager._enemyBulletKind = EnemyBulletKind.normalBullet;
+            bulletManager._bulletSpeed = _bulletSpeed * Mathf.Sign(transform.localScale.x);
+        }
+        else if (_enemyKind == EnemyKind.ShootEnemyTwo)
+        {
+            bulletManager._enemyBulletKind = EnemyBulletKind.followBullet;
+        }
+
+        _particleActive = true;
     }
 
     void HitDamage(float damage)
