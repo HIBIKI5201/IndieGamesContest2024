@@ -73,11 +73,11 @@ public class EnemyManager : MonoBehaviour
             if (_player.transform.position.x - transform.position.x > 0)
             {
                 _rigidbody2D.velocity = new Vector2(_moveSpeed, _rigidbody2D.velocity.y);
-                transform.localScale = new Vector2(1, transform.localScale.y);
+                transform.localScale = new Vector2(_firstScale.x, transform.localScale.y);
             } else
             {
                 _rigidbody2D.velocity = new Vector2(-_moveSpeed, _rigidbody2D.velocity.y);
-                transform.localScale = new Vector2(-1, transform.localScale.y);
+                transform.localScale = new Vector2(-_firstScale.x, transform.localScale.y);
             }
 
             if (_enemyKind == EnemyKind.MeleeEnemy)
@@ -100,10 +100,6 @@ public class EnemyManager : MonoBehaviour
             else if (_enemyKind == EnemyKind.ShootEnemyTwo)
             {
                 bulletManager._enemyBulletKind = EnemyBulletKind.followBullet;
-            }
-            else if (_enemyKind == EnemyKind.MeleeEnemy)
-            {
-
             }
 
             _attackIntervalTimer = Time.time;

@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Linq;
-using UnityEngine.UI;
 using DG.Tweening;
-using Unity.VisualScripting;
+using System.Collections;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -36,7 +34,7 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D PlayerRigidBody;
     [Tooltip("重力の初期値")]
     float _gravity;
-    [SerializeField,ReadOnly,Tooltip("地面に付いているかの判定")]
+    [SerializeField, ReadOnly, Tooltip("地面に付いているかの判定")]
     bool _isGround;
 
     [Space]
@@ -53,7 +51,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Tooltip("ジャンプ長押し入力中の重力低下量")]
     float _jumpGravity = 0.8f;
 
-    [SerializeField,ReadOnly,Tooltip("ジャンプが可能な状態か")]
+    [SerializeField, ReadOnly, Tooltip("ジャンプが可能な状態か")]
     bool _canJump;
     [Tooltip("ジャンプの最初の処理")]
     bool firstJump;
@@ -173,9 +171,9 @@ public class PlayerController : MonoBehaviour
 
     //プロパティ
     [HideInInspector, Tooltip("プレイヤーの移動速度")]
-    public float PlayerSpeed { get { return _moveSpeed;} }
+    public float PlayerSpeed { get { return _moveSpeed; } }
     [HideInInspector, Tooltip("プレイヤーの移動制限")]
-    public bool PlayerMoveActive { get { return _moveActive;} }
+    public bool PlayerMoveActive { get { return _moveActive; } }
 
 
     void Start()
@@ -202,7 +200,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
 
-        
+
         float horizontal = Input.GetAxisRaw("Horizontal");
 
         if (_moveActive)
@@ -217,7 +215,7 @@ public class PlayerController : MonoBehaviour
             {
                 StartCoroutine(Attack(horizontal));
             }
-            
+
 
             //スキル系
             #region
@@ -292,7 +290,8 @@ public class PlayerController : MonoBehaviour
             else if (horizontal != 0)
             {
                 PlayerAnimator.SetInteger("AnimationNumber", 1);
-            } else
+            }
+            else
             {
                 PlayerAnimator.SetInteger("AnimationNumber", 0);
             }
@@ -314,12 +313,12 @@ public class PlayerController : MonoBehaviour
                 _jumpTimer = 0;
                 _wallTouch = 0;
             }
+        }
 
-            //壁に当たった時に方向を保存する
-            if (Mathf.Abs(collision.contacts[0].normal.x) > 0.8f)
-            {
-                _wallTouch = Mathf.Sign(collision.contacts[0].normal.x);
-            }
+        //壁に当たった時に方向を保存する
+        if (Mathf.Abs(collision.contacts[0].normal.x) > 0.8f)
+        {
+            _wallTouch = Mathf.Sign(collision.contacts[0].normal.x);
         }
     }
 
@@ -393,7 +392,7 @@ public class PlayerController : MonoBehaviour
             if (!_isGround)
             {
                 _canJump = false;
-                PlayerRigidBody.gravityScale = _gravity;   
+                PlayerRigidBody.gravityScale = _gravity;
             }
         }
     }
@@ -454,7 +453,11 @@ public class PlayerController : MonoBehaviour
         PlayerRigidBody.gravityScale = _gravity;
 
         //攻撃範囲 兼 炎のオブジェクトを配置
-        GameObject skillObject = Instantiate(_skillOneObjecct, transform.position + new Vector3(_skillOneRange / 2 * Mathf.Sign(transform.localScale.x), 0, 0), Quaternion.identity);
+        GameObject skillObject = Instantiate(_skillOneObjecct,
+            transform.position + new Vector3(
+                _skillOneRange / 2 * Mathf.Sign(transform.localScale.x),
+                transform.localScale.y / 2 * -1, 0),
+            Quaternion.identity);
 
         SkillOneManager skillManager = skillObject.GetComponent<SkillOneManager>();
         skillManager._skillOneDuration = _skillOneDuration;
@@ -472,7 +475,7 @@ public class PlayerController : MonoBehaviour
         _moveActive = false;
 
         //進行方向に向けて加速
-        PlayerRigidBody.velocity = new Vector2(Mathf.Sign(transform.localScale.x) *　_moveSpeed * _skillTwoDashSpeed, 0);
+        PlayerRigidBody.velocity = new Vector2(Mathf.Sign(transform.localScale.x) * _moveSpeed * _skillTwoDashSpeed, 0);
 
         PlayerRigidBody.gravityScale = 0.5f;
 
@@ -513,7 +516,8 @@ public class PlayerController : MonoBehaviour
             if (Vector2.Distance(obj.transform.position, transform.position) < _skillFourRange)
             {
                 obj.GetComponent<EnemyManager>()._moveActive = false;
-            } else
+            }
+            else
             {
                 Debug.Log($"{obj.gameObject.name}は効果範囲外");
             }
