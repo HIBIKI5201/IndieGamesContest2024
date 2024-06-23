@@ -50,8 +50,7 @@ public class EnemyManager : MonoBehaviour
     float _attackRange;
 
     [SerializeField]
-    ParticleSystem particleSystem;
-    bool _particleActive;
+    ParticleSystem PS;
     void Start()
     {
         _maxHealth = 500;
@@ -123,8 +122,7 @@ public class EnemyManager : MonoBehaviour
 
     IEnumerator Shoot()
     {
-            particleSystem.Play();
-            _particleActive = false;
+            PS.Play();
 
         yield return new WaitForSeconds(3);
 
@@ -141,8 +139,6 @@ public class EnemyManager : MonoBehaviour
         {
             bulletManager._enemyBulletKind = EnemyBulletKind.followBullet;
         }
-
-        _particleActive = true;
     }
 
     void HitDamage(float damage)
