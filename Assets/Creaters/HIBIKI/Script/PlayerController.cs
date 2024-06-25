@@ -26,9 +26,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField, ReadOnly, Tooltip("現在のヘルス")]
     float _currentHealth;
 
+    [SerializeField, Tooltip("プレイヤーの最大妖力")]
+    float _maxSpiritPower = 1500;
+    [SerializeField, ReadOnly, Tooltip("現在の妖力")]
+    float _currentSpiritPower;
+
     [Space]
     [SerializeField]
     Image HealthGauge;
+    [SerializeField]
+    Image SpiritGauge;
 
     [Header("移動ステータス")]
     Rigidbody2D PlayerRigidBody;
@@ -163,6 +170,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Tooltip("玄武スキルの効果範囲")]
     float _skillFourRange = 5;
 
+    [SerializeField]
+    SpriteRenderer _spriteRenderer;
+    Coroutine effectCoroutine;
+
     [Header("アニメーション関係")]
     Animator PlayerAnimator;
 
@@ -183,9 +194,8 @@ public class PlayerController : MonoBehaviour
 
         _playerMode = PlayerMode.Sun;
 
-        SkillTwoIconGauge.fillAmount = 0.5f;
-
         _currentHealth = _maxHealth;
+        _currentSpiritPower = _maxSpiritPower;
 
         _moveActive = true;
         _canJump = true;
@@ -424,7 +434,7 @@ public class PlayerController : MonoBehaviour
             _moveActive = true;
         }
         //遠距離攻撃
-        else if (_playerMode == PlayerMode.Moon && _fireTimer + _fireSpeed < Time.time)
+        else if (_playerMode == PlayerMode.Moon && _fireTimer + _fireSpeed < Time.time && _currentSpiritPower > 0)
         {
             _fireTimer = Time.time;
             Debug.Log("遠距離攻撃発動");
@@ -432,11 +442,14 @@ public class PlayerController : MonoBehaviour
             //弾丸を発射
             GameObject bullet = Instantiate(Bullet, transform.position, Quaternion.Euler(0, 0, -90 * Mathf.Sign(transform.localScale.x)));
             bullet.transform.localScale = new Vector3(Mathf.Sign(transform.localScale.x) * bullet.transform.localScale.x, bullet.transform.localScale.y, bullet.transform.localScale.z);
+
             BulletManager bulletManager = bullet.GetComponent<BulletManager>();
             bulletManager.StartDestroy(_bulletDestroyTime);
             bulletManager.SetProperty(_bulletMaxDamage, _bulletMinDamage, _bulletAttenuation);
-
             bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(_bulletVelocity * Mathf.Sign(transform.localScale.x), 0);
+
+            _currentSpiritPower -= 10;
+            SpiritGauge.fillAmount = _currentSpiritPower / _maxSpiritPower;
         }
         else
         {
@@ -565,10 +578,54 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void HitDamage(float Damage)
+    void HitDamage(float damage)
     {
-        _currentHealth -= Damage;
+        _currentHealth -= damage;
         HealthGauge.fillAmount = _currentHealth / _maxHealth;
+
+        if (effectCoroutine != null)
+        {
+            StopCoroutine(effectCoroutine);
+        }
+        effectCoroutine = StartCoroutine(Effect(0));
     }
 
+    public void HitHeal(float healAmount)
+    {
+        _currentHealth = Mathf.Min(_currentHealth + healAmount, _maxHealth);
+        HealthGauge.fillAmount = _currentHealth / _maxHealth;
+
+        if (effectCoroutine != null)
+        {
+            StopCoroutine(effectCoroutine);
+        }
+        effectCoroutine = StartCoroutine(Effect(1));
+    }
+
+    public void SpiritPowerIncrease(float increasePower)
+    {
+        _currentSpiritPower = Mathf.Min(_currentSpiritPower + increasePower, _maxSpiritPower);
+        SpiritGauge.fillAmount = _currentSpiritPower / _maxSpiritPower;
+    }
+
+    IEnumerator Effect(int number)
+    {
+        switch (number)
+        {
+            case 0:
+                _spriteRenderer.color = Color.red;
+
+                yield return new WaitForSeconds(0.1f);
+
+                _spriteRenderer.color = Color.white;
+                break;
+
+            case 1:
+                _spriteRenderer.color = Color.green;
+
+                yield return new WaitForSeconds(0.1f);
+                _spriteRenderer.color = Color.white;
+                break;
+        }
+    }
 }

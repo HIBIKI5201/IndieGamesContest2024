@@ -1,6 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using System.Threading;
 using UnityEngine;
 using static EnemyBulletManager;
 
@@ -21,11 +20,15 @@ public class EnemyManager : MonoBehaviour
     }
 
     [Header("ëÃóÕån")]
-    [ReadOnly,Tooltip("ìGÇÃç≈ëÂëÃóÕ")]
+    [ReadOnly, Tooltip("ìGÇÃç≈ëÂëÃóÕ")]
     float _maxHealth;
-    [SerializeField,ReadOnly,Tooltip("åªç›ÇÃëÃóÕ")]
+    [SerializeField, ReadOnly, Tooltip("åªç›ÇÃëÃóÕ")]
     float _currentHealth;
     public bool _moveActive;
+
+    [SerializeField]
+    float _invincibleTime;
+    float _invincibleTimer;
 
     [Header("à⁄ìÆån")]
     [SerializeField, Tooltip("à⁄ìÆë¨ìx")]
@@ -73,13 +76,12 @@ public class EnemyManager : MonoBehaviour
     {
         if (_moveActive)
         {
-            _spriteRenderer.color = Color.white;
-
             if (_player.transform.position.x - transform.position.x > 0)
             {
                 _rigidbody2D.velocity = new Vector2(_moveSpeed, _rigidbody2D.velocity.y);
                 transform.localScale = new Vector2(_firstScale.x, transform.localScale.y);
-            } else
+            }
+            else
             {
                 _rigidbody2D.velocity = new Vector2(-_moveSpeed, _rigidbody2D.velocity.y);
                 transform.localScale = new Vector2(-_firstScale.x, transform.localScale.y);
@@ -108,21 +110,19 @@ public class EnemyManager : MonoBehaviour
 
             HitDamage(_playerController._attackDamage);
 
-            Debug.Log($"åªç›ÇÃëÃóÕÇÕ{_currentHealth}");
+            _playerController.SpiritPowerIncrease(5);
         }
 
         if (collision.gameObject.CompareTag("Bullet"))
         {
             BulletManager bulletManager = collision.GetComponent<BulletManager>();
             HitDamage(Mathf.Clamp(Vector2.Distance(bulletManager._firstPos, transform.position) / bulletManager.inBullet_bulletAttenuation * bulletManager.inBullet_bulletMaxDamage, bulletManager.inBullet_bulletMinDamage, bulletManager.inBullet_bulletMaxDamage));
-
-            Debug.Log($"åªç›ÇÃëÃóÕÇÕ{_currentHealth}");
         }
     }
 
     IEnumerator Shoot()
     {
-            PS.Play();
+        PS.Play();
 
         yield return new WaitForSeconds(3);
 
@@ -141,12 +141,30 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    void HitDamage(float damage)
+    public void HitDamage(float damage)
     {
-        _currentHealth -= damage;
-        if (_currentHealth <= 0)
+        if (_invincibleTime + _invincibleTimer < Time.time)
         {
-            Destroy(this.gameObject);
+            _invincibleTimer = Time.time;
+
+            _currentHealth -= damage;
+            Debug.Log($"åªç›ÇÃëÃóÕÇÕ{_currentHealth}");
+
+            StartCoroutine(HitEffect());
+
+            if (_currentHealth <= 0)
+            {
+                Destroy(this.gameObject);
+            }
         }
+    }
+
+    IEnumerator HitEffect()
+    {
+        Debug.Log("ÉGÉtÉFÉNÉgÇê∂ê¨");
+
+        _spriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        _spriteRenderer.color = Color.white;
     }
 }

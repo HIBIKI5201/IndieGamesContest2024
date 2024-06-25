@@ -37,8 +37,9 @@ public class SkillOneManager : MonoBehaviour
 
             if (_timer + _fireTime < Time.time)
             {
-                Debug.Log("‰Šƒ_ƒ[ƒW");
                 _timer = Time.time;
+                collision.GetComponent<EnemyManager>().HitDamage(10);
+
             }
         }
     }

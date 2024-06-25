@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4.415409, y: 1.8200918, z: -4.9006324}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5, y: 5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -72,15 +72,15 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 2108787507
-  m_SortingLayer: 2
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 7482667652216324306, guid: ddaf02df980d69c488b060ce2a0bb570, type: 3}
-  m_Color: {r: 0.26981127, g: 0.6896792, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: e7461d64354dcf6498630b5639d539ff, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_DrawMode: 1
+  m_Size: {x: 0.5, y: 0.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -133,4 +133,4 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.21133333}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 2
