@@ -183,10 +183,14 @@ public class PlayerController : MonoBehaviour
 
         _playerMode = PlayerMode.Sun;
 
+        SkillTwoIconGauge.fillAmount = 0.5f;
+
         _currentHealth = _maxHealth;
 
         _moveActive = true;
         _canJump = true;
+
+        PlayerAnimator.SetBool("SunMoon", true);
 
         _gravity = PlayerRigidBody.gravityScale;
         _firstScale = transform.localScale;
@@ -228,6 +232,7 @@ public class PlayerController : MonoBehaviour
                     _playerMode = PlayerMode.Moon;
                     Debug.Log("陰形態に変形");
                     ModeAnimator.SetBool("Exchange", true);
+                    PlayerAnimator.SetBool("SunMoon", false);
                 }
                 //陽形態に変形
                 else
@@ -235,6 +240,7 @@ public class PlayerController : MonoBehaviour
                     _playerMode = PlayerMode.Sun;
                     Debug.Log("陽形態に変形");
                     ModeAnimator.SetBool("Exchange", false);
+                    PlayerAnimator.SetBool("SunMoon", true);
                 }
 
                 _modeTimer = Time.time;
@@ -258,6 +264,7 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("スキル１ リキャストタイム中");
                 }
             }
+
 
             //スキル２
             if (Input.GetKeyDown(KeyCode.RightBracket))
@@ -424,6 +431,7 @@ public class PlayerController : MonoBehaviour
 
             //弾丸を発射
             GameObject bullet = Instantiate(Bullet, transform.position, Quaternion.Euler(0, 0, -90 * Mathf.Sign(transform.localScale.x)));
+            bullet.transform.localScale = new Vector3(Mathf.Sign(transform.localScale.x) * bullet.transform.localScale.x, bullet.transform.localScale.y, bullet.transform.localScale.z);
             BulletManager bulletManager = bullet.GetComponent<BulletManager>();
             bulletManager.StartDestroy(_bulletDestroyTime);
             bulletManager.SetProperty(_bulletMaxDamage, _bulletMinDamage, _bulletAttenuation);

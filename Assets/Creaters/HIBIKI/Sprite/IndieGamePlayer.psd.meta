@@ -40,7 +40,7 @@ ScriptedImporter:
     spriteMeshType: 1
     alignment: 0
     spritePivot: {x: 0.5, y: 0.5}
-    spritePixelsToUnits: 100
+    spritePixelsToUnits: 300
     spriteBorder: {x: 0, y: 0, z: 0, w: 0}
     spriteGenerateFallbackPhysicsShape: 0
     generateCubemap: 6
@@ -99,6 +99,27 @@ ScriptedImporter:
     spritePosition: {x: 0, y: 0}
   mosaicSpriteImportData: []
   rigSpriteImportData:
+  - name: "\u30EC\u30A4\u30E4\u30FC 3"
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 1292
+      width: 520
+      height: 610
+    spriteID: e69cb9502d80946418b30ddbd71a4265
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 1292}
+    spritePosition: {x: 380, y: 50}
   - name: "\u30EC\u30A4\u30E4\u30FC 4"
     originalName: 
     pivot: {x: 0.5, y: 0.5}
@@ -110,7 +131,7 @@ ScriptedImporter:
       y: 4
       width: 590
       height: 600
-    spriteID: e69cb9502d80946418b30ddbd71a4265
+    spriteID: 5baed3bd21be1804b9644279f195ab8f
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -120,69 +141,6 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
     spritePosition: {x: 496, y: 48}
-  - name: "\u30EC\u30A4\u30E4\u30FC 3"
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 4
-      y: 612
-      width: 520
-      height: 618
-    spriteID: d7142a64035f49f4ca7127c80edaad75
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 4, y: 612}
-    spritePosition: {x: 380, y: 50}
-  - name: "\u30EC\u30A4\u30E4\u30FC 2"
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 532
-      y: 612
-      width: 520
-      height: 620
-    spriteID: 10e7e571e7e75fa489bab7b309f398e4
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 532, y: 612}
-    spritePosition: {x: 380, y: 50}
-  - name: "\u30EC\u30A4\u30E4\u30FC 1"
-    originalName: 
-    pivot: {x: 0.5, y: 0.5}
-    alignment: 0
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 1060
-      y: 612
-      width: 520
-      height: 620
-    spriteID: 5d3ff82e8476a1545a3516873e03e848
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 1060, y: 612}
-    spritePosition: {x: 380, y: 50}
   - name: IndieGamePlayer_0
     originalName: 
     pivot: {x: 0.5, y: 0.5}
@@ -190,11 +148,11 @@ ScriptedImporter:
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
-      x: 1162
-      y: 1150
-      width: 524
-      height: 380
-    spriteID: b373245086f4bb44daa7e4a0b12a284b
+      x: 531
+      y: 1293
+      width: 526
+      height: 609
+    spriteID: e6c6cd44803cb5948a9c58b550095019
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -202,7 +160,91 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 1162, y: 1150}
+    uvTransform: {x: 531, y: 1293}
+    spritePosition: {x: 0, y: 0}
+  - name: IndieGamePlayer_1
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 1058
+      y: 1293
+      width: 523
+      height: 607
+    spriteID: cd809d09ec1819547899588fb4f15371
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 1058, y: 1293}
+    spritePosition: {x: 0, y: 0}
+  - name: IndieGamePlayer_2
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 1056
+      y: 608
+      width: 518
+      height: 599
+    spriteID: 6c57d5dec94c8c347b03669c91eee351
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 1056, y: 608}
+    spritePosition: {x: 0, y: 0}
+  - name: IndieGamePlayer_3
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 529
+      y: 612
+      width: 521
+      height: 604
+    spriteID: 2dc2639bc10ca2047b75a36f07120ce0
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 529, y: 612}
+    spritePosition: {x: 0, y: 0}
+  - name: IndieGamePlayer_4
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 614
+      width: 518
+      height: 615
+    spriteID: 0a934feaaa741594d8a511da5c96497d
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 614}
     spritePosition: {x: 0, y: 0}
   characterData:
     bones: []
@@ -219,7 +261,43 @@ ScriptedImporter:
     characterGroups: []
     pivot: {x: 0, y: 0}
     boneReadOnly: 0
-  platformSettings: []
+  platformSettings:
+  - name: DefaultTexturePlatform
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  - name: Standalone
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  - name: WebGL
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
   mosaicLayers: 1
   characterMode: 1
   documentPivot: {x: 0, y: 0}
@@ -246,7 +324,7 @@ ScriptedImporter:
     parentIndex: -1
     spriteID: d7142a64035f49f4ca7127c80edaad75
     layerID: 1172823507
-    mosaicPosition: {x: 4, y: 612}
+    mosaicPosition: {x: 1056, y: 612}
     flatten: 0
     isImported: 1
     isVisible: 1
@@ -256,7 +334,7 @@ ScriptedImporter:
     parentIndex: -1
     spriteID: 10e7e571e7e75fa489bab7b309f398e4
     layerID: -1556059848
-    mosaicPosition: {x: 532, y: 612}
+    mosaicPosition: {x: 4, y: 612}
     flatten: 0
     isImported: 1
     isVisible: 1
@@ -266,7 +344,37 @@ ScriptedImporter:
     parentIndex: -1
     spriteID: 5d3ff82e8476a1545a3516873e03e848
     layerID: -1959344375
-    mosaicPosition: {x: 1060, y: 612}
+    mosaicPosition: {x: 530, y: 612}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: "\u30EC\u30A4\u30E4\u30FC 3"
+    spriteName: "\u30EC\u30A4\u30E4\u30FC 3"
+    isGroup: 0
+    parentIndex: -1
+    spriteID: e69cb9502d80946418b30ddbd71a4265
+    layerID: 0
+    mosaicPosition: {x: 4, y: 1292}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: "\u30EC\u30A4\u30E4\u30FC 2"
+    spriteName: "\u30EC\u30A4\u30E4\u30FC 2"
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 10e7e571e7e75fa489bab7b309f398e4
+    layerID: -1556059848
+    mosaicPosition: {x: 4, y: 612}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: "\u30EC\u30A4\u30E4\u30FC 1"
+    spriteName: "\u30EC\u30A4\u30E4\u30FC 1"
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 5d3ff82e8476a1545a3516873e03e848
+    layerID: -1959344375
+    mosaicPosition: {x: 530, y: 612}
     flatten: 0
     isImported: 1
     isVisible: 1
@@ -274,8 +382,8 @@ ScriptedImporter:
     spriteName: "\u30EC\u30A4\u30E4\u30FC 4"
     isGroup: 0
     parentIndex: -1
-    spriteID: e69cb9502d80946418b30ddbd71a4265
-    layerID: 0
+    spriteID: 5baed3bd21be1804b9644279f195ab8f
+    layerID: 1932338394
     mosaicPosition: {x: 4, y: 4}
     flatten: 0
     isImported: 1
