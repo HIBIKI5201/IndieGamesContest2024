@@ -72,6 +72,9 @@ public class PlayerController : MonoBehaviour
     Vector2 _firstScale;
 
     [Header("攻撃ステータス")]
+    [SerializeField, Tooltip("通常攻撃を行っているか")]
+    bool _attackActive;
+
     [SerializeField, Tooltip("近接判定を持つオブジェクト")]
     GameObject AttackRangeObject;
 
@@ -299,7 +302,7 @@ public class PlayerController : MonoBehaviour
             #endregion
 
             //アニメーション系
-            if (AttackRangeObject.activeSelf)
+            if (_attackActive)
             {
                 PlayerAnimator.SetInteger("AnimationNumber", 2);
             }
@@ -420,6 +423,7 @@ public class PlayerController : MonoBehaviour
         if (_playerMode == PlayerMode.Sun && _attackTimer + _attackSpeed < Time.time)
         {
             _attackTimer = Time.time;
+            _attackActive = true;
             Debug.Log("近接攻撃発動");
 
             //近接攻撃当たり判定を出現
@@ -432,15 +436,18 @@ public class PlayerController : MonoBehaviour
 
             AttackRangeObject.SetActive(false);
             _moveActive = true;
+
+            _attackActive = false;
         }
         //遠距離攻撃
-        else if (_playerMode == PlayerMode.Moon && _fireTimer + _fireSpeed < Time.time && _currentSpiritPower > 0)
+        else if (_playerMode == PlayerMode.Moon && _fireTimer + _fireSpeed < Time.time && _currentSpiritPower >= 10)
         {
             _fireTimer = Time.time;
+            _attackActive = true;
             Debug.Log("遠距離攻撃発動");
 
             //弾丸を発射
-            GameObject bullet = Instantiate(Bullet, transform.position, Quaternion.Euler(0, 0, -90 * Mathf.Sign(transform.localScale.x)));
+            GameObject bullet = Instantiate(Bullet, transform.position + new Vector3(Mathf.Sign(transform.localScale.x) * 1.5f,0 ,0), Quaternion.Euler(0, 0, -90 * Mathf.Sign(transform.localScale.x)));
             bullet.transform.localScale = new Vector3(Mathf.Sign(transform.localScale.x) * bullet.transform.localScale.x, bullet.transform.localScale.y, bullet.transform.localScale.z);
 
             BulletManager bulletManager = bullet.GetComponent<BulletManager>();
@@ -450,6 +457,15 @@ public class PlayerController : MonoBehaviour
 
             _currentSpiritPower -= 10;
             SpiritGauge.fillAmount = _currentSpiritPower / _maxSpiritPower;
+
+            _moveActive = false;
+            PlayerRigidBody.AddForce(Vector2.left * horizontal * 3, ForceMode2D.Impulse);
+
+            yield return new WaitForSeconds(0.2f);
+
+            _moveActive = true;
+
+            _attackActive = false;
         }
         else
         {
@@ -484,8 +500,6 @@ public class PlayerController : MonoBehaviour
         skillManager._skillOneDuration = _skillOneDuration;
         skillManager._fireTime = _skillOneFireInterval;
         skillObject.transform.localScale = new Vector3(_skillOneRange, 1, 1);
-
-
     }
 
     IEnumerator SkillTwo()
@@ -604,6 +618,8 @@ public class PlayerController : MonoBehaviour
 
     public void SpiritPowerIncrease(float increasePower)
     {
+        Debug.Log(increasePower);
+
         _currentSpiritPower = Mathf.Min(_currentSpiritPower + increasePower, _maxSpiritPower);
         SpiritGauge.fillAmount = _currentSpiritPower / _maxSpiritPower;
     }
