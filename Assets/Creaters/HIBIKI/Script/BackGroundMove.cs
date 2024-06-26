@@ -12,6 +12,8 @@ public class BackGroundMove : MonoBehaviour
 
     [SerializeField, Tooltip("ˆÚ“®‘¬“x‚Ì”{—¦")]
     float _moveSpeed;
+
+
     void Start()
     {
         lastPlayerPos = Player.transform.position;
