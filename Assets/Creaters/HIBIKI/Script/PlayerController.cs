@@ -6,9 +6,6 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField, ReadOnly]
-    float test;
-
     [Header("プレイヤー")]
     [ReadOnly, Tooltip("陰陽の形態")]
     public PlayerMode _playerMode;
@@ -19,6 +16,7 @@ public class PlayerController : MonoBehaviour
     }
     [Tooltip("陰陽変形のタイマー")]
     float _modeTimer;
+
 
     [Header("体力ステータス")]
     [SerializeField, Tooltip("プレイヤーの最大ヘルス")]
@@ -36,6 +34,7 @@ public class PlayerController : MonoBehaviour
     Image HealthGauge;
     [SerializeField]
     Image SpiritGauge;
+
 
     [Header("移動ステータス")]
     Rigidbody2D PlayerRigidBody;
@@ -71,6 +70,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Tooltip("初期の大きさ")]
     Vector2 _firstScale;
 
+
     [Header("攻撃ステータス")]
     [SerializeField, Tooltip("通常攻撃を行っているか")]
     bool _attackActive;
@@ -90,6 +90,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField, Tooltip("発射する弾丸プレハブ")]
     GameObject Bullet;
+    [SerializeField, Tooltip("弾丸が発射される地点のオフセット")]
+    Vector2 _bulletFirePosOffset;
 
     [SerializeField, Tooltip("次の射撃を行えるまでのリキャストタイム")]
     float _fireSpeed = 0.1f;
@@ -107,6 +109,7 @@ public class PlayerController : MonoBehaviour
     float _bulletMinDamage = 30;
     [SerializeField, Tooltip("弾丸の距離減衰")]
     float _bulletAttenuation = 5;
+
 
     [Header("スキル")]
 
@@ -175,13 +178,22 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     SpriteRenderer _spriteRenderer;
+
     Coroutine effectCoroutine;
+
 
     [Header("アニメーション関係")]
     Animator PlayerAnimator;
 
     [SerializeField]
     Animator ModeAnimator;
+
+    [Space]
+
+    [SerializeField, Tooltip("被ダメを受けた時のカラー")]
+    Color _hitDamageColor;
+    [SerializeField, Tooltip("回復を受けた時のカラー")]
+    Color _hitHealColor;
 
     //プロパティ
     [HideInInspector, Tooltip("プレイヤーの移動速度")]
@@ -453,7 +465,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("遠距離攻撃発動");
 
             //弾丸を発射
-            GameObject bullet = Instantiate(Bullet, transform.position + new Vector3(Mathf.Sign(transform.localScale.x) * 1.5f,0 ,0), Quaternion.Euler(0, 0, -90 * Mathf.Sign(transform.localScale.x)));
+            GameObject bullet = Instantiate(Bullet, transform.position + new Vector3(Mathf.Sign(transform.localScale.x) * _bulletFirePosOffset.x,_bulletFirePosOffset.y ,0), Quaternion.Euler(0, 0, -90 * Mathf.Sign(transform.localScale.x)));
             bullet.transform.localScale = new Vector3(Mathf.Sign(transform.localScale.x) * bullet.transform.localScale.x, bullet.transform.localScale.y, bullet.transform.localScale.z);
 
             BulletManager bulletManager = bullet.GetComponent<BulletManager>();
@@ -608,6 +620,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //ダメージを受けた時
     void HitDamage(float damage)
     {
         _currentHealth -= damage;
@@ -625,6 +638,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //回復を受けた時
     public void HitHeal(float healAmount)
     {
         _currentHealth = Mathf.Min(_currentHealth + healAmount, _maxHealth);
@@ -637,6 +651,7 @@ public class PlayerController : MonoBehaviour
         effectCoroutine = StartCoroutine(Effect(1));
     }
 
+    //妖力が回復した時
     public void SpiritPowerIncrease(float increasePower)
     {
         Debug.Log(increasePower);
@@ -645,20 +660,23 @@ public class PlayerController : MonoBehaviour
         SpiritGauge.fillAmount = _currentSpiritPower / _maxSpiritPower;
     }
 
+    //体のエフェクト効果
     IEnumerator Effect(int number)
     {
         switch (number)
         {
+            //被ダメを受けたと時のカラー
             case 0:
-                _spriteRenderer.color = Color.red;
+                _spriteRenderer.color = _hitDamageColor;
 
                 yield return new WaitForSeconds(0.1f);
 
                 _spriteRenderer.color = Color.white;
                 break;
 
+            //回復した時のカラー
             case 1:
-                _spriteRenderer.color = Color.green;
+                _spriteRenderer.color = _hitHealColor;
 
                 yield return new WaitForSeconds(0.1f);
                 _spriteRenderer.color = Color.white;
