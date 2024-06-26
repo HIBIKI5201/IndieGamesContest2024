@@ -122,7 +122,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Tooltip("朱雀スキルのチャージ時間")]
     float _skillOneChargeTime = 1;
 
-    [SerializeField, Tooltip("青龍のスキル効果時間")]
+    [SerializeField, Tooltip("朱雀のスキル効果時間")]
     float _skillOneDuration = 5;
     [SerializeField, Tooltip("朱雀スキルの攻撃範囲")]
     float _skillOneRange = 3;
@@ -246,6 +246,8 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("陰形態に変形");
                     ModeAnimator.SetBool("Exchange", true);
                     PlayerAnimator.SetBool("SunMoon", false);
+
+                    SoundManager.ChangeMoon();
                 }
                 //陽形態に変形
                 else
@@ -254,6 +256,8 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("陽形態に変形");
                     ModeAnimator.SetBool("Exchange", false);
                     PlayerAnimator.SetBool("SunMoon", true);
+
+                    SoundManager.ChangeSun();
                 }
 
                 _modeTimer = Time.time;
@@ -432,6 +436,8 @@ public class PlayerController : MonoBehaviour
 
             PlayerRigidBody.AddForce(Vector2.left * horizontal * 3, ForceMode2D.Impulse);
 
+            SoundManager.Attack();
+
             yield return new WaitForSeconds(0.2f);
 
             AttackRangeObject.SetActive(false);
@@ -461,6 +467,8 @@ public class PlayerController : MonoBehaviour
             _moveActive = false;
             PlayerRigidBody.AddForce(Vector2.left * horizontal * 3, ForceMode2D.Impulse);
 
+            SoundManager.Fire();
+
             yield return new WaitForSeconds(0.2f);
 
             _moveActive = true;
@@ -476,6 +484,8 @@ public class PlayerController : MonoBehaviour
     IEnumerator SkillOne()
     {
         _skillOneCTtimer = Time.time;
+
+        SoundManager.SkillOne();
         Debug.Log("朱雀スキル発動");
 
         _moveActive = false;
@@ -505,6 +515,8 @@ public class PlayerController : MonoBehaviour
     IEnumerator SkillTwo()
     {
         _skillTwoCTtimer = Time.time;
+
+        SoundManager.SkillTwo();
         Debug.Log("白虎スキル発動");
 
         _moveActive = false;
@@ -526,6 +538,8 @@ public class PlayerController : MonoBehaviour
     void SkillThree()
     {
         _skillThreeCTtimer = Time.time;
+
+        SoundManager.SkillThree();
         Debug.Log("青龍スキル発動");
 
         //スキルのオブジェクトを出現させる
@@ -538,6 +552,8 @@ public class PlayerController : MonoBehaviour
     IEnumerator SkillFour()
     {
         _skillFourCTtimer = Time.time;
+
+        SoundManager.SkillFour();
         Debug.Log("玄武スキル発動");
 
         //敵を全て取得し処理
@@ -602,6 +618,11 @@ public class PlayerController : MonoBehaviour
             StopCoroutine(effectCoroutine);
         }
         effectCoroutine = StartCoroutine(Effect(0));
+
+        if (_currentHealth <= 0)
+        {
+            SceneChanger.LoadHIBIKIScene();
+        }
     }
 
     public void HitHeal(float healAmount)

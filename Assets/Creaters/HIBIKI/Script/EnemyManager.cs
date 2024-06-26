@@ -108,9 +108,12 @@ public class EnemyManager : MonoBehaviour
         {
             _currentHealth -= _playerController._attackDamage;
 
+            if (_invincibleTime + _invincibleTimer < Time.time)
+            {
+                _playerController.SpiritPowerIncrease(5);
+            }
+ 
             HitDamage(_playerController._attackDamage);
-
-            _playerController.SpiritPowerIncrease(5);
         }
 
         if (collision.gameObject.CompareTag("Bullet"))
@@ -154,6 +157,7 @@ public class EnemyManager : MonoBehaviour
 
             if (_currentHealth <= 0)
             {
+                SceneChanger.KillEnemey();
                 Destroy(this.gameObject);
             }
         }
