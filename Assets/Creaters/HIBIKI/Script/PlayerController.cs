@@ -213,12 +213,17 @@ public class PlayerController : MonoBehaviour
         _currentSpiritPower = _maxSpiritPower;
 
         _moveActive = true;
-        _canJump = true;
+        _canJump = false;
 
         PlayerAnimator.SetBool("SunMoon", true);
 
         _gravity = PlayerRigidBody.gravityScale;
         _firstScale = transform.localScale;
+
+        _skillOneCTtimer = Time.time;
+        _skillTwoCTtimer = Time.time;
+        _skillThreeCTtimer = Time.time;
+        _skillFourCTtimer = Time.time;
 
         DOTween.To(() => (float)0, x => SkillOneIconGauge.fillAmount = x, 1, _skillOneCT).SetEase(Ease.Linear);
         DOTween.To(() => (float)0, x => SkillTwoIconGauge.fillAmount = x, 1, _skillTwoCT).SetEase(Ease.Linear);
@@ -228,14 +233,13 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-
-
         float horizontal = Input.GetAxisRaw("Horizontal");
 
         if (_moveActive)
         {
             //移動
             StartCoroutine(Move(horizontal));
+
 
             //攻撃系
             #region
@@ -446,7 +450,7 @@ public class PlayerController : MonoBehaviour
             AttackRangeObject.SetActive(true);
             _moveActive = false;
 
-            PlayerRigidBody.AddForce(Vector2.left * horizontal * 3, ForceMode2D.Impulse);
+            PlayerRigidBody.AddForce(Vector2.left * PlayerRigidBody.velocity.x * 1.2f, ForceMode2D.Impulse);
 
             SoundManager.Attack();
 
@@ -477,9 +481,9 @@ public class PlayerController : MonoBehaviour
             SpiritGauge.fillAmount = _currentSpiritPower / _maxSpiritPower;
 
             _moveActive = false;
-            PlayerRigidBody.AddForce(Vector2.left * horizontal * 3, ForceMode2D.Impulse);
 
             SoundManager.Fire();
+            PlayerRigidBody.AddForce(Vector2.left * PlayerRigidBody.velocity.x * 1.2f, ForceMode2D.Impulse);
 
             yield return new WaitForSeconds(0.2f);
 
@@ -589,35 +593,18 @@ public class PlayerController : MonoBehaviour
         DOTween.To(() => (float)0, x => SkillFourIconGauge.fillAmount = x, 1, _skillFourCT).SetEase(Ease.Linear);
 
         //効果時間終了の処理
-        if (_skillFourRestraintTime < _skillFourShieldTime)
+
+        yield return new WaitForSeconds(_skillFourRestraintTime < _skillFourShieldTime ? _skillFourRestraintTime : _skillFourShieldTime);
+
+        Debug.Log("玄武スキルの拘束時間終了");
+        foreach (GameObject obj in closestEnemies)
         {
-            yield return new WaitForSeconds(_skillFourRestraintTime);
-
-            Debug.Log("玄武スキルの拘束時間終了");
-            foreach (GameObject obj in closestEnemies)
-            {
-                obj.GetComponent<EnemyManager>()._moveActive = true;
-            }
-
-            yield return new WaitForSeconds(_skillFourShieldTime - _skillFourRestraintTime);
-
-            Debug.Log("玄武スキルのシールド維持時間終了");
+            obj.GetComponent<EnemyManager>()._moveActive = true;
         }
-        else
-        {
-            yield return new WaitForSeconds(_skillFourShieldTime);
 
-            Debug.Log("玄武スキルのシールド維持時間終了");
+        yield return new WaitForSeconds(_skillFourRestraintTime < _skillFourShieldTime ? _skillFourShieldTime -_skillFourRestraintTime : _skillFourRestraintTime - _skillFourShieldTime);
 
-            yield return new WaitForSeconds(_skillFourRestraintTime - _skillFourShieldTime);
-
-            Debug.Log("玄武スキルの拘束時間終了");
-
-            foreach (GameObject obj in closestEnemies)
-            {
-                obj.GetComponent<EnemyManager>()._moveActive = true;
-            }
-        }
+        Debug.Log("玄武スキルのシールド維持時間終了");
     }
 
     //ダメージを受けた時

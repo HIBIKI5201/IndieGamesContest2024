@@ -57,6 +57,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
+      propertyPath: _maxHealth
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
       propertyPath: _attackRange
       value: 12
       objectReference: {fileID: 0}
@@ -69,8 +73,16 @@ PrefabInstance:
       value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
+      propertyPath: _deadZonePoint
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
       propertyPath: _attackInterval
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
+      propertyPath: _deadZoneWeight
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
       propertyPath: _invincibleTime

@@ -20,19 +20,25 @@ public class EnemyManager : MonoBehaviour
     }
 
     [Header("体力系")]
-    [ReadOnly, Tooltip("敵の最大体力")]
-    float _maxHealth;
+    [SerializeField, Tooltip("敵の最大体力")]
+    float _maxHealth = 100;
     [SerializeField, ReadOnly, Tooltip("現在の体力")]
     float _currentHealth;
     public bool _moveActive;
 
-    [SerializeField]
+    [SerializeField, Tooltip("無敵時間")]
     float _invincibleTime;
     float _invincibleTimer;
 
     [Header("移動系")]
     [SerializeField, Tooltip("移動速度")]
     float _moveSpeed;
+
+    [SerializeField, Tooltip("デッドゾーンの中心点")]
+    float _deadZonePoint;
+    [SerializeField, Tooltip("デッドゾーンの範囲")]
+    float _deadZoneWeight;
+
     [Tooltip("初期のスケール")]
     Vector2 _firstScale;
 
@@ -54,6 +60,7 @@ public class EnemyManager : MonoBehaviour
 
     [SerializeField]
     ParticleSystem PS;
+
     void Start()
     {
         _maxHealth = 500;
@@ -76,20 +83,41 @@ public class EnemyManager : MonoBehaviour
     {
         if (_moveActive)
         {
-            if (_player.transform.position.x - transform.position.x > 0)
+            if (Vector2.Distance(transform.position, _player.transform.position) > _deadZonePoint + _deadZoneWeight / 2)
             {
-                _rigidbody2D.velocity = new Vector2(_moveSpeed, _rigidbody2D.velocity.y);
-                transform.localScale = new Vector2(_firstScale.x, transform.localScale.y);
-            }
-            else
-            {
-                _rigidbody2D.velocity = new Vector2(-_moveSpeed, _rigidbody2D.velocity.y);
-                transform.localScale = new Vector2(-_firstScale.x, transform.localScale.y);
+                //プレイヤーに向けて歩く
+                if (_player.transform.position.x - transform.position.x > 0)
+                {
+                    _rigidbody2D.velocity = new Vector2(_moveSpeed, _rigidbody2D.velocity.y);
+                    transform.localScale = new Vector2(_firstScale.x, transform.localScale.y);
+                }
+
+                else
+                {
+                    _rigidbody2D.velocity = new Vector2(-_moveSpeed, _rigidbody2D.velocity.y);
+                    transform.localScale = new Vector2(-_firstScale.x, transform.localScale.y);
+                }
+
+                if (_enemyKind == EnemyKind.MeleeEnemy)
+                {
+
+                }
             }
 
-            if (_enemyKind == EnemyKind.MeleeEnemy)
+            else if (Vector2.Distance(transform.position, _player.transform.position) < _deadZonePoint - _deadZoneWeight / 2)
             {
+                //プレイヤーから遠ざかる
+                if (_player.transform.position.x - transform.position.x > 0)
+                {
+                    _rigidbody2D.velocity = new Vector2(-_moveSpeed, _rigidbody2D.velocity.y);
+                    transform.localScale = new Vector2(_firstScale.x, transform.localScale.y);
+                }
 
+                else
+                {
+                    _rigidbody2D.velocity = new Vector2(_moveSpeed, _rigidbody2D.velocity.y);
+                    transform.localScale = new Vector2(-_firstScale.x, transform.localScale.y);
+                }
             }
         }
 
