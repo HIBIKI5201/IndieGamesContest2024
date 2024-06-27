@@ -280,7 +280,7 @@ public class PlayerController : MonoBehaviour
             }
 
             //スキル１
-            if (Input.GetKeyDown(KeyCode.Backslash))
+            if (Input.GetKeyDown(KeyCode.Q))
             {
                 if (_playerMode == PlayerMode.Sun && _skillOneCT + _skillOneCTtimer < Time.time)
                 {
@@ -300,7 +300,7 @@ public class PlayerController : MonoBehaviour
 
 
             //スキル２
-            if (Input.GetKeyDown(KeyCode.RightBracket))
+            if (Input.GetKeyDown(KeyCode.E))
             {
                 if (_playerMode == PlayerMode.Sun && _skillTwoCT + _skillTwoCTtimer < Time.time)
                 {
@@ -397,7 +397,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //ジャンプ
-        if (Input.GetKeyDown(KeyCode.W) && _canJump)
+        if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && _canJump)
         {
             PlayerRigidBody.velocity = new Vector2(PlayerRigidBody.velocity.x, 0);
             PlayerRigidBody.AddForce(Vector2.up * _jumpPower, ForceMode2D.Impulse);
@@ -411,7 +411,7 @@ public class PlayerController : MonoBehaviour
             _moveActive = true;
         }
 
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
             _jumpTimer += Time.deltaTime;
 
@@ -427,7 +427,7 @@ public class PlayerController : MonoBehaviour
             PlayerRigidBody.gravityScale = _gravity;
         }
 
-        if (Input.GetKeyUp(KeyCode.W))
+        if ((Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow)))
         {
             if (!_isGround)
             {
