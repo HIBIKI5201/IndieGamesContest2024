@@ -279,9 +279,13 @@ public class PlayerController : MonoBehaviour
                 _modeTimer = Time.time;
             }
 
+            bool skillActive = false;
+
             //スキル１
-            if (Input.GetKeyDown(KeyCode.Q))
+            if (Input.GetKeyDown(KeyCode.Q) && !skillActive)
             {
+                skillActive = true;
+
                 if (_playerMode == PlayerMode.Sun && _skillOneCT + _skillOneCTtimer < Time.time)
                 {
                     //朱雀スキルを発動
@@ -300,8 +304,10 @@ public class PlayerController : MonoBehaviour
 
 
             //スキル２
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) && !skillActive)
             {
+                skillActive = true;
+
                 if (_playerMode == PlayerMode.Sun && _skillTwoCT + _skillTwoCTtimer < Time.time)
                 {
                     //白虎スキルを発動
