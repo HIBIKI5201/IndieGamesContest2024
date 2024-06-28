@@ -373,9 +373,6 @@ public class PlayerController : MonoBehaviour
                     _wallTouch = 0;
                 }
             }
-
-
-            Debug.Log("’n–Ê‚ÉÚG");
             _lastNormal = collision.contacts[0].normal;
         }
     }
@@ -593,6 +590,8 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Œº•ƒXƒLƒ‹”­“®");
 
         //“G‚ð‘S‚ÄŽæ“¾‚µˆ—
+
+        /*
         GameObject[] closestEnemies = GameObject.FindGameObjectsWithTag("Enemy")
             .OrderBy(go => Vector2.Distance(go.transform.position, transform.position))
             .Take(5)
@@ -609,6 +608,31 @@ public class PlayerController : MonoBehaviour
                 Debug.Log($"{obj.gameObject.name}‚ÍŒø‰Ê”ÍˆÍŠO");
             }
         }
+
+        */
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.right * Mathf.Sign(transform.localScale.x), _skillFourRange);
+
+        GameObject[] closestEnemies = new GameObject[hits.Length];
+        if (hits.Length > 0)
+        {
+            closestEnemies = hits
+                .Select(hit => hit.collider.gameObject)
+                .Where(go => go.CompareTag("Enemy"))
+                .OrderBy(go => Vector2.Distance(go.transform.position, transform.position))
+                .Take(5)
+                .ToArray();
+
+            foreach(GameObject enemy in closestEnemies)
+            {
+                enemy.GetComponent<EnemyManager>()._moveActive = false;
+            }
+        }
+
+        foreach (GameObject obj in closestEnemies)
+        {
+            Debug.Log($"{obj.name}‚ªS‘©‚³‚ê‚½");
+        }
+
 
         DOTween.To(() => (float)0, x => SkillFourIconGauge.fillAmount = x, 1, _skillFourCT).SetEase(Ease.Linear);
 
