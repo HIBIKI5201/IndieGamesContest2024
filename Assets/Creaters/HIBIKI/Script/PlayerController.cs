@@ -63,6 +63,8 @@ public class PlayerController : MonoBehaviour
     bool firstJump;
     [Tooltip("壁に当たっている時の法線水平方向")]
     float _wallTouch;
+    [Tooltip("最後に当たったGroundの法線方向")]
+    Vector2 _lastNormal;
 
     [SerializeField, ReadOnly, Tooltip("移動可能な状態か")]
     bool _moveActive = true;
@@ -346,25 +348,35 @@ public class PlayerController : MonoBehaviour
 
     //当たり判定処理
     #region
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        //地面に当たったらジャンプ回数を回復
-        //地面の側面に当たったら反発する
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.contacts[0].normal != _lastNormal)
         {
+            //地面に当たったらジャンプ回数を回復
+            //地面の側面に当たったら反発する
             if (collision.contacts[0].normal.y > 0.8f)
             {
                 _isGround = true;
                 _canJump = true;
                 _jumpTimer = 0;
-                _wallTouch = 0;
             }
-        }
 
-        //壁に当たった時に方向を保存する
-        if (Mathf.Abs(collision.contacts[0].normal.x) > 0.8f)
-        {
-            _wallTouch = Mathf.Sign(collision.contacts[0].normal.x);
+            //壁に当たった時に方向を保存する
+            if (collision.gameObject.CompareTag("Ground"))
+            {
+                if (Mathf.Abs(collision.contacts[0].normal.x) > 0.8f)
+                {
+                    _wallTouch = Mathf.Sign(collision.contacts[0].normal.x);
+                }
+                else
+                {
+                    _wallTouch = 0;
+                }
+            }
+
+
+            Debug.Log("地面に接触");
+            _lastNormal = collision.contacts[0].normal;
         }
     }
 
@@ -375,6 +387,8 @@ public class PlayerController : MonoBehaviour
             _isGround = false;
             _wallTouch = 0;
             _canJump = false;
+
+            _lastNormal = Vector2.zero;
         }
     }
 
@@ -475,7 +489,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("遠距離攻撃発動");
 
             //弾丸を発射
-            GameObject bullet = Instantiate(Bullet, transform.position + new Vector3(Mathf.Sign(transform.localScale.x) * _bulletFirePosOffset.x,_bulletFirePosOffset.y ,0), Quaternion.Euler(0, 0, -90 * Mathf.Sign(transform.localScale.x)));
+            GameObject bullet = Instantiate(Bullet, transform.position + new Vector3(Mathf.Sign(transform.localScale.x) * _bulletFirePosOffset.x, _bulletFirePosOffset.y, 0), Quaternion.Euler(0, 0, -90 * Mathf.Sign(transform.localScale.x)));
             bullet.transform.localScale = new Vector3(Mathf.Sign(transform.localScale.x) * bullet.transform.localScale.x, bullet.transform.localScale.y, bullet.transform.localScale.z);
 
             BulletManager bulletManager = bullet.GetComponent<BulletManager>();
@@ -608,7 +622,7 @@ public class PlayerController : MonoBehaviour
             obj.GetComponent<EnemyManager>()._moveActive = true;
         }
 
-        yield return new WaitForSeconds(_skillFourRestraintTime < _skillFourShieldTime ? _skillFourShieldTime -_skillFourRestraintTime : _skillFourRestraintTime - _skillFourShieldTime);
+        yield return new WaitForSeconds(_skillFourRestraintTime < _skillFourShieldTime ? _skillFourShieldTime - _skillFourRestraintTime : _skillFourRestraintTime - _skillFourShieldTime);
 
         Debug.Log("玄武スキルのシールド維持時間終了");
     }

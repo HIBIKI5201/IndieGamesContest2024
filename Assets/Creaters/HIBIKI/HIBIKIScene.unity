@@ -9352,7 +9352,7 @@ GameObject:
   - component: {fileID: 610967057}
   m_Layer: 0
   m_Name: FieldEdge (1)
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9366,7 +9366,7 @@ Transform:
   m_GameObject: {fileID: 610967055}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 64.3832, y: 7.179879, z: 0.19847584}
+  m_LocalPosition: {x: 64.3832, y: 7.179879, z: 0.1984758}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11535,7 +11535,7 @@ Transform:
   m_GameObject: {fileID: 1212906467}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 49.787197, y: 3.0295224, z: 0}
+  m_LocalPosition: {x: 49.7872, y: 3.029522, z: 0}
   m_LocalScale: {x: 1, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11591,7 +11591,7 @@ MonoBehaviour:
   HealthGauge: {fileID: 1512193574}
   SpiritGauge: {fileID: 1735832862}
   _isGround: 0
-  _moveSpeed: 3
+  _moveSpeed: 4
   _jumpPower: 8
   _jumpMaxTime: 0.5
   _jumpGravity: 0.8
@@ -11619,7 +11619,7 @@ MonoBehaviour:
   _skillOneFireInterval: 0.25
   _skillTwoCT: 5
   SkillTwoIconGauge: {fileID: 1296908310}
-  _skillTwoDashSpeed: 10
+  _skillTwoDashSpeed: 5
   _skillTwoWaitTime: 0.5
   _skillThreeCT: 15
   SkillThreeIconGauge: {fileID: 1037660410}
@@ -11844,7 +11844,7 @@ Transform:
   m_GameObject: {fileID: 1257445010}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 49.787197, y: 5.829522, z: -10}
+  m_LocalPosition: {x: 49.7872, y: 5.829522, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -12097,7 +12097,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1365908911
 Transform:
   m_ObjectHideFlags: 0
@@ -13134,7 +13134,7 @@ GameObject:
   - component: {fileID: 1778463503}
   m_Layer: 0
   m_Name: FieldEdge
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13193,7 +13193,7 @@ Transform:
   m_GameObject: {fileID: 1778463502}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -74.2668, y: 7.179879, z: 0.19847584}
+  m_LocalPosition: {x: -74.2668, y: 7.179879, z: 0.1984758}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
