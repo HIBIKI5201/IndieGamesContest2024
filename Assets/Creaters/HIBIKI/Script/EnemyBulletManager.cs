@@ -32,8 +32,6 @@ public class EnemyBulletManager : MonoBehaviour
         {
             Vector2 axis = PlayerPos.position - transform.position;
             rb2D.velocity = axis.normalized * _bulletSpeed;
-
-            Debug.Log(axis);
         }
 
         Invoke("Destroy", _bulletTime);

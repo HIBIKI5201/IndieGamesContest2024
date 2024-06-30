@@ -11736,6 +11736,7 @@ MonoBehaviour:
   _currentHealth: 0
   _maxSpiritPower: 50
   _currentSpiritPower: 0
+  _invincibleActive: 0
   HealthGauge: {fileID: 1512193574}
   SpiritGauge: {fileID: 1735832862}
   _isGround: 0
@@ -11782,6 +11783,7 @@ MonoBehaviour:
   ModeAnimator: {fileID: 1422203659}
   _hitDamageColor: {r: 1, g: 0.1490565, b: 0.1490565, a: 1}
   _hitHealColor: {r: 0.58956045, g: 1, b: 0.54905653, a: 1}
+  _invincibleColor: {r: 1, g: 0.98039216, b: 0.8039216, a: 1}
 --- !u!95 &1212906473
 Animator:
   serializedVersion: 5

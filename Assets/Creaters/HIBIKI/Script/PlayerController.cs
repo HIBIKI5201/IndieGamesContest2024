@@ -29,6 +29,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField, ReadOnly, Tooltip("現在の妖力")]
     float _currentSpiritPower;
 
+    [SerializeField, ReadOnly, Tooltip("無敵時間")]
+    bool _invincibleActive;
+
     [Space]
     [SerializeField]
     Image HealthGauge;
@@ -196,6 +199,8 @@ public class PlayerController : MonoBehaviour
     Color _hitDamageColor;
     [SerializeField, Tooltip("回復を受けた時のカラー")]
     Color _hitHealColor;
+    [SerializeField, Tooltip("無敵になった時のカラー")]
+    Color _invincibleColor;
 
     //プロパティ
     [HideInInspector, Tooltip("プレイヤーの移動速度")]
@@ -213,6 +218,7 @@ public class PlayerController : MonoBehaviour
 
         _currentHealth = _maxHealth;
         _currentSpiritPower = _maxSpiritPower;
+        _invincibleActive = false;
 
         _moveActive = true;
         _canJump = false;
@@ -551,6 +557,8 @@ public class PlayerController : MonoBehaviour
         Debug.Log("白虎スキル発動");
 
         _moveActive = false;
+        _invincibleActive = true;
+        StartCoroutine(Effect(2));
 
         //進行方向に向けて加速
         PlayerRigidBody.velocity = new Vector2(Mathf.Sign(transform.localScale.x) * _moveSpeed * _skillTwoDashSpeed, 0);
@@ -562,6 +570,8 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(_skillTwoWaitTime);
 
         PlayerRigidBody.gravityScale = _gravity;
+
+        _invincibleActive = false;
         _moveActive = true;
     }
 
@@ -606,12 +616,6 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        foreach (GameObject obj in closestEnemies)
-        {
-            Debug.Log($"{obj.name}が拘束された");
-        }
-
-
         DOTween.To(() => (float)0, x => SkillFourIconGauge.fillAmount = x, 1, _skillFourCT).SetEase(Ease.Linear);
 
         //効果時間終了の処理
@@ -637,18 +641,24 @@ public class PlayerController : MonoBehaviour
     //ダメージを受けた時
     void HitDamage(float damage)
     {
-        _currentHealth -= damage;
-        HealthGauge.fillAmount = _currentHealth / _maxHealth;
-
-        if (effectCoroutine != null)
+        if (!_invincibleActive)
         {
-            StopCoroutine(effectCoroutine);
-        }
-        effectCoroutine = StartCoroutine(Effect(0));
+            _currentHealth -= damage;
+            HealthGauge.fillAmount = _currentHealth / _maxHealth;
 
-        if (_currentHealth <= 0)
+            if (effectCoroutine != null)
+            {
+                StopCoroutine(effectCoroutine);
+            }
+            effectCoroutine = StartCoroutine(Effect(0));
+
+            if (_currentHealth <= 0)
+            {
+                SceneChanger.LoadHIBIKIScene();
+            }
+        } else
         {
-            SceneChanger.LoadHIBIKIScene();
+            Debug.Log("無敵時間中ヒット");
         }
     }
 
@@ -705,6 +715,17 @@ public class PlayerController : MonoBehaviour
 
                 yield return new WaitForSeconds(0.1f);
                 _spriteRenderer.color = Color.white;
+                break;
+
+            case 2:
+                _spriteRenderer.color = _invincibleColor;
+                Debug.LogWarning("無敵時間カラーを開始");
+
+
+                yield return new WaitForSeconds(0.1f);
+                _spriteRenderer.color = Color.white;
+
+                Debug.LogWarning("無敵時間カラーを終了");
                 break;
         }
     }
