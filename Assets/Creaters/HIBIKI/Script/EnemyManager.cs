@@ -120,6 +120,10 @@ public class EnemyManager : MonoBehaviour
 
             transform.localScale = new Vector2(_firstScale.x * Mathf.Sign(_player.transform.position.x - transform.position.x), transform.localScale.y);
         }
+        else
+        {
+            _rigidbody2D.velocity = Vector2.zero;
+        }
 
         if (_enemyKind == EnemyKind.BomberEnemy && Vector2.Distance(transform.position, _player.transform.position) < _bomberDistanceToExplosion && !_bomberExplosionActive)
         {

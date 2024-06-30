@@ -621,10 +621,12 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Œº•ƒXƒLƒ‹‚ÌS‘©ŠÔI—¹");
         foreach (GameObject obj in closestEnemies)
         {
-            if (obj is not null)
+            if (obj.TryGetComponent<EnemyManager>(out EnemyManager enemyManager))
             {
-               obj.GetComponent<EnemyManager>()._moveActive = true;
+                enemyManager._moveActive = true;
             }
+
+            Debug.Log(obj.name);
         }
 
         yield return new WaitForSeconds(_skillFourRestraintTime < _skillFourShieldTime ? _skillFourShieldTime - _skillFourRestraintTime : _skillFourRestraintTime - _skillFourShieldTime);
