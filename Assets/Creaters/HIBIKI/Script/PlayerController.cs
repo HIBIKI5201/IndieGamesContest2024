@@ -602,7 +602,10 @@ public class PlayerController : MonoBehaviour
 
             foreach (GameObject enemy in closestEnemies)
             {
-                enemy.GetComponent<EnemyManager>()._moveActive = false;
+                if (enemy.TryGetComponent<EnemyManager>(out EnemyManager enemyManager))
+                {
+                    enemyManager._moveActive = false;
+                }
             }
         }
 
@@ -615,12 +618,13 @@ public class PlayerController : MonoBehaviour
         Debug.Log("å∫ïêÉXÉLÉãÇÃçSë©éûä‘èIóπ");
         foreach (GameObject obj in closestEnemies)
         {
-            if (obj.TryGetComponent<EnemyManager>(out EnemyManager enemyManager))
+            if (obj)
             {
-                enemyManager._moveActive = true;
+                if (obj.TryGetComponent<EnemyManager>(out EnemyManager enemyManager))
+                {
+                    enemyManager._moveActive = true;
+                }
             }
-
-            Debug.Log(obj.name);
         }
 
         yield return new WaitForSeconds(_skillFourRestraintTime < _skillFourShieldTime ? _skillFourShieldTime - _skillFourRestraintTime : _skillFourRestraintTime - _skillFourShieldTime);

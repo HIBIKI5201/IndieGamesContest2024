@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Properties;
 using UnityEngine;
 
 public class BulletManager : MonoBehaviour
@@ -18,7 +15,7 @@ public class BulletManager : MonoBehaviour
     public void StartDestroy(float bulletDestroyTime)
     {
         _firstPos = transform.position;
-        Invoke("Destroy",bulletDestroyTime);
+        Invoke(nameof(Destroy), bulletDestroyTime);
     }
 
     public void SetProperty(float bulletMaxDamage, float bulletMinDamage, float bulletAttenuation)
