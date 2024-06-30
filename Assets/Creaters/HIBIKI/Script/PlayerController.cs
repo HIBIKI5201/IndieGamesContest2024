@@ -239,19 +239,6 @@ public class PlayerController : MonoBehaviour
 
         if (_moveActive)
         {
-            //ˆÚ“®
-            StartCoroutine(Move(horizontal));
-
-
-            //UŒ‚Œn
-            #region
-            //’ÊíUŒ‚
-            if (Input.GetKeyDown(KeyCode.Return))
-            {
-                StartCoroutine(Attack(horizontal));
-            }
-
-
             //ƒXƒLƒ‹Œn
             #region
             //‰A—zØ‚è‘Ö‚¦
@@ -327,7 +314,18 @@ public class PlayerController : MonoBehaviour
                 }
             }
             #endregion
-            #endregion
+
+            //ˆÚ“®
+            if (!skillActive)
+            {
+                StartCoroutine(Move(horizontal));
+            }
+
+            //’ÊíUŒ‚
+            if (Input.GetKeyDown(KeyCode.Return) && !skillActive)
+            {
+                StartCoroutine(Attack(horizontal));
+            }
 
             //ƒAƒjƒ[ƒVƒ‡ƒ“Œn
             if (_attackActive)
