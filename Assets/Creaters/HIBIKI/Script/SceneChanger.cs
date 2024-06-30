@@ -12,7 +12,7 @@ public class SceneChanger : MonoBehaviour
     [SerializeField]
     int _enemyValue;
     [SerializeField]
-    GameObject _clearMassege;
+    GameObject _clearMessage;
 
     [SerializeField]
     SceneKind _sceneKind;
@@ -34,7 +34,7 @@ public class SceneChanger : MonoBehaviour
     {
         _enemyCount = _enemyValue;
 
-        _clearMassege.SetActive(false);
+        _clearMessage.SetActive(false);
     }
 
     // Update is called once per frame
@@ -48,7 +48,7 @@ public class SceneChanger : MonoBehaviour
 
     IEnumerator Clear()
     {
-        _clearMassege .SetActive(true);
+        _clearMessage.SetActive(true);
         yield return new WaitForSeconds(3);
         LoadHIBIKIScene(SceneKind.InGame);
     }
@@ -59,7 +59,7 @@ public class SceneChanger : MonoBehaviour
         Debug.LogWarning($"Žc‚è‚Ì“G‚Í{_enemyCount}");
     }
 
-    public static void LoadHIBIKIScene(SceneKind sceneKind)
+    public static void LoadScene(SceneKind sceneKind)
     {
         SceneManager.LoadScene(sceneName[sceneKind]);
     }

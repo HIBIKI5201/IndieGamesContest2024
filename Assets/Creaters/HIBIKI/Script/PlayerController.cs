@@ -713,7 +713,7 @@ public class PlayerController : MonoBehaviour
 
             if (_currentHealth <= 0)
             {
-                SceneChanger.LoadHIBIKIScene(SceneChanger.SceneKind.InGame);
+                SceneChanger.LoadScene(SceneChanger.SceneKind.InGame);
             }
         }
         else
