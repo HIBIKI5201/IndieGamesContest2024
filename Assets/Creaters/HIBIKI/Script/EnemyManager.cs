@@ -60,6 +60,11 @@ public class EnemyManager : MonoBehaviour
     [SerializeField, Tooltip("自爆するまでのエフェクト数")]
     float _bomberExplosionEffectValue;
 
+    [SerializeField, Tooltip("爆発ダメージ")]
+    float _explosionDamage;
+    [SerializeField, Tooltip("爆発範囲")]
+    float _bomberExplosionRange;
+
     [Header("シューター攻撃系")]
 
     [SerializeField]
@@ -82,6 +87,8 @@ public class EnemyManager : MonoBehaviour
     {
         _currentHealth = _maxHealth;
         _moveActive = true;
+
+        _deadZonePoint += Random.Range(-0.5f, 0.5f);
 
         _firstScale = transform.localScale;
 
@@ -171,7 +178,13 @@ public class EnemyManager : MonoBehaviour
             yield return new WaitForSeconds(1);
         }
 
-        Destroy(gameObject);
+        GameObject bullet = Instantiate(EnemyBullet, transform.position, Quaternion.identity);
+
+        EnemyBulletManager bulletManager = bullet.GetComponent<EnemyBulletManager>();
+        bulletManager._bulletDamage = _explosionDamage;
+        bulletManager._explosionRange = _bomberExplosionRange;
+
+        Dead();
     }
 
     IEnumerator Shoot()
@@ -181,17 +194,20 @@ public class EnemyManager : MonoBehaviour
         yield return new WaitForSeconds(3);
         Vector2 axis = _player.transform.position - transform.position;
         GameObject bullet = Instantiate(EnemyBullet, transform.position, Quaternion.Euler(0, 0, (Mathf.Atan2(axis.y, axis.x) * Mathf.Rad2Deg) - 90));
+
         EnemyBulletManager bulletManager = bullet.GetComponent<EnemyBulletManager>();
         bulletManager._bulletDamage = _bulletDamage;
+        bulletManager._bulletSpeed = _bulletSpeed;
 
-        if (_enemyKind == EnemyKind.ShootEnemyOne)
+        switch (_enemyKind)
         {
-            bulletManager._enemyBulletKind = EnemyBulletKind.normalBullet;
-            bulletManager._bulletSpeed = _bulletSpeed;
-        }
-        else if (_enemyKind == EnemyKind.ShootEnemyTwo)
-        {
-            bulletManager._enemyBulletKind = EnemyBulletKind.followBullet;
+            case EnemyKind.ShootEnemyOne:
+                bulletManager._enemyBulletKind = EnemyBulletKind.normalBullet;
+                break;
+
+            case EnemyKind.ShootEnemyTwo:
+                bulletManager._enemyBulletKind = EnemyBulletKind.followBullet;
+                break;
         }
     }
 
@@ -208,8 +224,7 @@ public class EnemyManager : MonoBehaviour
 
             if (_currentHealth <= 0)
             {
-                SceneChanger.KillEnemey();
-                Destroy(this.gameObject);
+                Dead();
             }
         }
     }
@@ -221,5 +236,20 @@ public class EnemyManager : MonoBehaviour
         _spriteRenderer.color = Color.red;
         yield return new WaitForSeconds(0.1f);
         _spriteRenderer.color = Color.white;
+    }
+
+    void Dead()
+    {
+        if (_enemyKind == EnemyKind.BomberEnemy)
+        {
+            GameObject bullet = Instantiate(EnemyBullet, transform.position, Quaternion.identity);
+
+            EnemyBulletManager bulletManager = bullet.GetComponent<EnemyBulletManager>();
+            bulletManager._bulletDamage = _explosionDamage;
+            bulletManager._explosionRange = _bomberExplosionRange;
+        }
+
+        SceneChanger.KillEnemey();
+        Destroy(this.gameObject);
     }
 }

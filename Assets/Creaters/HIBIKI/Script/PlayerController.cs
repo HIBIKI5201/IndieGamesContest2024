@@ -62,8 +62,6 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField, ReadOnly, Tooltip("ジャンプが可能な状態か")]
     bool _canJump;
-    [Tooltip("ジャンプの最初の処理")]
-    bool firstJump;
     [Tooltip("壁に当たっている時の法線水平方向")]
     float _wallTouch;
     [Tooltip("最後に当たったGroundの法線方向")]
@@ -330,7 +328,7 @@ public class PlayerController : MonoBehaviour
             //通常攻撃
             if (Input.GetKeyDown(KeyCode.Return) && !skillActive)
             {
-                StartCoroutine(Attack(horizontal));
+                StartCoroutine(Attack());
             }
 
             //アニメーション系
@@ -393,14 +391,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("EnemyBullet"))
-        {
-            HitDamage(collision.gameObject.GetComponent<EnemyBulletManager>()._bulletDamage);
-            Destroy(collision.gameObject);
-        }
-    }
     #endregion
 
     //移動系
@@ -458,7 +448,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    IEnumerator Attack(float horizontal)
+    IEnumerator Attack()
     {
         //近接攻撃
         if (_playerMode == PlayerMode.Sun && _attackTimer + _attackSpeed < Time.time)
@@ -471,7 +461,7 @@ public class PlayerController : MonoBehaviour
             AttackRangeObject.SetActive(true);
             _moveActive = false;
 
-            PlayerRigidBody.AddForce(Vector2.left * PlayerRigidBody.velocity.x * 1.2f, ForceMode2D.Impulse);
+            PlayerRigidBody.AddForce(1.2f * PlayerRigidBody.velocity.x * Vector2.left, ForceMode2D.Impulse);
 
             SoundManager.Attack();
 
@@ -504,7 +494,7 @@ public class PlayerController : MonoBehaviour
             _moveActive = false;
 
             SoundManager.Fire();
-            PlayerRigidBody.AddForce(Vector2.left * PlayerRigidBody.velocity.x * 1.2f, ForceMode2D.Impulse);
+            PlayerRigidBody.AddForce(1.2f * PlayerRigidBody.velocity.x * Vector2.left, ForceMode2D.Impulse);
 
             yield return new WaitForSeconds(0.2f);
 
@@ -639,7 +629,7 @@ public class PlayerController : MonoBehaviour
     }
 
     //ダメージを受けた時
-    void HitDamage(float damage)
+    public void HitDamage(float damage)
     {
         if (!_invincibleActive)
         {
@@ -654,9 +644,10 @@ public class PlayerController : MonoBehaviour
 
             if (_currentHealth <= 0)
             {
-                SceneChanger.LoadHIBIKIScene();
+                SceneChanger.LoadHIBIKIScene(SceneChanger.SceneKind.InGame);
             }
-        } else
+        }
+        else
         {
             Debug.Log("無敵時間中ヒット");
         }

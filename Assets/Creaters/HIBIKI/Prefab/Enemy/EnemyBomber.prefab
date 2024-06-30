@@ -65,13 +65,21 @@ PrefabInstance:
       value: 1.28
       objectReference: {fileID: 0}
     - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
+      propertyPath: PS
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
       propertyPath: _maxHealth
       value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
       propertyPath: _moveSpeed
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
+      propertyPath: EnemyBullet
+      value: 
+      objectReference: {fileID: 4282541037656283485, guid: 471a7bb211a9b50409a944166b2323fe, type: 3}
     - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
       propertyPath: _attackRange
       value: 4
@@ -89,15 +97,24 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
+      propertyPath: _explosionDamage
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
       propertyPath: _bomberExplosionTime
-      value: 4
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
+      propertyPath: _bomberExplosionRange
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
       propertyPath: _bomberDistanceToExplosion
       value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8496479854022721443, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}

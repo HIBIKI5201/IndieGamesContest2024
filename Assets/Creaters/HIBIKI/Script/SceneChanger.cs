@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,9 +14,26 @@ public class SceneChanger : MonoBehaviour
     [SerializeField]
     GameObject _clearMassege;
 
-    // Start is called before the first frame update
+    [SerializeField]
+    SceneKind _sceneKind;
+
+    public enum SceneKind
+    {
+        Title,
+        InGame
+    }
+
+    static readonly Dictionary<SceneKind, string> sceneName = new()
+    {
+        {SceneKind.Title, "Title"},
+        {SceneKind.InGame, "HIBIKIScene"}
+    };
+
+
     void Start()
     {
+
+
         _enemyCount = _enemyValue;
 
         _clearMassege.SetActive(false);
@@ -24,27 +42,27 @@ public class SceneChanger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if (_enemyCount <= 0)
         {
-            StartCoroutine(clear());
+            StartCoroutine(Clear());
         }
     }
 
-    IEnumerator clear()
+    IEnumerator Clear()
     {
         _clearMassege .SetActive(true);
         yield return new WaitForSeconds(3);
-        LoadHIBIKIScene();
+        LoadHIBIKIScene(SceneKind.InGame);
     }
 
     public static void KillEnemey()
     {
         _enemyCount--;
+        Debug.LogWarning($"Žc‚è‚Ì“G‚Í{_enemyCount}");
     }
 
-    public static void LoadHIBIKIScene()
+    public static void LoadHIBIKIScene(SceneKind sceneKind)
     {
-        SceneManager.LoadScene("HIBIKIScene");
+        SceneManager.LoadScene(sceneName[sceneKind]);
     }
 }
