@@ -174,14 +174,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyKind: 0
+  _maxHealth: 100
   _currentHealth: 0
   _moveActive: 0
+  _invincibleTime: 0
   _moveSpeed: 1
-  EnemyBullet: {fileID: 6640036996467145792, guid: 8a7131711a1cbce4896e0696eef558c6, type: 3}
-  _attackInterval: 5
-  _bulletDamage: 100
-  _bulletSpeed: 3
+  _deadZonePoint: 0
+  _deadZoneWeight: 0
   _attackRange: 6
+  _bomberDushSpeed: 0
+  _bomberDistanceToExplosion: 0
+  _bomberExplosionTime: 0
+  EnemyBullet: {fileID: 6640036996467145792, guid: 8a7131711a1cbce4896e0696eef558c6, type: 3}
+  _attackInterval: 0
+  _bulletDamage: 0
+  _bulletSpeed: 0
   PS: {fileID: 872286039179344320}
 --- !u!1 &4096045500822600402
 GameObject:

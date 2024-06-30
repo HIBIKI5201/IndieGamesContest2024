@@ -8,10 +8,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -1324694383927222976, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
+      propertyPath: m_Mass
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -1324694383927222976, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
+      propertyPath: m_GravityScale
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 499578672129666237, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
       propertyPath: m_Name
       value: EnemyShootOne
       objectReference: {fileID: 0}
+    - target: {fileID: 591761648223455786, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 0860bcb9821e7b74281a9e337c0e5363, type: 3}
     - target: {fileID: 654521035454523615, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.28438905
@@ -52,6 +64,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4289215246991185669, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
+      propertyPath: m_Size.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4289215246991185669, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
+      propertyPath: m_Size.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387848162854691288, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
+      propertyPath: m_Size.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387848162854691288, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
+      propertyPath: m_Size.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387848162854691288, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 1.6842105
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387848162854691288, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 1.6842105
+      objectReference: {fileID: 0}
     - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
       propertyPath: _enemyKind
       value: 1
@@ -59,6 +95,10 @@ PrefabInstance:
     - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
       propertyPath: _maxHealth
       value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
+      propertyPath: _moveSpeed
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
       propertyPath: _attackRange
@@ -74,7 +114,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
       propertyPath: _deadZonePoint
-      value: 7
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
       propertyPath: _attackInterval
@@ -82,7 +122,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
       propertyPath: _deadZoneWeight
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7594008444172870514, guid: 419f2ba14dbe7af4589a240a08bdc37c, type: 3}
       propertyPath: _invincibleTime

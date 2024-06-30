@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Threading;
 using UnityEngine;
 using static EnemyBulletManager;
 
@@ -14,7 +13,7 @@ public class EnemyManager : MonoBehaviour
     public EnemyKind _enemyKind;
     public enum EnemyKind
     {
-        MeleeEnemy,
+        BomberEnemy,
         ShootEnemyOne,
         ShootEnemyTwo
     }
@@ -24,6 +23,7 @@ public class EnemyManager : MonoBehaviour
     float _maxHealth = 100;
     [SerializeField, ReadOnly, Tooltip("現在の体力")]
     float _currentHealth;
+    [ReadOnly]
     public bool _moveActive;
 
     [SerializeField, Tooltip("無敵時間")]
@@ -42,7 +42,24 @@ public class EnemyManager : MonoBehaviour
     [Tooltip("初期のスケール")]
     Vector2 _firstScale;
 
-    [Header("攻撃系")]
+    [Header("共通攻撃系")]
+
+    [SerializeField, Tooltip("攻撃範囲")]
+    float _attackRange;
+
+    [Header("ボマー攻撃系")]
+    [SerializeField, Tooltip("プレイヤー発見時の移動速度上昇倍率")]
+    float _bomberDushSpeed;
+
+    [Tooltip("自爆シークエンス開始")]
+    bool _bomberExplosionActive;
+    [SerializeField, Tooltip("自爆するまでの距離")]
+    float _bomberDistanceToExplosion;
+    [SerializeField, Tooltip("自爆するまでの時間")]
+    float _bomberExplosionTime;
+
+    [Header("シューター攻撃系")]
+
     [SerializeField]
     GameObject EnemyBullet;
 
@@ -55,8 +72,6 @@ public class EnemyManager : MonoBehaviour
     float _bulletDamage;
     [SerializeField, Tooltip("弾スピード")]
     float _bulletSpeed;
-    [SerializeField, Tooltip("攻撃範囲")]
-    float _attackRange;
 
     [SerializeField]
     ParticleSystem PS;
@@ -83,42 +98,35 @@ public class EnemyManager : MonoBehaviour
     {
         if (_moveActive)
         {
+            //プレイヤーに向けて歩く
             if (Vector2.Distance(transform.position, _player.transform.position) > _deadZonePoint + _deadZoneWeight / 2)
             {
-                //プレイヤーに向けて歩く
-                if (_player.transform.position.x - transform.position.x > 0)
+                if (_enemyKind == EnemyKind.BomberEnemy && Vector2.Distance(transform.position, _player.transform.position) < _attackRange)
                 {
-                    _rigidbody2D.velocity = new Vector2(_moveSpeed, _rigidbody2D.velocity.y);
-                    transform.localScale = new Vector2(_firstScale.x, transform.localScale.y);
+                    _rigidbody2D.velocity = new Vector2(_moveSpeed * _bomberDushSpeed * Mathf.Sign(_player.transform.position.x - transform.position.x), _rigidbody2D.velocity.y);
                 }
-
                 else
                 {
-                    _rigidbody2D.velocity = new Vector2(-_moveSpeed, _rigidbody2D.velocity.y);
-                    transform.localScale = new Vector2(-_firstScale.x, transform.localScale.y);
-                }
-
-                if (_enemyKind == EnemyKind.MeleeEnemy)
-                {
-
+                    _rigidbody2D.velocity = new Vector2(_moveSpeed * Mathf.Sign(_player.transform.position.x - transform.position.x), _rigidbody2D.velocity.y);
                 }
             }
-
+            //プレイヤーから遠ざかる
             else if (Vector2.Distance(transform.position, _player.transform.position) < _deadZonePoint - _deadZoneWeight / 2)
             {
-                //プレイヤーから遠ざかる
-                if (_player.transform.position.x - transform.position.x > 0)
-                {
-                    _rigidbody2D.velocity = new Vector2(-_moveSpeed, _rigidbody2D.velocity.y);
-                    transform.localScale = new Vector2(_firstScale.x, transform.localScale.y);
-                }
-
-                else
-                {
-                    _rigidbody2D.velocity = new Vector2(_moveSpeed, _rigidbody2D.velocity.y);
-                    transform.localScale = new Vector2(-_firstScale.x, transform.localScale.y);
-                }
+                _rigidbody2D.velocity = new Vector2(_moveSpeed * -1 * Mathf.Sign(_player.transform.position.x - transform.position.x), _rigidbody2D.velocity.y);
             }
+            else
+            {
+                _rigidbody2D.velocity = Vector2.zero;
+            }
+
+            transform.localScale = new Vector2(_firstScale.x * Mathf.Sign(_player.transform.position.x - transform.position.x), transform.localScale.y);
+        }
+
+        if (_enemyKind == EnemyKind.BomberEnemy && Vector2.Distance(transform.position, _player.transform.position) < _bomberDistanceToExplosion && !_bomberExplosionActive)
+        {
+            _bomberExplosionActive = true;
+            StartCoroutine(Explosion());
         }
 
         if ((_enemyKind == EnemyKind.ShootEnemyOne || _enemyKind == EnemyKind.ShootEnemyTwo) &&
@@ -140,7 +148,7 @@ public class EnemyManager : MonoBehaviour
             {
                 _playerController.SpiritPowerIncrease(5);
             }
- 
+
             HitDamage(_playerController._attackDamage);
         }
 
@@ -149,6 +157,17 @@ public class EnemyManager : MonoBehaviour
             BulletManager bulletManager = collision.GetComponent<BulletManager>();
             HitDamage(Mathf.Clamp(Vector2.Distance(bulletManager._firstPos, transform.position) / bulletManager.inBullet_bulletAttenuation * bulletManager.inBullet_bulletMaxDamage, bulletManager.inBullet_bulletMinDamage, bulletManager.inBullet_bulletMaxDamage));
         }
+    }
+
+    IEnumerator Explosion()
+    {
+        for (int i = 0; i < _bomberExplosionTime; i++)
+        {
+            Debug.Log($"爆発まで{_bomberExplosionTime - i}秒");
+            yield return new WaitForSeconds(1);
+        }
+
+        Destroy(gameObject);
     }
 
     IEnumerator Shoot()
