@@ -600,7 +600,7 @@ public class PlayerController : MonoBehaviour
                 .Take(5)
                 .ToArray();
 
-            foreach(GameObject enemy in closestEnemies)
+            foreach (GameObject enemy in closestEnemies)
             {
                 enemy.GetComponent<EnemyManager>()._moveActive = false;
             }
@@ -666,9 +666,20 @@ public class PlayerController : MonoBehaviour
     }
 
     //—d—Í‚ª‰ñ•œ‚µ‚½Žž
-    public void SpiritPowerIncrease(float increasePower)
+    public void SpiritPowerIncrease(float number)
     {
-        Debug.Log(increasePower);
+        int increasePower = 0;
+
+        switch (number)
+        {
+            case 1:
+                increasePower = 5;
+                break;
+
+            case 2:
+                increasePower = 2;
+                break;
+        }
 
         _currentSpiritPower = Mathf.Min(_currentSpiritPower + increasePower, _maxSpiritPower);
         SpiritGauge.fillAmount = _currentSpiritPower / _maxSpiritPower;

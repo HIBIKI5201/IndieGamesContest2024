@@ -57,6 +57,8 @@ public class EnemyManager : MonoBehaviour
     float _bomberDistanceToExplosion;
     [SerializeField, Tooltip("自爆するまでの時間")]
     float _bomberExplosionTime;
+    [SerializeField, Tooltip("自爆するまでのエフェクト数")]
+    float _bomberExplosionEffectValue;
 
     [Header("シューター攻撃系")]
 
@@ -148,7 +150,7 @@ public class EnemyManager : MonoBehaviour
 
             if (_invincibleTime + _invincibleTimer < Time.time)
             {
-                _playerController.SpiritPowerIncrease(5);
+                _playerController.SpiritPowerIncrease(1);
             }
 
             HitDamage(_playerController._attackDamage);

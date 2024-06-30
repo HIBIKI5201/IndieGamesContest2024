@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations;
 
@@ -55,6 +56,7 @@ public class EnemyBulletManager : MonoBehaviour
         //‹ßÚUŒ‚‚É“–‚½‚Á‚½‚ç”j‰ó‚³‚ê‚é
         if (collision.gameObject.CompareTag("Melee"))
         {
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().SpiritPowerIncrease(2);
             Destroy(gameObject);
             Debug.Log("a‚è—‚Æ‚µ");
         }
