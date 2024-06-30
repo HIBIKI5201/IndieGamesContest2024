@@ -151,22 +151,21 @@ public class EnemyManager : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Melee"))
+        if (_invincibleTime + _invincibleTimer < Time.time)
         {
-            _currentHealth -= _playerController._attackDamage;
-
-            if (_invincibleTime + _invincibleTimer < Time.time)
+            if (collision.gameObject.CompareTag("Melee"))
             {
+                _currentHealth -= _playerController._attackDamage;
                 _playerController.SpiritPowerIncrease(1);
+
+                HitDamage(_playerController._attackDamage);
             }
 
-            HitDamage(_playerController._attackDamage);
-        }
-
-        if (collision.gameObject.CompareTag("Bullet"))
-        {
-            BulletManager bulletManager = collision.GetComponent<BulletManager>();
-            HitDamage(Mathf.Clamp(Vector2.Distance(bulletManager._firstPos, transform.position) / bulletManager.inBullet_bulletAttenuation * bulletManager.inBullet_bulletMaxDamage, bulletManager.inBullet_bulletMinDamage, bulletManager.inBullet_bulletMaxDamage));
+            if (collision.gameObject.CompareTag("Bullet"))
+            {
+                BulletManager bulletManager = collision.GetComponent<BulletManager>();
+                HitDamage(Mathf.Clamp(Vector2.Distance(bulletManager._firstPos, transform.position) / bulletManager.inBullet_bulletAttenuation * bulletManager.inBullet_bulletMaxDamage, bulletManager.inBullet_bulletMinDamage, bulletManager.inBullet_bulletMaxDamage));
+            }
         }
     }
 
@@ -249,7 +248,7 @@ public class EnemyManager : MonoBehaviour
             bulletManager._explosionRange = _bomberExplosionRange;
         }
 
-        SceneChanger.KillEnemey();
+        SceneChanger.KillEnemy();
         Destroy(this.gameObject);
     }
 }

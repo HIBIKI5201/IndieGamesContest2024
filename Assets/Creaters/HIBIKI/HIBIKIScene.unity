@@ -9161,6 +9161,81 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1649884871824400932, guid: 44ca1ae5c7004ea40a3ff34da9f25d98, type: 3}
   m_PrefabInstance: {fileID: 242420960}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &510865462
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 510865463}
+  - component: {fileID: 510865465}
+  - component: {fileID: 510865464}
+  m_Layer: 5
+  m_Name: SkillFourBuffIcon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &510865463
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 510865462}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1422203658}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 690, y: 328}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &510865464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 510865462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0.7132075, b: 0.24901687, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &510865465
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 510865462}
+  m_CullTransparentMesh: 1
 --- !u!4 &512463557 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6252316571971372111, guid: 343795bcfd3636a4daeeeb3f0d9bb8ae, type: 3}
@@ -11856,6 +11931,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerMode: 0
+  _modeChangeInterval: 1
+  _spriteRenderer: {fileID: 338544098}
+  _skillOneBuffActive: 0
+  _skillOneBuffIcon: {fileID: 1870522544}
+  _skillFourBuffActive: 0
+  _skillFourBuffIcon: {fileID: 510865462}
   _maxHealth: 1500
   _currentHealth: 0
   _maxSpiritPower: 50
@@ -11885,11 +11966,12 @@ MonoBehaviour:
   _bulletAttenuation: 5
   _skillOneCT: 10
   SkillOneIconGauge: {fileID: 841096800}
-  _skillOneObjecct: {fileID: 1305652823737791865, guid: e1f201484549cf54c95cfe7d019863a4, type: 3}
+  _skillOneObject: {fileID: 1305652823737791865, guid: e1f201484549cf54c95cfe7d019863a4, type: 3}
   _skillOneChargeTime: 2
   _skillOneDuration: 10
   _skillOneRange: 5
   _skillOneFireInterval: 0.25
+  _skillOneBuffTime: 8
   _skillTwoCT: 5
   SkillTwoIconGauge: {fileID: 1296908310}
   _skillTwoDashSpeed: 5
@@ -11900,10 +11982,9 @@ MonoBehaviour:
   _skillThreeDuration: 8
   _skillFourCT: 12
   SkillFourIconGauge: {fileID: 728240484}
-  _skillFourRestraintTime: 3
-  _skillFourShieldTime: 5
+  _skillFourRestraintTime: 5
   _skillFourRange: 15
-  _spriteRenderer: {fileID: 338544098}
+  _skillFourShieldTime: 8
   ModeAnimator: {fileID: 1422203659}
   _hitDamageColor: {r: 1, g: 0.1490565, b: 0.1490565, a: 1}
   _hitHealColor: {r: 0.58956045, g: 1, b: 0.54905653, a: 1}
@@ -12719,6 +12800,8 @@ RectTransform:
   - {fileID: 945581959}
   - {fileID: 1735832861}
   - {fileID: 1701375812}
+  - {fileID: 1870522545}
+  - {fileID: 510865463}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -14169,6 +14252,81 @@ Transform:
   - {fileID: 728240483}
   m_Father: {fileID: 1422203658}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1870522544
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1870522545}
+  - component: {fileID: 1870522547}
+  - component: {fileID: 1870522546}
+  m_Layer: 5
+  m_Name: SkillOneBuffIcon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1870522545
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870522544}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1422203658}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 830, y: 328}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1870522546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870522544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 0.4305964, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1870522547
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870522544}
+  m_CullTransparentMesh: 1
 --- !u!1 &1883453060
 GameObject:
   m_ObjectHideFlags: 0

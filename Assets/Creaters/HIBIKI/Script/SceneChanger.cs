@@ -32,8 +32,6 @@ public class SceneChanger : MonoBehaviour
 
     void Start()
     {
-
-
         _enemyCount = _enemyValue;
 
         _clearMassege.SetActive(false);
@@ -55,7 +53,7 @@ public class SceneChanger : MonoBehaviour
         LoadHIBIKIScene(SceneKind.InGame);
     }
 
-    public static void KillEnemey()
+    public static void KillEnemy()
     {
         _enemyCount--;
         Debug.LogWarning($"Žc‚è‚Ì“G‚Í{_enemyCount}");

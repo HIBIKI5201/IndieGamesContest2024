@@ -14,8 +14,36 @@ public class PlayerController : MonoBehaviour
         Sun,
         Moon
     }
+    [SerializeField, Tooltip("陰陽切り替えのクールタイム")]
+    float _modeChangeInterval = 1;
+
     [Tooltip("陰陽変形のタイマー")]
     float _modeTimer;
+
+    [Space(10)]
+
+    [SerializeField]
+    SpriteRenderer _spriteRenderer;
+
+
+    [Header("バフ・デバフ")]
+    [SerializeField, ReadOnly, Tooltip("朱雀スキルの攻撃力上昇バフの有無")]
+    bool _skillOneBuffActive;
+    [Tooltip("朱雀スキルのバフの残り時間")]
+    float _skillOneBuffTimer;
+
+    [SerializeField]
+    GameObject _skillOneBuffIcon;
+
+    [Space(10)]
+
+    [SerializeField, ReadOnly, Tooltip("玄武スキルのシールドの有無")]
+    bool _skillFourBuffActive;
+    [Tooltip("玄武スキルのバフの残り時間")]
+    float _skillFourBuffTimer;
+
+    [SerializeField]
+    GameObject _skillFourBuffIcon;
 
 
     [Header("体力ステータス")]
@@ -23,6 +51,8 @@ public class PlayerController : MonoBehaviour
     float _maxHealth = 1500;
     [SerializeField, ReadOnly, Tooltip("現在のヘルス")]
     float _currentHealth;
+
+    [Space(10)]
 
     [SerializeField, Tooltip("プレイヤーの最大妖力")]
     float _maxSpiritPower = 1500;
@@ -32,7 +62,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField, ReadOnly, Tooltip("無敵時間")]
     bool _invincibleActive;
 
-    [Space]
+    [Space(10)]
+
     [SerializeField]
     Image HealthGauge;
     [SerializeField]
@@ -46,7 +77,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField, ReadOnly, Tooltip("地面に付いているかの判定")]
     bool _isGround;
 
-    [Space]
+    [Space(20)]
 
     [SerializeField, Tooltip("移動速度")]
     float _moveSpeed = 5;
@@ -89,7 +120,7 @@ public class PlayerController : MonoBehaviour
     [Tooltip("近接のダメージ")]
     public float _attackDamage = 50;
 
-    [Space]
+    [Space(20)]
 
     [SerializeField, Tooltip("発射する弾丸プレハブ")]
     GameObject Bullet;
@@ -101,10 +132,14 @@ public class PlayerController : MonoBehaviour
     [Tooltip("射撃リキャストタイマー")]
     float _fireTimer;
 
+    [Space(10)]
+
     [SerializeField, Tooltip("弾丸のスピード")]
     float _bulletVelocity = 10;
     [SerializeField, Tooltip("弾丸が消滅するまでの時間")]
     float _bulletDestroyTime = 10;
+
+    [Space(10)]
 
     [SerializeField, Tooltip("弾丸の最大ダメージ")]
     float _bulletMaxDamage = 100;
@@ -119,14 +154,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Tooltip("朱雀スキルクールタイム")]
     float _skillOneCT = 10;
     [Tooltip("朱雀スキルクールタイムタイマー")]
-    float _skillOneCTtimer;
+    float _skillOneCTimer;
     [SerializeField]
     Image SkillOneIconGauge;
 
+    [Space(10)]
+
     [SerializeField, Tooltip("朱雀スキルのオブジェクト")]
-    GameObject _skillOneObjecct;
+    GameObject _skillOneObject;
     [SerializeField, Tooltip("朱雀スキルのチャージ時間")]
     float _skillOneChargeTime = 1;
+
+    [Space(10)]
 
     [SerializeField, Tooltip("朱雀のスキル効果時間")]
     float _skillOneDuration = 5;
@@ -135,55 +174,59 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Tooltip("炎ダメージを与える間隔")]
     float _skillOneFireInterval = 0.2f;
 
-    [Space]
+    [SerializeField, Tooltip("朱雀スキルのバフ効果時間")]
+    float _skillOneBuffTime = 8;
+
+    [Space(20)]
 
     [SerializeField, Tooltip("白虎スキルクールタイム")]
     float _skillTwoCT = 10;
     [Tooltip("白虎スキルクールタイムタイマー")]
-    float _skillTwoCTtimer;
+    float _skillTwoCTimer;
     [SerializeField]
     Image SkillTwoIconGauge;
+
+    [Space(10)]
 
     [SerializeField, Tooltip("白虎スキルのダッシュ速度倍率")]
     float _skillTwoDashSpeed = 25;
     [SerializeField, Tooltip("白虎スキル発動時に何秒間操作不能にするか")]
     float _skillTwoWaitTime = 0.5f;
 
-    [Space]
+    [Space(20)]
 
     [SerializeField, Tooltip("青龍スキルクールタイム")]
     float _skillThreeCT = 10;
     [Tooltip("青龍スキルクールタイムタイマー")]
-    float _skillThreeCTtimer;
+    float _skillThreeCTimer;
     [SerializeField]
     Image SkillThreeIconGauge;
+
+    [Space(10)]
 
     [SerializeField, Tooltip("回復トーテムのオブジェクト")]
     GameObject SkillThreeObject;
     [SerializeField, Tooltip("青龍のスキル効果時間")]
     float _skillThreeDuration = 8;
 
-    [Space]
+    [Space(20)]
 
     [SerializeField, Tooltip("玄武スキルクールタイム")]
     float _skillFourCT = 10;
     [Tooltip("玄武スキルクールタイムタイマー")]
-    float _skillFourCTtimer;
+    float _skillFourCTimer;
     [SerializeField]
     Image SkillFourIconGauge;
 
+    [Space(10)]
+
     [SerializeField, Tooltip("玄武スキルの拘束時間")]
     float _skillFourRestraintTime = 6;
-    [SerializeField, Tooltip("玄武スキルのシールド維持時間")]
-    float _skillFourShieldTime = 10;
     [SerializeField, Tooltip("玄武スキルの効果範囲")]
     float _skillFourRange = 5;
 
-    [SerializeField]
-    SpriteRenderer _spriteRenderer;
-
-    Coroutine effectCoroutine;
-
+    [SerializeField, Tooltip("玄武スキルのシールド維持時間")]
+    float _skillFourShieldTime = 10;
 
     [Header("アニメーション関係")]
     Animator PlayerAnimator;
@@ -191,7 +234,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     Animator ModeAnimator;
 
-    [Space]
+    [Space(20)]
+
+    Coroutine effectCoroutine;
 
     [SerializeField, Tooltip("被ダメを受けた時のカラー")]
     Color _hitDamageColor;
@@ -226,10 +271,12 @@ public class PlayerController : MonoBehaviour
         _gravity = PlayerRigidBody.gravityScale;
         _firstScale = transform.localScale;
 
-        _skillOneCTtimer = Time.time;
-        _skillTwoCTtimer = Time.time;
-        _skillThreeCTtimer = Time.time;
-        _skillFourCTtimer = Time.time;
+        _modeTimer = Time.time;
+
+        _skillOneCTimer = Time.time;
+        _skillTwoCTimer = Time.time;
+        _skillThreeCTimer = Time.time;
+        _skillFourCTimer = Time.time;
 
         DOTween.To(() => (float)0, x => SkillOneIconGauge.fillAmount = x, 1, _skillOneCT).SetEase(Ease.Linear);
         DOTween.To(() => (float)0, x => SkillTwoIconGauge.fillAmount = x, 1, _skillTwoCT).SetEase(Ease.Linear);
@@ -246,7 +293,7 @@ public class PlayerController : MonoBehaviour
             //スキル系
             #region
             //陰陽切り替え
-            if (Input.GetKeyDown(KeyCode.RightShift) && _modeTimer + 1 < Time.time)
+            if (Input.GetKeyDown(KeyCode.RightShift) && _modeTimer + _modeChangeInterval < Time.time)
             {
                 //陰形態に変形
                 if (_playerMode == PlayerMode.Sun)
@@ -279,12 +326,12 @@ public class PlayerController : MonoBehaviour
             {
                 skillActive = true;
 
-                if (_playerMode == PlayerMode.Sun && _skillOneCT + _skillOneCTtimer < Time.time)
+                if (_playerMode == PlayerMode.Sun && _skillOneCT + _skillOneCTimer < Time.time)
                 {
                     //朱雀スキルを発動
                     StartCoroutine(SkillOne());
                 }
-                else if (_playerMode == PlayerMode.Moon && _skillThreeCT + _skillThreeCTtimer < Time.time)
+                else if (_playerMode == PlayerMode.Moon && _skillThreeCT + _skillThreeCTimer < Time.time)
                 {
                     //青龍スキルを発動
                     SkillThree();
@@ -301,13 +348,13 @@ public class PlayerController : MonoBehaviour
             {
                 skillActive = true;
 
-                if (_playerMode == PlayerMode.Sun && _skillTwoCT + _skillTwoCTtimer < Time.time)
+                if (_playerMode == PlayerMode.Sun && _skillTwoCT + _skillTwoCTimer < Time.time)
                 {
                     //白虎スキルを発動
                     StartCoroutine(SkillTwo());
 
                 }
-                else if (_playerMode == PlayerMode.Moon && _skillFourCT + _skillFourCTtimer < Time.time)
+                else if (_playerMode == PlayerMode.Moon && _skillFourCT + _skillFourCTimer < Time.time)
                 {
                     //玄武スキルを発動
                     StartCoroutine(SkillFour());
@@ -346,6 +393,10 @@ public class PlayerController : MonoBehaviour
                 PlayerAnimator.SetInteger("AnimationNumber", 0);
             }
         }
+
+
+        BuffIcon();
+
     }
 
     //当たり判定処理
@@ -448,6 +499,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //通常攻撃の処理
     IEnumerator Attack()
     {
         //近接攻撃
@@ -510,7 +562,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator SkillOne()
     {
-        _skillOneCTtimer = Time.time;
+        _skillOneCTimer = Time.time;
 
         SoundManager.SkillOne();
         Debug.Log("朱雀スキル発動");
@@ -527,21 +579,31 @@ public class PlayerController : MonoBehaviour
         PlayerRigidBody.gravityScale = _gravity;
 
         //攻撃範囲 兼 炎のオブジェクトを配置
-        GameObject skillObject = Instantiate(_skillOneObjecct,
+        GameObject skillObject = Instantiate(_skillOneObject,
             transform.position + new Vector3(
                 _skillOneRange / 2 * Mathf.Sign(transform.localScale.x),
                 transform.localScale.y / 2 * -1, 0),
             Quaternion.identity);
 
+        //炎のステータスを設定
         SkillOneManager skillManager = skillObject.GetComponent<SkillOneManager>();
         skillManager._skillOneDuration = _skillOneDuration;
         skillManager._fireTime = _skillOneFireInterval;
         skillObject.transform.localScale = new Vector3(_skillOneRange, 1, 1);
+
+        //朱雀バフを発動
+        _skillOneBuffActive = true;
+
+        yield return new WaitForSeconds(_skillOneBuffTime);
+
+        //朱雀バフ解除
+
+        _skillOneBuffActive = false;
     }
 
     IEnumerator SkillTwo()
     {
-        _skillTwoCTtimer = Time.time;
+        _skillTwoCTimer = Time.time;
 
         SoundManager.SkillTwo();
         Debug.Log("白虎スキル発動");
@@ -568,7 +630,7 @@ public class PlayerController : MonoBehaviour
 
     void SkillThree()
     {
-        _skillThreeCTtimer = Time.time;
+        _skillThreeCTimer = Time.time;
 
         SoundManager.SkillThree();
         Debug.Log("青龍スキル発動");
@@ -582,7 +644,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator SkillFour()
     {
-        _skillFourCTtimer = Time.time;
+        _skillFourCTimer = Time.time;
 
         SoundManager.SkillFour();
         Debug.Log("玄武スキル発動");
@@ -611,8 +673,9 @@ public class PlayerController : MonoBehaviour
 
         DOTween.To(() => (float)0, x => SkillFourIconGauge.fillAmount = x, 1, _skillFourCT).SetEase(Ease.Linear);
 
-        //効果時間終了の処理
+        _skillFourBuffActive = true;
 
+        //効果時間終了の処理
         yield return new WaitForSeconds(_skillFourRestraintTime < _skillFourShieldTime ? _skillFourRestraintTime : _skillFourShieldTime);
 
         Debug.Log("玄武スキルの拘束時間終了");
@@ -630,6 +693,8 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(_skillFourRestraintTime < _skillFourShieldTime ? _skillFourShieldTime - _skillFourRestraintTime : _skillFourRestraintTime - _skillFourShieldTime);
 
         Debug.Log("玄武スキルのシールド維持時間終了");
+
+        _skillFourBuffActive = false;
     }
 
     //ダメージを受けた時
@@ -723,5 +788,36 @@ public class PlayerController : MonoBehaviour
                 Debug.LogWarning("無敵時間カラーを終了");
                 break;
         }
+    }
+
+    void BuffIcon()
+    {
+        if (_skillOneBuffActive)
+        {
+            if (!_skillOneBuffIcon.activeSelf)
+            {
+                _skillOneBuffIcon.SetActive(true);
+            }
+            _skillOneBuffTimer -= Time.deltaTime;
+        }
+        else if (_skillOneBuffIcon.activeSelf)
+        {
+            _skillOneBuffIcon.SetActive(false);
+        }
+
+        if (_skillFourBuffActive)
+        {
+            if (!_skillFourBuffIcon.activeSelf)
+            {
+                _skillFourBuffIcon.SetActive(true);
+            }
+
+            _skillFourBuffTimer -= Time.deltaTime;
+        }
+        else if (_skillFourBuffIcon.activeSelf)
+        {
+            _skillFourBuffIcon.SetActive(false);
+        }
+
     }
 }
