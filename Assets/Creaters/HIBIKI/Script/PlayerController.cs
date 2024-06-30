@@ -588,26 +588,6 @@ public class PlayerController : MonoBehaviour
         Debug.Log("玄武スキル発動");
 
         //敵を全て取得し処理
-
-        /*
-        GameObject[] closestEnemies = GameObject.FindGameObjectsWithTag("Enemy")
-            .OrderBy(go => Vector2.Distance(go.transform.position, transform.position))
-            .Take(5)
-            .ToArray();
-
-        foreach (GameObject obj in closestEnemies)
-        {
-            if (Vector2.Distance(obj.transform.position, transform.position) < _skillFourRange)
-            {
-                obj.GetComponent<EnemyManager>()._moveActive = false;
-            }
-            else
-            {
-                Debug.Log($"{obj.gameObject.name}は効果範囲外");
-            }
-        }
-
-        */
         RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.right * Mathf.Sign(transform.localScale.x), _skillFourRange);
 
         GameObject[] closestEnemies = new GameObject[hits.Length];
@@ -641,7 +621,10 @@ public class PlayerController : MonoBehaviour
         Debug.Log("玄武スキルの拘束時間終了");
         foreach (GameObject obj in closestEnemies)
         {
-            obj.GetComponent<EnemyManager>()._moveActive = true;
+            if (obj is not null)
+            {
+               obj.GetComponent<EnemyManager>()._moveActive = true;
+            }
         }
 
         yield return new WaitForSeconds(_skillFourRestraintTime < _skillFourShieldTime ? _skillFourShieldTime - _skillFourRestraintTime : _skillFourRestraintTime - _skillFourShieldTime);

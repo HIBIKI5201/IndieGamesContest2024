@@ -78,8 +78,6 @@ public class EnemyManager : MonoBehaviour
 
     void Start()
     {
-        _maxHealth = 500;
-
         _currentHealth = _maxHealth;
         _moveActive = true;
 
@@ -198,7 +196,7 @@ public class EnemyManager : MonoBehaviour
             _invincibleTimer = Time.time;
 
             _currentHealth -= damage;
-            Debug.Log($"Œ»İ‚Ì‘Ì—Í‚Í{_currentHealth}");
+            Debug.Log($"ó‚¯‚½ƒ_ƒ[ƒW‚Í{damage}\nŒ»İ‚Ì‘Ì—Í‚Í{_currentHealth}");
 
             StartCoroutine(HitEffect());
 
