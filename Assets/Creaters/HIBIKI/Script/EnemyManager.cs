@@ -156,15 +156,15 @@ public class EnemyManager : MonoBehaviour
         PS.Play();
 
         yield return new WaitForSeconds(3);
-
-        GameObject bullet = Instantiate(EnemyBullet, transform.position, Quaternion.Euler(0, 0, -90 * Mathf.Sign(transform.localScale.x)));
+        Vector2 axis = _player.transform.position - transform.position;
+        GameObject bullet = Instantiate(EnemyBullet, transform.position, Quaternion.Euler(0, 0, (Mathf.Atan2(axis.y, axis.x) * Mathf.Rad2Deg) - 90));
         EnemyBulletManager bulletManager = bullet.GetComponent<EnemyBulletManager>();
         bulletManager._bulletDamage = _bulletDamage;
 
         if (_enemyKind == EnemyKind.ShootEnemyOne)
         {
             bulletManager._enemyBulletKind = EnemyBulletKind.normalBullet;
-            bulletManager._bulletSpeed = _bulletSpeed * Mathf.Sign(transform.localScale.x);
+            bulletManager._bulletSpeed = _bulletSpeed;
         }
         else if (_enemyKind == EnemyKind.ShootEnemyTwo)
         {

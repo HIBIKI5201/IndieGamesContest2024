@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
 public class EnemyBulletManager : MonoBehaviour
 {
@@ -28,7 +29,10 @@ public class EnemyBulletManager : MonoBehaviour
 
         if (_enemyBulletKind == EnemyBulletKind.normalBullet)
         {
-            rb2D.velocity = new Vector2(_bulletSpeed, 0);
+            Vector2 axis = PlayerPos.position - transform.position;
+            rb2D.velocity = axis.normalized * _bulletSpeed;
+
+            Debug.Log(axis);
         }
 
         Invoke("Destroy", _bulletTime);
