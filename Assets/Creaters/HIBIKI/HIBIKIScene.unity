@@ -10828,8 +10828,9 @@ GameObject:
   - component: {fileID: 1090152173}
   - component: {fileID: 1090152172}
   - component: {fileID: 1090152171}
+  - component: {fileID: 1090152175}
   m_Layer: 5
-  m_Name: DamageUI
+  m_Name: DamageAndHealUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10917,6 +10918,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1090152175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090152170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 177802d63eb341347adeaeba96883cf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _damageText: {fileID: 2492028055547451453, guid: 368b11a3956884a4dbe7b060f45abef7, type: 3}
 --- !u!1 &1094209902
 GameObject:
   m_ObjectHideFlags: 0

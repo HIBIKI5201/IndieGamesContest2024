@@ -1,6 +1,5 @@
 using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using static EnemyBulletManager;
 
@@ -11,7 +10,8 @@ public class EnemyManager : MonoBehaviour
     GameObject _player;
     PlayerController _playerController;
 
-    Canvas _damageUICanvas;
+    DamageAndHealUIManager _damageAndHealUIManager;
+
 
     [SerializeField]
     GameObject _damageText;
@@ -105,7 +105,7 @@ public class EnemyManager : MonoBehaviour
         _player = GameObject.Find("Player");
         _playerController = _player.GetComponent<PlayerController>();
 
-        _damageUICanvas = GameObject.Find("DamageUI").GetComponent<Canvas>();
+        _damageAndHealUIManager = GameObject.Find("DamageAndHealUI").GetComponent<DamageAndHealUIManager>();
 
         _attackIntervalTimer = Time.time;
     }
@@ -228,28 +228,8 @@ public class EnemyManager : MonoBehaviour
             _currentHealth -= damage;
             Debug.Log($"受けたダメージは{damage}\n現在の体力は{_currentHealth}");
 
-            StartCoroutine(HitEffect());
-
-            // ダメージテキストのインスタンスを生成
-            GameObject damageText = Instantiate(_damageText, transform.position, Quaternion.identity);
-            damageText.transform.SetParent(_damageUICanvas.transform);
-            damageText.transform.localScale = Vector3.one;
-
-            RectTransform rectTransform = damageText.GetComponent<RectTransform>();
-            Vector3 screenPosition = Camera.main.WorldToScreenPoint(transform.position);
-
-            Vector2 anchoredPosition;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                _damageUICanvas.transform as RectTransform,
-                screenPosition,
-                _damageUICanvas.worldCamera,
-                out anchoredPosition
-            );
-
-            rectTransform.anchoredPosition3D = new Vector3(anchoredPosition.x, anchoredPosition.y, 0);
-
-            damageText.GetComponent<TextMeshProUGUI>().text = damage.ToString("0");
-            damageText.GetComponent<Rigidbody2D>().velocity = new Vector2(-Mathf.Sign(transform.localScale.x) * 2, 3);
+            StartCoroutine(HitEffect(damage));
+            _damageAndHealUIManager.InstantiateDamageText(transform, damage, Mathf.Sign(transform.localScale.x));
 
             if (_currentHealth <= 0)
             {
@@ -258,8 +238,9 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    IEnumerator HitEffect()
+    IEnumerator HitEffect(float damage)
     {
+        //色を変更
         _spriteRenderer.color = Color.red;
         yield return new WaitForSeconds(0.1f);
         _spriteRenderer.color = Color.white;
