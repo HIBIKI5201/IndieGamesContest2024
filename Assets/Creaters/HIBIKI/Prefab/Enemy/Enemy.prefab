@@ -173,6 +173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1103a79c492c63847999adb929d783b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _damageText: {fileID: 2492028055547451453, guid: 368b11a3956884a4dbe7b060f45abef7, type: 3}
   _enemyKind: 0
   _maxHealth: 100
   _currentHealth: 0
@@ -185,6 +186,9 @@ MonoBehaviour:
   _bomberDushSpeed: 0
   _bomberDistanceToExplosion: 0
   _bomberExplosionTime: 0
+  _bomberExplosionEffectValue: 0
+  _explosionDamage: 0
+  _bomberExplosionRange: 0
   EnemyBullet: {fileID: 6640036996467145792, guid: 8a7131711a1cbce4896e0696eef558c6, type: 3}
   _attackInterval: 0
   _bulletDamage: 0

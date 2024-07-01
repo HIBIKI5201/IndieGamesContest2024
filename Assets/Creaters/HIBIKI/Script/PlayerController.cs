@@ -36,6 +36,8 @@ public class PlayerController : MonoBehaviour
     [ReadOnly, Tooltip("朱雀スキルの効果量")]
     public float _skillOneBuffValue;
 
+    [Space(10)]
+
     [SerializeField]
     GameObject _skillOneBuffIcon;
     [SerializeField]
@@ -43,15 +45,27 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI _skillOneBuffTimerText;
 
-    [Space(10)]
+    [Space(20)]
 
     [SerializeField, ReadOnly, Tooltip("玄武スキルのシールドの有無")]
     bool _skillFourBuffActive;
     [Tooltip("玄武スキルのバフの残り時間")]
     float _skillFourBuffTimer;
 
+    [SerializeField, Tooltip("玄武スキルのシールド量")]
+    float _skillFourShieldQuantity;
+
+    [SerializeField]
+    Image ShieldGauge;
+
+    [Space(10)]
+
     [SerializeField]
     GameObject _skillFourBuffIcon;
+        [SerializeField]
+    TextMeshProUGUI _skillFourBuffText;
+    [SerializeField]
+    TextMeshProUGUI _skillFourBuffTimerText;
 
 
     [Header("体力ステータス")]
@@ -188,6 +202,8 @@ public class PlayerController : MonoBehaviour
     float _skillOneBuffTime = 8;
     [SerializeField, Tooltip("朱雀スキルのバフの一体ごとの増加量")]
     float _skillOneBuffQuantityPerHit;
+    [SerializeField, Tooltip("朱雀スキルのバフの基礎量")]
+    float _skillOneBuffBaseQuantity;
 
     [Space(20)]
 
@@ -239,6 +255,9 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField, Tooltip("玄武スキルのシールド維持時間")]
     float _skillFourShieldTime = 10;
+    [SerializeField, Tooltip("玄武スキルのシールド量")]
+    float _skillFourShieldQuantityPerHit;
+
 
     [Header("アニメーション関係")]
     Animator PlayerAnimator;
@@ -284,6 +303,8 @@ public class PlayerController : MonoBehaviour
         _firstScale = transform.localScale;
 
         _skillOneBuffValue = 1;
+        _skillFourShieldQuantity = 0;
+        ShieldGauge.fillAmount = 0;
 
         _modeTimer = Time.time;
 
@@ -621,7 +642,7 @@ public class PlayerController : MonoBehaviour
 
         _skillOneBuffValue = hits.Length * _skillOneBuffQuantityPerHit + 1;
 
-        _skillOneBuffText.text = $"{_skillOneBuffValue * 100}%";
+        _skillOneBuffText.text = $"+{(_skillOneBuffValue - 1 + _skillOneBuffBaseQuantity) * 100}%";
 
         yield return new WaitForSeconds(_skillOneBuffTime);
 
@@ -683,28 +704,32 @@ public class PlayerController : MonoBehaviour
         //敵を全て取得し処理
         RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.right * Mathf.Sign(transform.localScale.x), _skillFourRange);
 
-        GameObject[] closestEnemies = new GameObject[hits.Length];
-        if (hits.Length > 0)
-        {
-            closestEnemies = hits
-                .Select(hit => hit.collider.gameObject)
-                .Where(go => go.CompareTag("Enemy"))
-                .OrderBy(go => Vector2.Distance(go.transform.position, transform.position))
-                .Take(5)
-                .ToArray();
 
-            foreach (GameObject enemy in closestEnemies)
+        GameObject[] closestEnemies = hits
+            .Select(hit => hit.collider.gameObject)
+            .Where(go => go.CompareTag("Enemy"))
+            .OrderBy(go => Vector2.Distance(go.transform.position, transform.position))
+            .Take(5)
+            .ToArray();
+
+
+        foreach (GameObject enemy in closestEnemies)
+        {
+            if (enemy.TryGetComponent<EnemyManager>(out EnemyManager enemyManager))
             {
-                if (enemy.TryGetComponent<EnemyManager>(out EnemyManager enemyManager))
-                {
-                    enemyManager._moveActive = false;
-                }
+                enemyManager._moveActive = false;
             }
         }
 
         DOTween.To(() => (float)0, x => SkillFourIconGauge.fillAmount = x, 1, _skillFourCT).SetEase(Ease.Linear);
 
         _skillFourBuffActive = true;
+        _skillFourBuffTimer = _skillFourShieldTime;
+
+        _skillFourShieldQuantity = _skillFourShieldQuantityPerHit * closestEnemies.Length;
+
+        _skillFourBuffText.text = _skillFourShieldQuantity.ToString();
+        ShieldGauge.fillAmount = _skillFourShieldQuantity / (_skillFourShieldQuantityPerHit * 5);
 
         //効果時間終了の処理
         yield return new WaitForSeconds(_skillFourRestraintTime < _skillFourShieldTime ? _skillFourRestraintTime : _skillFourShieldTime);
@@ -733,8 +758,26 @@ public class PlayerController : MonoBehaviour
     {
         if (!_invincibleActive)
         {
-            _currentHealth -= damage;
-            HealthGauge.fillAmount = _currentHealth / _maxHealth;
+            if (_skillFourShieldQuantity > 0)
+            {
+                _skillFourShieldQuantity -= damage;
+                                
+                ShieldGauge.fillAmount = _skillFourShieldQuantity / (_skillFourShieldQuantityPerHit * 5);
+
+                if (_skillFourShieldQuantity > 0)
+                {
+                    _skillFourBuffText.text = _skillFourShieldQuantity.ToString();
+                }
+                else
+                {
+                    _skillFourBuffActive = false;
+                }
+            } 
+            else 
+            {
+                _currentHealth -= damage;
+                HealthGauge.fillAmount = _currentHealth / _maxHealth;
+            }
 
             if (effectCoroutine != null)
             {
@@ -845,6 +888,7 @@ public class PlayerController : MonoBehaviour
             }
 
             _skillFourBuffTimer -= Time.deltaTime;
+            _skillFourBuffTimerText.text = _skillFourBuffTimer.ToString("00.0");
         }
         else if (_skillFourBuffIcon.activeSelf)
         {
