@@ -230,8 +230,6 @@ public class EnemyManager : MonoBehaviour
 
     IEnumerator HitEffect()
     {
-        Debug.Log("エフェクトを生成");
-
         _spriteRenderer.color = Color.red;
         yield return new WaitForSeconds(0.1f);
         _spriteRenderer.color = Color.white;

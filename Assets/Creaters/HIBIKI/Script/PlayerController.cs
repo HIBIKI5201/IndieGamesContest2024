@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -37,6 +38,10 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     GameObject _skillOneBuffIcon;
+    [SerializeField]
+    TextMeshProUGUI _skillOneBuffText;
+    [SerializeField]
+    TextMeshProUGUI _skillOneBuffTimerText;
 
     [Space(10)]
 
@@ -278,6 +283,8 @@ public class PlayerController : MonoBehaviour
         _gravity = PlayerRigidBody.gravityScale;
         _firstScale = transform.localScale;
 
+        _skillOneBuffValue = 1;
+
         _modeTimer = Time.time;
 
         _skillOneCTimer = Time.time;
@@ -514,7 +521,6 @@ public class PlayerController : MonoBehaviour
         {
             _attackTimer = Time.time;
             _attackActive = true;
-            Debug.Log("近接攻撃発動");
 
             //近接攻撃当たり判定を出現
             AttackRangeObject.SetActive(true);
@@ -536,7 +542,6 @@ public class PlayerController : MonoBehaviour
         {
             _fireTimer = Time.time;
             _attackActive = true;
-            Debug.Log("遠距離攻撃発動");
 
             //弾丸を発射
             GameObject bullet = Instantiate(Bullet, transform.position + new Vector3(Mathf.Sign(transform.localScale.x) * _bulletFirePosOffset.x, _bulletFirePosOffset.y, 0), Quaternion.Euler(0, 0, -90 * Mathf.Sign(transform.localScale.x)));
@@ -586,14 +591,13 @@ public class PlayerController : MonoBehaviour
         PlayerRigidBody.gravityScale = _gravity;
 
         //初撃ダメージ
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.right * Mathf.Sign(transform.localScale.x), _skillOneRange);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.right * Mathf.Sign(transform.localScale.x), _skillOneRange)
+            .Where(hit => hit.collider.CompareTag("Enemy")).ToArray();
+
         foreach (RaycastHit2D hit in hits)
         {
-            if (hit.collider.gameObject.CompareTag("Enemy"))
-            {
-                hit.collider.GetComponent<EnemyManager>().HitDamage(_skillOneAttackDamage);
-                Debug.Log("朱雀スキル初撃命中");
-            }
+            hit.collider.GetComponent<EnemyManager>().HitDamage(_skillOneAttackDamage);
+            Debug.Log("朱雀スキル初撃命中");
         }
 
 
@@ -613,9 +617,11 @@ public class PlayerController : MonoBehaviour
         //朱雀バフを発動
 
         _skillOneBuffActive = true;
+        _skillOneBuffTimer = _skillOneBuffTime;
 
         _skillOneBuffValue = hits.Length * _skillOneBuffQuantityPerHit + 1;
 
+        _skillOneBuffText.text = $"{_skillOneBuffValue * 100}%";
 
         yield return new WaitForSeconds(_skillOneBuffTime);
 
@@ -824,6 +830,7 @@ public class PlayerController : MonoBehaviour
                 _skillOneBuffIcon.SetActive(true);
             }
             _skillOneBuffTimer -= Time.deltaTime;
+            _skillOneBuffTimerText.text = _skillOneBuffTimer.ToString("00.0");
         }
         else if (_skillOneBuffIcon.activeSelf)
         {
