@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.U2D.Animation;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
@@ -178,6 +179,8 @@ public class PlayerController : MonoBehaviour
     [Tooltip("朱雀スキルクールタイムタイマー")]
     float _skillOneCTimer;
     [SerializeField]
+    Image SkillOneIcon;
+    [SerializeField]
     Image SkillOneIconGauge;
 
     [Space(10)]
@@ -212,6 +215,8 @@ public class PlayerController : MonoBehaviour
     [Tooltip("白虎スキルクールタイムタイマー")]
     float _skillTwoCTimer;
     [SerializeField]
+    Image SkillTwoIcon;
+    [SerializeField]
     Image SkillTwoIconGauge;
 
     [Space(10)]
@@ -228,6 +233,8 @@ public class PlayerController : MonoBehaviour
     [Tooltip("青龍スキルクールタイムタイマー")]
     float _skillThreeCTimer;
     [SerializeField]
+    Image SkillThreeIcon;
+    [SerializeField]
     Image SkillThreeIconGauge;
 
     [Space(10)]
@@ -243,6 +250,8 @@ public class PlayerController : MonoBehaviour
     float _skillFourCT = 10;
     [Tooltip("玄武スキルクールタイムタイマー")]
     float _skillFourCTimer;
+    [SerializeField]
+    Image SkillFourIcon;
     [SerializeField]
     Image SkillFourIconGauge;
 
@@ -264,6 +273,9 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     Animator ModeAnimator;
+
+    [SerializeField]
+    SpriteLibraryAsset skillIconLibrary;
 
     [Space(20)]
 
@@ -313,10 +325,21 @@ public class PlayerController : MonoBehaviour
         _skillThreeCTimer = Time.time;
         _skillFourCTimer = Time.time;
 
-        DOTween.To(() => (float)0, x => SkillOneIconGauge.fillAmount = x, 1, _skillOneCT).SetEase(Ease.Linear);
-        DOTween.To(() => (float)0, x => SkillTwoIconGauge.fillAmount = x, 1, _skillTwoCT).SetEase(Ease.Linear);
-        DOTween.To(() => (float)0, x => SkillThreeIconGauge.fillAmount = x, 1, _skillThreeCT).SetEase(Ease.Linear);
-        DOTween.To(() => (float)0, x => SkillFourIconGauge.fillAmount = x, 1, _skillFourCT).SetEase(Ease.Linear);
+        DOTween.To(() => (float)1, x => SkillOneIconGauge.fillAmount = x, 0, _skillOneCT).SetEase(Ease.Linear)
+            .OnStart(() => SkillOneIcon.sprite = skillIconLibrary.GetSprite("SkillOne", "Normal"))
+            .OnComplete(() => SkillOneIcon.sprite = skillIconLibrary.GetSprite("SkillOne", "Charge"));
+
+        DOTween.To(() => (float)1, x => SkillTwoIconGauge.fillAmount = x, 0, _skillTwoCT).SetEase(Ease.Linear)
+             .OnStart(() => SkillTwoIcon.sprite = skillIconLibrary.GetSprite("SkillTwo", "Normal"))
+            .OnComplete(() => SkillTwoIcon.sprite = skillIconLibrary.GetSprite("SkillTwo", "Charge"));
+
+        DOTween.To(() => (float)1, x => SkillThreeIconGauge.fillAmount = x, 0, _skillThreeCT).SetEase(Ease.Linear)
+         .OnStart(() => SkillThreeIcon.sprite = skillIconLibrary.GetSprite("SkillThree", "Normal"))
+            .OnComplete(() => SkillThreeIcon.sprite = skillIconLibrary.GetSprite("SkillThree", "Charge"));
+
+        DOTween.To(() => (float)1, x => SkillFourIconGauge.fillAmount = x, 0, _skillFourCT).SetEase(Ease.Linear)
+         .OnStart(() => SkillFourIcon.sprite = skillIconLibrary.GetSprite("SkillFour", "Normal"))
+            .OnComplete(() => SkillFourIcon.sprite = skillIconLibrary.GetSprite("SkillFour", "Charge"));
     }
 
     void Update()
@@ -603,7 +626,9 @@ public class PlayerController : MonoBehaviour
         _moveActive = false;
         PlayerRigidBody.gravityScale += 1f;
 
-        DOTween.To(() => (float)0, x => SkillOneIconGauge.fillAmount = x, 1, _skillOneCT).SetEase(Ease.Linear);
+        DOTween.To(() => (float)1, x => SkillOneIconGauge.fillAmount = x, 0, _skillOneCT).SetEase(Ease.Linear)
+            .OnStart(() => SkillOneIcon.sprite = skillIconLibrary.GetSprite("SkillOne", "Normal"))
+            .OnComplete(() => SkillOneIcon.sprite = skillIconLibrary.GetSprite("SkillOne", "Charge"));
 
         //攻撃チャージ時間
         yield return new WaitForSeconds(_skillOneChargeTime);
@@ -621,6 +646,16 @@ public class PlayerController : MonoBehaviour
             Debug.Log("朱雀スキル初撃命中");
         }
 
+        //初撃内の弾丸を破壊
+        GameObject[] EnemyBullets = hits
+            .Select(hit => hit.collider.gameObject)
+            .Where(go => go.CompareTag("Enemy"))
+            .ToArray();
+
+        foreach (GameObject bullet in EnemyBullets)
+        {
+            Destroy(bullet);
+        }
 
         //攻撃範囲 兼 炎のオブジェクトを配置
         GameObject skillObject = Instantiate(_skillOneObject,
@@ -669,7 +704,9 @@ public class PlayerController : MonoBehaviour
 
         PlayerRigidBody.gravityScale = 0.5f;
 
-        DOTween.To(() => (float)0, x => SkillTwoIconGauge.fillAmount = x, 1, _skillTwoCT).SetEase(Ease.Linear);
+        DOTween.To(() => (float)1, x => SkillTwoIconGauge.fillAmount = x, 0, _skillTwoCT).SetEase(Ease.Linear)
+             .OnStart(() => SkillTwoIcon.sprite = skillIconLibrary.GetSprite("SkillTwo", "Normal"))
+            .OnComplete(() => SkillTwoIcon.sprite = skillIconLibrary.GetSprite("SkillTwo", "Charge"));
 
         yield return new WaitForSeconds(_skillTwoWaitTime);
 
@@ -691,7 +728,10 @@ public class PlayerController : MonoBehaviour
         GameObject skillObject = Instantiate(SkillThreeObject, transform.position, Quaternion.identity);
         skillObject.GetComponent<SkillThreeManager>()._skillThreeDuration = _skillThreeDuration;
 
-        DOTween.To(() => (float)0, x => SkillThreeIconGauge.fillAmount = x, 1, _skillThreeCT).SetEase(Ease.Linear);
+
+        DOTween.To(() => (float)1, x => SkillThreeIconGauge.fillAmount = x, 0, _skillThreeCT).SetEase(Ease.Linear)
+         .OnStart(() => SkillThreeIcon.sprite = skillIconLibrary.GetSprite("SkillThree", "Normal"))
+            .OnComplete(() => SkillThreeIcon.sprite = skillIconLibrary.GetSprite("SkillThree", "Charge"));
     }
 
     IEnumerator SkillFour()
@@ -721,7 +761,9 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        DOTween.To(() => (float)0, x => SkillFourIconGauge.fillAmount = x, 1, _skillFourCT).SetEase(Ease.Linear);
+        DOTween.To(() => (float)1, x => SkillFourIconGauge.fillAmount = x, 0, _skillFourCT).SetEase(Ease.Linear)
+         .OnStart(() => SkillFourIcon.sprite = skillIconLibrary.GetSprite("SkillFour", "Normal"))
+            .OnComplete(() => SkillFourIcon.sprite = skillIconLibrary.GetSprite("SkillFour", "Charge"));
 
         _skillFourBuffActive = true;
         _skillFourBuffTimer = _skillFourShieldTime;

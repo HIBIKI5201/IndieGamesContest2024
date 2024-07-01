@@ -234,6 +234,7 @@ public class EnemyManager : MonoBehaviour
             if (_currentHealth <= 0)
             {
                 Dead();
+                Debug.Log($"{this.gameObject.name}‚Ì‘Ì—Í0");
             }
         }
     }

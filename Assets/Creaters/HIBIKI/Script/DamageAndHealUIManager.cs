@@ -8,6 +8,9 @@ public class DamageAndHealUIManager : MonoBehaviour
     [SerializeField]
     GameObject _damageText;
 
+    [SerializeField]
+    GameObject _healText;
+
     Canvas canvas;
     // Start is called before the first frame update
     void Start()
@@ -49,13 +52,46 @@ public class DamageAndHealUIManager : MonoBehaviour
         damageText.GetComponent<TextMeshProUGUI>().text = damage.ToString("0");
         damageText.GetComponent<Rigidbody2D>().velocity = new Vector2(-axis * 2, 3);
 
-        Debug.LogWarning("ダメージテキスト生成");
+        yield return new WaitForSeconds(1);
+
+        Destroy(damageText);
+    }
+
+
+    public void InstantiateHealText(Transform Pos, float damage, float axis)
+    {
+        StartCoroutine(StartInstantiateHealText(Pos, damage, axis));
+    }
+
+    IEnumerator StartInstantiateHealText(Transform Pos, float damage, float axis)
+    {
+        // 回復テキストのインスタンスを生成
+        GameObject healText = Instantiate(_healText, Pos.position, Quaternion.identity);
+        healText.transform.SetParent(transform);
+        healText.transform.localScale = Vector3.one;
+
+        RectTransform rectTransform = healText.GetComponent<RectTransform>();
+        Vector3 screenPosition = Camera.main.WorldToScreenPoint(Pos.position);
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvas.transform as RectTransform,
+            screenPosition,
+            canvas.worldCamera,
+            out Vector2 anchoredPosition
+        );
+
+        rectTransform.anchoredPosition3D = (Vector3)anchoredPosition;
+
+        healText.GetComponent<TextMeshProUGUI>().text = damage.ToString("0");
+        healText.GetComponent<Rigidbody2D>().velocity = new Vector2(-axis * 2, 3);
+
+        Debug.LogWarning("回復テキスト生成");
 
         yield return new WaitForSeconds(1);
 
-        Debug.LogWarning("ダメージテキスト削除");
+        Debug.LogWarning("回復テキスト削除");
 
 
-        Destroy(damageText);
+        Destroy(healText);
     }
 }

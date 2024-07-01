@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 909669193534447430}
   - component: {fileID: 6118125110805651942}
   m_Layer: 5
-  m_Name: DamageText
+  m_Name: HealText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75,8 +75,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4280755967
-  m_fontColor: {r: 1, g: 0.1490565, b: 0.1541143, a: 1}
+    rgba: 4280745772
+  m_fontColor: {r: 0.17202179, g: 1, b: 0.1490196, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

@@ -7,16 +7,14 @@ public class SkillThreeManager : MonoBehaviour
     [HideInInspector]
     public float _skillThreeDuration;
 
+    DamageAndHealUIManager _damageAndHealUIManager;
+
     float _timer;
     void Start()
     {
-        Invoke("DestroyTimer", _skillThreeDuration);
-    }
+        _damageAndHealUIManager = GameObject.FindAnyObjectByType<DamageAndHealUIManager>();
 
-    // Update is called once per frame
-    void Update()
-    {
-
+        Invoke(nameof(DestroyTimer), _skillThreeDuration);
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -29,6 +27,8 @@ public class SkillThreeManager : MonoBehaviour
 
                 Debug.Log("‰ñ•œ");
                 collision.GetComponent<PlayerController>().HitHeal(100);
+
+                _damageAndHealUIManager.InstantiateHealText(collision.transform, 100, Mathf.Sign(collision.transform.localScale.x));
             }
         }
     }
