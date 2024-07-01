@@ -50,7 +50,7 @@ public class SceneChanger : MonoBehaviour
     {
         _clearMessage.SetActive(true);
         yield return new WaitForSeconds(3);
-        LoadHIBIKIScene(SceneKind.InGame);
+        LoadScene(SceneKind.InGame);
     }
 
     public static void KillEnemy()

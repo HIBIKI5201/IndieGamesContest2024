@@ -93,7 +93,7 @@ public class EnemyBulletManager : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             collision.GetComponent<PlayerController>().HitDamage(_bulletDamage);
-            Destroy(gameObject);
+            Destroy();
         }
     }
 

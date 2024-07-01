@@ -158,13 +158,13 @@ public class EnemyManager : MonoBehaviour
                 _currentHealth -= _playerController._attackDamage;
                 _playerController.SpiritPowerIncrease(1);
 
-                HitDamage(_playerController._attackDamage);
+                HitDamage(_playerController._attackDamage * _playerController._skillOneBuffValue);
             }
 
             if (collision.gameObject.CompareTag("Bullet"))
             {
                 BulletManager bulletManager = collision.GetComponent<BulletManager>();
-                HitDamage(Mathf.Clamp(Vector2.Distance(bulletManager._firstPos, transform.position) / bulletManager.inBullet_bulletAttenuation * bulletManager.inBullet_bulletMaxDamage, bulletManager.inBullet_bulletMinDamage, bulletManager.inBullet_bulletMaxDamage));
+                HitDamage(Mathf.Clamp(Vector2.Distance(bulletManager._firstPos, transform.position) / bulletManager.inBullet_bulletAttenuation * bulletManager.inBullet_bulletMaxDamage, bulletManager.inBullet_bulletMinDamage, bulletManager.inBullet_bulletMaxDamage) * _playerController._skillOneBuffValue);
             }
         }
     }

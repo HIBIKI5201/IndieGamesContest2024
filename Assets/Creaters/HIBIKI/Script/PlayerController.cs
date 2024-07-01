@@ -32,6 +32,9 @@ public class PlayerController : MonoBehaviour
     [Tooltip("朱雀スキルのバフの残り時間")]
     float _skillOneBuffTimer;
 
+    [ReadOnly, Tooltip("朱雀スキルの効果量")]
+    public float _skillOneBuffValue;
+
     [SerializeField]
     GameObject _skillOneBuffIcon;
 
@@ -164,6 +167,8 @@ public class PlayerController : MonoBehaviour
     GameObject _skillOneObject;
     [SerializeField, Tooltip("朱雀スキルのチャージ時間")]
     float _skillOneChargeTime = 1;
+    [SerializeField, Tooltip("発動時の初撃のダメージ量")]
+    float _skillOneAttackDamage = 120;
 
     [Space(10)]
 
@@ -176,6 +181,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField, Tooltip("朱雀スキルのバフ効果時間")]
     float _skillOneBuffTime = 8;
+    [SerializeField, Tooltip("朱雀スキルのバフの一体ごとの増加量")]
+    float _skillOneBuffQuantityPerHit;
 
     [Space(20)]
 
@@ -578,6 +585,18 @@ public class PlayerController : MonoBehaviour
         _moveActive = true;
         PlayerRigidBody.gravityScale = _gravity;
 
+        //初撃ダメージ
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.right * Mathf.Sign(transform.localScale.x), _skillOneRange);
+        foreach (RaycastHit2D hit in hits)
+        {
+            if (hit.collider.gameObject.CompareTag("Enemy"))
+            {
+                hit.collider.GetComponent<EnemyManager>().HitDamage(_skillOneAttackDamage);
+                Debug.Log("朱雀スキル初撃命中");
+            }
+        }
+
+
         //攻撃範囲 兼 炎のオブジェクトを配置
         GameObject skillObject = Instantiate(_skillOneObject,
             transform.position + new Vector3(
@@ -592,13 +611,19 @@ public class PlayerController : MonoBehaviour
         skillObject.transform.localScale = new Vector3(_skillOneRange, 1, 1);
 
         //朱雀バフを発動
+
         _skillOneBuffActive = true;
+
+        _skillOneBuffValue = hits.Length * _skillOneBuffQuantityPerHit + 1;
+
 
         yield return new WaitForSeconds(_skillOneBuffTime);
 
         //朱雀バフ解除
 
         _skillOneBuffActive = false;
+
+        _skillOneBuffValue = 1;
     }
 
     IEnumerator SkillTwo()

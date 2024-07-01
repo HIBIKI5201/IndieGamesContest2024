@@ -7,15 +7,12 @@ public class SkillOneManager : MonoBehaviour
     [HideInInspector]
     public float _skillOneDuration;
 
-    bool _firstAttack;
-
     float _timer;
     [HideInInspector]
     public float _fireTime;
 
     void Start()
     {
-        _firstAttack = true;
         Invoke("DestroyTime", _skillOneDuration);
     }
 
@@ -29,17 +26,10 @@ public class SkillOneManager : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            if (_firstAttack)
-            {
-                Debug.Log("朱雀スキルの敵のコンポーネント取得とダメージ");
-                _firstAttack = false;
-            }
-
             if (_timer + _fireTime < Time.time)
             {
                 _timer = Time.time;
                 collision.GetComponent<EnemyManager>().HitDamage(10);
-
             }
         }
     }
