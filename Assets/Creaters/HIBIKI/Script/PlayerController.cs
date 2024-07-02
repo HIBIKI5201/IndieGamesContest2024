@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
     [Tooltip("玄武スキルのバフの残り時間")]
     float _skillFourBuffTimer;
 
-    [SerializeField, Tooltip("玄武スキルのシールド量")]
+    [SerializeField, ReadOnly, Tooltip("玄武スキルのシールド量")]
     float _skillFourShieldQuantity;
 
     [SerializeField]
@@ -174,7 +174,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("スキル")]
 
-    [Tooltip("スキルが発動しているか")]
+    [SerializeField, ReadOnly, Tooltip("スキルが発動しているか")]
     bool _skillActive;
 
     [SerializeField, Tooltip("朱雀スキルクールタイム")]
@@ -841,7 +841,7 @@ public class PlayerController : MonoBehaviour
         _moveActive = true;
         PlayerRigidBody.gravityScale = _gravity;
 
-        _invincibleActive = true;
+        _invincibleActive = false;
         StartCoroutine(Effect(2));
 
         //効果時間終了の処理
