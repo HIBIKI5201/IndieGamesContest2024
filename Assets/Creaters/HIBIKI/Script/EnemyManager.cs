@@ -57,6 +57,7 @@ public class EnemyManager : MonoBehaviour
     [Header("ボマー攻撃系")]
     [SerializeField, Tooltip("プレイヤー発見時の移動速度上昇倍率")]
     float _bomberDushSpeed;
+    bool _bomberExplosion;
 
     [Tooltip("自爆シークエンス開始")]
     bool _bomberExplosionActive;
@@ -192,6 +193,8 @@ public class EnemyManager : MonoBehaviour
         bulletManager._bulletDamage = _explosionDamage;
         bulletManager._explosionRange = _bomberExplosionRange;
 
+        _bomberExplosion = true;
+
         Dead();
     }
 
@@ -249,7 +252,7 @@ public class EnemyManager : MonoBehaviour
 
     void Dead()
     {
-        if (_enemyKind == EnemyKind.BomberEnemy)
+        if (_enemyKind == EnemyKind.BomberEnemy && !_bomberExplosion)
         {
             GameObject bullet = Instantiate(EnemyBullet, transform.position, Quaternion.identity);
 

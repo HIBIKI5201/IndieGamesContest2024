@@ -357,7 +357,6 @@ public class PlayerController : MonoBehaviour
                 if (_playerMode == PlayerMode.Sun)
                 {
                     _playerMode = PlayerMode.Moon;
-                    Debug.Log("陰形態に変形");
                     ModeAnimator.SetBool("Exchange", true);
                     PlayerAnimator.SetBool("SunMoon", false);
 
@@ -367,7 +366,6 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     _playerMode = PlayerMode.Sun;
-                    Debug.Log("陽形態に変形");
                     ModeAnimator.SetBool("Exchange", false);
                     PlayerAnimator.SetBool("SunMoon", true);
 
@@ -649,12 +647,13 @@ public class PlayerController : MonoBehaviour
         //初撃内の弾丸を破壊
         GameObject[] EnemyBullets = hits
             .Select(hit => hit.collider.gameObject)
-            .Where(go => go.CompareTag("Enemy"))
+            .Where(go => go.CompareTag("EnemyBullet"))
             .ToArray();
 
         foreach (GameObject bullet in EnemyBullets)
         {
             Destroy(bullet);
+            SpiritPowerIncrease(2);
         }
 
         //攻撃範囲 兼 炎のオブジェクトを配置

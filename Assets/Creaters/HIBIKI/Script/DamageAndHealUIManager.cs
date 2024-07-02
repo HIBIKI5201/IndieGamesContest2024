@@ -12,13 +12,12 @@ public class DamageAndHealUIManager : MonoBehaviour
     GameObject _healText;
 
     Canvas canvas;
-    // Start is called before the first frame update
+   
     void Start()
     {
         canvas = GetComponent<Canvas>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -85,12 +84,7 @@ public class DamageAndHealUIManager : MonoBehaviour
         healText.GetComponent<TextMeshProUGUI>().text = damage.ToString("0");
         healText.GetComponent<Rigidbody2D>().velocity = new Vector2(-axis * 2, 3);
 
-        Debug.LogWarning("回復テキスト生成");
-
         yield return new WaitForSeconds(1);
-
-        Debug.LogWarning("回復テキスト削除");
-
 
         Destroy(healText);
     }

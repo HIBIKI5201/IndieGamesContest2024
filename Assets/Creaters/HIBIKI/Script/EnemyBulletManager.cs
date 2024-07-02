@@ -85,7 +85,6 @@ public class EnemyBulletManager : MonoBehaviour
 
                     GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().SpiritPowerIncrease(2);
                     Destroy(gameObject);
-                    Debug.Log("Ža‚è—Ž‚Æ‚µ");
                     break;
             }
         }
