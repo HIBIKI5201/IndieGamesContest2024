@@ -231,7 +231,7 @@ public class EnemyManager : MonoBehaviour
             _currentHealth -= damage;
             Debug.Log($"受けたダメージは{damage}\n現在の体力は{_currentHealth}");
 
-            StartCoroutine(HitEffect(damage));
+            StartCoroutine(HitEffect());
             _damageAndHealUIManager.InstantiateDamageText(transform, damage, Mathf.Sign(transform.localScale.x));
 
             if (_currentHealth <= 0)
@@ -242,7 +242,7 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    IEnumerator HitEffect(float damage)
+    IEnumerator HitEffect()
     {
         //色を変更
         _spriteRenderer.color = Color.red;

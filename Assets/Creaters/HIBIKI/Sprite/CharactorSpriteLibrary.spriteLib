@@ -57,8 +57,63 @@ MonoBehaviour:
       m_Sprite: {fileID: -4021887467873319091, guid: a6eebf239952c37478b787205b409fb2, type: 3}
       m_FromMain: 0
       m_SpriteOverride: {fileID: -4021887467873319091, guid: a6eebf239952c37478b787205b409fb2, type: 3}
+    - m_Name: SkillOne1
+      m_Hash: 367507506
+      m_Sprite: {fileID: 21300000, guid: f5fbb8275b078e548aa079863cf5b594, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 21300000, guid: f5fbb8275b078e548aa079863cf5b594, type: 3}
+    - m_Name: SkillTwo1
+      m_Hash: 1005000921
+      m_Sprite: {fileID: 21300000, guid: a919c3bbb11f6f24ab591aca05c07413, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 21300000, guid: a919c3bbb11f6f24ab591aca05c07413, type: 3}
+    - m_Name: SkillThree1
+      m_Hash: 544070077
+      m_Sprite: {fileID: 21300000, guid: 2cc7ac5f2edd75c4399a26c1ae2dc504, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 21300000, guid: 2cc7ac5f2edd75c4399a26c1ae2dc504, type: 3}
+    - m_Name: SkillFour
+      m_Hash: 205168628
+      m_Sprite: {fileID: 21300000, guid: a382361300dd61542ab1f4ce96b19064, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 21300000, guid: a382361300dd61542ab1f4ce96b19064, type: 3}
+    - m_Name: SkillThree2
+      m_Hash: 962889735
+      m_Sprite: {fileID: 21300000, guid: a13c8ac6260ecb044ad94a30582b4e2e, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 21300000, guid: a13c8ac6260ecb044ad94a30582b4e2e, type: 3}
+    - m_Name: SkillThree3
+      m_Hash: 241416337
+      m_Sprite: {fileID: 21300000, guid: 3db72d0f24ae0f74086fe32f94e2672a, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 21300000, guid: 3db72d0f24ae0f74086fe32f94e2672a, type: 3}
+    - m_Name: SkillOne2
+      m_Hash: 216983944
+      m_Sprite: {fileID: 21300000, guid: de08523a3f3cb984a976a2374ccdf1f9, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 21300000, guid: de08523a3f3cb984a976a2374ccdf1f9, type: 3}
+    - m_Name: SkillOne3
+      m_Hash: 1005181214
+      m_Sprite: {fileID: 21300000, guid: ac65de51dd715334d914050a045fb96f, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 21300000, guid: ac65de51dd715334d914050a045fb96f, type: 3}
+    - m_Name: SkillOne4
+      m_Hash: 630017213
+      m_Sprite: {fileID: 21300000, guid: ad90c78e20ba73a479c032d7bb7b8ca5, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 21300000, guid: ad90c78e20ba73a479c032d7bb7b8ca5, type: 3}
+    - m_Name: SkillTwo2
+      m_Hash: 586041699
+      m_Sprite: {fileID: 21300000, guid: 985c3001fc6601045bc4f65dbc3c0521, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 21300000, guid: 985c3001fc6601045bc4f65dbc3c0521, type: 3}
+    - m_Name: SkillTwo3
+      m_Hash: 367622645
+      m_Sprite: {fileID: 21300000, guid: 3b5739411b6e5504abb6c751a14dda6e, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 21300000, guid: 3b5739411b6e5504abb6c751a14dda6e, type: 3}
     m_FromMain: 0
-    m_EntryOverrideCount: 8
+    m_EntryOverrideCount: 19
   m_PrimaryLibraryGUID: 
-  m_ModificationHash: 638549916333324008
+  m_ModificationHash: 638555639208475346
   m_Version: 1

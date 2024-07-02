@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     GameObject _skillFourBuffIcon;
-        [SerializeField]
+    [SerializeField]
     TextMeshProUGUI _skillFourBuffText;
     [SerializeField]
     TextMeshProUGUI _skillFourBuffTimerText;
@@ -174,6 +174,9 @@ public class PlayerController : MonoBehaviour
 
     [Header("スキル")]
 
+    [Tooltip("スキルが発動しているか")]
+    bool _skillActive;
+
     [SerializeField, Tooltip("朱雀スキルクールタイム")]
     float _skillOneCT = 10;
     [Tooltip("朱雀スキルクールタイムタイマー")]
@@ -204,9 +207,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Tooltip("朱雀スキルのバフ効果時間")]
     float _skillOneBuffTime = 8;
     [SerializeField, Tooltip("朱雀スキルのバフの一体ごとの増加量")]
-    float _skillOneBuffQuantityPerHit;
+    float _skillOneBuffQuantityPerHit = 0.8f;
     [SerializeField, Tooltip("朱雀スキルのバフの基礎量")]
-    float _skillOneBuffBaseQuantity;
+    float _skillOneBuffBaseQuantity = 0.5f;
 
     [Space(20)]
 
@@ -256,6 +259,16 @@ public class PlayerController : MonoBehaviour
     Image SkillFourIconGauge;
 
     [Space(10)]
+
+    [SerializeField]
+    GameObject _skillFourChain;
+    [SerializeField]
+    float _skillFourActivationTime = 1;
+
+    [Space(10)]
+
+    [SerializeField, Tooltip("玄武スキルの命中量上限")]
+    float _skillFourHitValue;
 
     [SerializeField, Tooltip("玄武スキルの拘束時間")]
     float _skillFourRestraintTime = 6;
@@ -390,7 +403,7 @@ public class PlayerController : MonoBehaviour
                 else if (_playerMode == PlayerMode.Moon && _skillThreeCT + _skillThreeCTimer < Time.time)
                 {
                     //青龍スキルを発動
-                    SkillThree();
+                    StartCoroutine(SkillThree());
                 }
                 else
                 {
@@ -435,7 +448,11 @@ public class PlayerController : MonoBehaviour
             }
 
             //アニメーション系
-            if (_attackActive)
+            if (_skillActive)
+            {
+                PlayerAnimator.SetInteger("AnimationNumber", 3);
+            }
+            else if (_attackActive)
             {
                 PlayerAnimator.SetInteger("AnimationNumber", 2);
             }
@@ -566,9 +583,9 @@ public class PlayerController : MonoBehaviour
 
             //近接攻撃当たり判定を出現
             AttackRangeObject.SetActive(true);
-            _moveActive = false;
 
-            PlayerRigidBody.AddForce(1.2f * PlayerRigidBody.velocity.x * Vector2.left, ForceMode2D.Impulse);
+            _moveActive = false;
+            PlayerRigidBody.AddForce(PlayerRigidBody.velocity.x * Vector2.left, ForceMode2D.Impulse);
 
             SoundManager.Attack();
 
@@ -600,7 +617,7 @@ public class PlayerController : MonoBehaviour
             _moveActive = false;
 
             SoundManager.Fire();
-            PlayerRigidBody.AddForce(1.2f * PlayerRigidBody.velocity.x * Vector2.left, ForceMode2D.Impulse);
+            PlayerRigidBody.AddForce(PlayerRigidBody.velocity.x * Vector2.left, ForceMode2D.Impulse);
 
             yield return new WaitForSeconds(0.2f);
 
@@ -621,8 +638,11 @@ public class PlayerController : MonoBehaviour
         SoundManager.SkillOne();
         Debug.Log("朱雀スキル発動");
 
+        _skillActive = true;
+        PlayerAnimator.SetInteger("SkillNumber", 11);
+
         _moveActive = false;
-        PlayerRigidBody.gravityScale += 1f;
+        PlayerRigidBody.gravityScale += 1;
 
         DOTween.To(() => (float)1, x => SkillOneIconGauge.fillAmount = x, 0, _skillOneCT).SetEase(Ease.Linear)
             .OnStart(() => SkillOneIcon.sprite = skillIconLibrary.GetSprite("SkillOne", "Normal"))
@@ -630,6 +650,8 @@ public class PlayerController : MonoBehaviour
 
         //攻撃チャージ時間
         yield return new WaitForSeconds(_skillOneChargeTime);
+
+        PlayerAnimator.SetInteger("SkillNumber", 12);
 
         _moveActive = true;
         PlayerRigidBody.gravityScale = _gravity;
@@ -678,7 +700,11 @@ public class PlayerController : MonoBehaviour
 
         _skillOneBuffText.text = $"+{(_skillOneBuffValue - 1 + _skillOneBuffBaseQuantity) * 100}%";
 
-        yield return new WaitForSeconds(_skillOneBuffTime);
+        yield return new WaitForSeconds(0.3f);
+
+        _skillActive = false;
+
+        yield return new WaitForSeconds(_skillOneBuffTime - 0.3f);
 
         //朱雀バフ解除
 
@@ -693,6 +719,9 @@ public class PlayerController : MonoBehaviour
 
         SoundManager.SkillTwo();
         Debug.Log("白虎スキル発動");
+
+        _skillActive = true;
+        PlayerAnimator.SetInteger("SkillNumber", 2);
 
         _moveActive = false;
         _invincibleActive = true;
@@ -711,17 +740,24 @@ public class PlayerController : MonoBehaviour
 
         PlayerRigidBody.gravityScale = _gravity;
 
+        _skillActive = false;
         _invincibleActive = false;
         _moveActive = true;
     }
 
 
-    void SkillThree()
+    IEnumerator SkillThree()
     {
         _skillThreeCTimer = Time.time;
 
         SoundManager.SkillThree();
         Debug.Log("青龍スキル発動");
+
+        _skillActive = true;
+        PlayerAnimator.SetInteger("SkillNumber", 3);
+
+        _moveActive = false;
+        PlayerRigidBody.AddForce(PlayerRigidBody.velocity.x * Vector2.left, ForceMode2D.Impulse);
 
         //スキルのオブジェクトを出現させる
         GameObject skillObject = Instantiate(SkillThreeObject, transform.position, Quaternion.identity);
@@ -731,6 +767,11 @@ public class PlayerController : MonoBehaviour
         DOTween.To(() => (float)1, x => SkillThreeIconGauge.fillAmount = x, 0, _skillThreeCT).SetEase(Ease.Linear)
          .OnStart(() => SkillThreeIcon.sprite = skillIconLibrary.GetSprite("SkillThree", "Normal"))
             .OnComplete(() => SkillThreeIcon.sprite = skillIconLibrary.GetSprite("SkillThree", "Charge"));
+
+        yield return new WaitForSeconds(0.5f);
+
+        _moveActive = true;
+        _skillActive = false;
     }
 
     IEnumerator SkillFour()
@@ -740,15 +781,34 @@ public class PlayerController : MonoBehaviour
         SoundManager.SkillFour();
         Debug.Log("玄武スキル発動");
 
+        _skillActive = true;
+        PlayerAnimator.SetInteger("SkillNumber", 4);
+
+        _moveActive= false;
+        PlayerRigidBody.gravityScale = 0;
+        PlayerRigidBody.velocity = Vector2.zero;
+
+        _invincibleActive = true;
+
+        GameObject chainRight = Instantiate(_skillFourChain, transform.position, Quaternion.identity);
+        chainRight.transform.localScale = new Vector3(chainRight.transform.localScale.x * Mathf.Sign(transform.localScale.x), chainRight.transform.localScale.y, chainRight.transform.localScale.z);
+        SpriteRenderer spriteRendererRight = chainRight.GetComponent<SpriteRenderer>();
+        DOTween.To(() => new Vector2(0, spriteRendererRight.size.y), x => spriteRendererRight.size = x, new Vector2(_skillFourRange * Mathf.Sign(transform.localScale.x), spriteRendererRight.size.y), _skillFourActivationTime).SetEase(Ease.Linear);
+        DOTween.To(() => transform.position, x => chainRight.transform.position = x, transform.position + (_skillFourRange / 2) * Mathf.Sign(transform.localScale.x) * Vector3.right, _skillFourActivationTime).SetEase(Ease.Linear);
+
+        GameObject chainLeft = Instantiate(_skillFourChain, transform.position, Quaternion.identity);
+        chainLeft.transform.localScale = new Vector3(chainLeft.transform.localScale.x * -Mathf.Sign(transform.localScale.x), chainLeft.transform.localScale.y, chainLeft.transform.localScale.z);
+        SpriteRenderer spriteRendererLeft = chainLeft.GetComponent<SpriteRenderer>();
+        DOTween.To(() => new Vector2(0, spriteRendererLeft.size.y), x => spriteRendererLeft.size = x, new Vector2(_skillFourRange * -Mathf.Sign(transform.localScale.x), spriteRendererLeft.size.y), _skillFourActivationTime).SetEase(Ease.Linear);
+        DOTween.To(() => transform.position, x => chainLeft.transform.position = x, transform.position + (_skillFourRange / 2) * -Mathf.Sign(transform.localScale.x) * Vector3.right, _skillFourActivationTime).SetEase(Ease.Linear);
+
         //敵を全て取得し処理
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.right * Mathf.Sign(transform.localScale.x), _skillFourRange);
-
-
-        GameObject[] closestEnemies = hits
+        GameObject[] closestEnemies = Physics2D.RaycastAll(transform.position, Vector2.right * Mathf.Sign(transform.localScale.x), _skillFourRange)
+            .Concat(Physics2D.RaycastAll(transform.position, Vector2.left * Mathf.Sign(transform.localScale.x), _skillFourRange))
             .Select(hit => hit.collider.gameObject)
             .Where(go => go.CompareTag("Enemy"))
             .OrderBy(go => Vector2.Distance(go.transform.position, transform.position))
-            .Take(5)
+            .Take((int)_skillFourHitValue)
             .ToArray();
 
 
@@ -770,10 +830,22 @@ public class PlayerController : MonoBehaviour
         _skillFourShieldQuantity = _skillFourShieldQuantityPerHit * closestEnemies.Length;
 
         _skillFourBuffText.text = _skillFourShieldQuantity.ToString();
-        ShieldGauge.fillAmount = _skillFourShieldQuantity / (_skillFourShieldQuantityPerHit * 5);
+        ShieldGauge.fillAmount = _skillFourShieldQuantity / (_skillFourShieldQuantityPerHit * _skillFourHitValue);
+
+        yield return new WaitForSeconds(_skillFourActivationTime);
+
+        Destroy(chainRight);
+        Destroy(chainLeft);
+        _skillActive = false;
+
+        _moveActive = true;
+        PlayerRigidBody.gravityScale = _gravity;
+
+        _invincibleActive = true;
+        StartCoroutine(Effect(2));
 
         //効果時間終了の処理
-        yield return new WaitForSeconds(_skillFourRestraintTime < _skillFourShieldTime ? _skillFourRestraintTime : _skillFourShieldTime);
+        yield return new WaitForSeconds(_skillFourRestraintTime - _skillFourActivationTime);
 
         Debug.Log("玄武スキルの拘束時間終了");
         foreach (GameObject obj in closestEnemies)
@@ -787,10 +859,11 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(_skillFourRestraintTime < _skillFourShieldTime ? _skillFourShieldTime - _skillFourRestraintTime : _skillFourRestraintTime - _skillFourShieldTime);
+        yield return new WaitForSeconds(_skillFourShieldTime - _skillFourRestraintTime - _skillFourActivationTime);
 
         Debug.Log("玄武スキルのシールド維持時間終了");
 
+        _skillFourShieldQuantity = 0;
         _skillFourBuffActive = false;
     }
 
@@ -802,8 +875,8 @@ public class PlayerController : MonoBehaviour
             if (_skillFourShieldQuantity > 0)
             {
                 _skillFourShieldQuantity -= damage;
-                                
-                ShieldGauge.fillAmount = _skillFourShieldQuantity / (_skillFourShieldQuantityPerHit * 5);
+
+                ShieldGauge.fillAmount = _skillFourShieldQuantity / (_skillFourShieldQuantityPerHit * _skillFourHitValue);
 
                 if (_skillFourShieldQuantity > 0)
                 {
@@ -813,8 +886,8 @@ public class PlayerController : MonoBehaviour
                 {
                     _skillFourBuffActive = false;
                 }
-            } 
-            else 
+            }
+            else
             {
                 _currentHealth -= damage;
                 HealthGauge.fillAmount = _currentHealth / _maxHealth;
@@ -894,13 +967,10 @@ public class PlayerController : MonoBehaviour
 
             case 2:
                 _spriteRenderer.color = _invincibleColor;
-                Debug.LogWarning("無敵時間カラーを開始");
-
 
                 yield return new WaitForSeconds(0.1f);
                 _spriteRenderer.color = Color.white;
 
-                Debug.LogWarning("無敵時間カラーを終了");
                 break;
         }
     }

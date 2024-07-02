@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static SceneChanger;
 
 public class SceneChanger : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class SceneChanger : MonoBehaviour
     int _enemyValue;
     [SerializeField]
     GameObject _clearMessage;
+
+    [SerializeField]
+    bool _active;
 
     [SerializeField]
     SceneKind _sceneKind;
@@ -32,17 +36,22 @@ public class SceneChanger : MonoBehaviour
 
     void Start()
     {
-        _enemyCount = _enemyValue;
-
-        _clearMessage.SetActive(false);
+        if (_active)
+        {
+            _enemyCount = _enemyValue;
+            _clearMessage.SetActive(false);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (_enemyCount <= 0)
+        if (_active)
         {
-            StartCoroutine(Clear());
+            if (_enemyCount <= 0)
+            {
+                StartCoroutine(Clear());
+            }
         }
     }
 
@@ -58,6 +67,17 @@ public class SceneChanger : MonoBehaviour
         _enemyCount--;
         Debug.LogWarning($"Žc‚è‚Ì“G‚Í{_enemyCount}");
     }
+
+    public void LoadSceneTitle()
+    {
+        SceneManager.LoadScene(sceneName[SceneKind.Title]);
+    }
+
+    public void LoadSceneInGame()
+    {
+        SceneManager.LoadScene(sceneName[SceneKind.InGame]);
+    }
+
 
     public static void LoadScene(SceneKind sceneKind)
     {
