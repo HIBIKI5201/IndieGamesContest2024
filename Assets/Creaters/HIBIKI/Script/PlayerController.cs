@@ -120,6 +120,8 @@ public class PlayerController : MonoBehaviour
     float _wallTouch;
     [Tooltip("最後に当たったGroundの法線方向")]
     Vector2 _lastNormal;
+    [Tooltip("ジャンプのアニメーション")]
+    bool _jumpAnime;
 
     [SerializeField, ReadOnly, Tooltip("移動可能な状態か")]
     bool _moveActive = true;
@@ -452,25 +454,36 @@ public class PlayerController : MonoBehaviour
             {
                 PlayerAnimator.SetInteger("AnimationNumber", 3);
             }
+
             else if (_attackActive)
             {
                 PlayerAnimator.SetInteger("AnimationNumber", 2);
             }
 
-            else if (horizontal != 0)
+            else if (_jumpAnime)
+            {
+                PlayerAnimator.SetInteger("AnimationNumber", 41);
+            }
+
+            else if (PlayerRigidBody.velocity.y < -0.05f)
+            {
+                PlayerAnimator.SetInteger("AnimationNumber", 42);
+            }
+
+            else if (horizontal != 0 && _isGround)
             {
                 PlayerAnimator.SetInteger("AnimationNumber", 1);
             }
+
             else
             {
                 PlayerAnimator.SetInteger("AnimationNumber", 0);
             }
         }
 
-
         BuffIcon();
-
     }
+
 
     //当たり判定処理
     #region
@@ -540,10 +553,15 @@ public class PlayerController : MonoBehaviour
             PlayerRigidBody.gravityScale = _gravity - _jumpGravity;
 
             _moveActive = false;
+            _jumpAnime = true;
 
             yield return new WaitForSeconds(0.1f);
 
             _moveActive = true;
+
+            yield return new WaitForSeconds(0.2f);
+
+            _jumpAnime = false;
         }
 
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))

@@ -112,8 +112,28 @@ MonoBehaviour:
       m_Sprite: {fileID: 21300000, guid: 3b5739411b6e5504abb6c751a14dda6e, type: 3}
       m_FromMain: 0
       m_SpriteOverride: {fileID: 21300000, guid: 3b5739411b6e5504abb6c751a14dda6e, type: 3}
+    - m_Name: JumpSun
+      m_Hash: 987573086
+      m_Sprite: {fileID: 21300000, guid: 68c112199c36a984581049ffaa1fea7a, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 21300000, guid: 68c112199c36a984581049ffaa1fea7a, type: 3}
+    - m_Name: FallSun
+      m_Hash: 43368496
+      m_Sprite: {fileID: 21300000, guid: 84a8922551ffd1f44b48f046d486965a, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 21300000, guid: 84a8922551ffd1f44b48f046d486965a, type: 3}
+    - m_Name: JumpMoon
+      m_Hash: 202192193
+      m_Sprite: {fileID: 21300000, guid: 6ab894086fc1a4b4a9ccd1a9b8f67edb, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 21300000, guid: 6ab894086fc1a4b4a9ccd1a9b8f67edb, type: 3}
+    - m_Name: FallMoon
+      m_Hash: 645870069
+      m_Sprite: {fileID: 0}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 0}
     m_FromMain: 0
-    m_EntryOverrideCount: 19
+    m_EntryOverrideCount: 23
   m_PrimaryLibraryGUID: 
-  m_ModificationHash: 638555639208475346
+  m_ModificationHash: 638557179647854542
   m_Version: 1
