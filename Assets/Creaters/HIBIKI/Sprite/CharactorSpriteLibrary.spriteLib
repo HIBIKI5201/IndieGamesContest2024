@@ -132,8 +132,13 @@ MonoBehaviour:
       m_Sprite: {fileID: 21300000, guid: bb2f48c92f9c06044a1f770e355dc115, type: 3}
       m_FromMain: 0
       m_SpriteOverride: {fileID: 21300000, guid: bb2f48c92f9c06044a1f770e355dc115, type: 3}
+    - m_Name: Attack2
+      m_Hash: 606383768
+      m_Sprite: {fileID: 21300000, guid: f683ae0d5ef3a8d40ab9bf6ddeb624ee, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 21300000, guid: f683ae0d5ef3a8d40ab9bf6ddeb624ee, type: 3}
     m_FromMain: 0
-    m_EntryOverrideCount: 23
+    m_EntryOverrideCount: 24
   m_PrimaryLibraryGUID: 
-  m_ModificationHash: 638557777287734613
+  m_ModificationHash: 638557832385460638
   m_Version: 1

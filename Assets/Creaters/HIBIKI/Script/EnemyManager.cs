@@ -54,6 +54,9 @@ public class EnemyManager : MonoBehaviour
     [SerializeField, Tooltip("攻撃範囲")]
     float _attackRange;
 
+    [SerializeField]
+    GameObject _chainObject;
+
     [Header("ボマー攻撃系")]
     [SerializeField, Tooltip("プレイヤー発見時の移動速度上昇倍率")]
     float _bomberDushSpeed;
@@ -109,6 +112,8 @@ public class EnemyManager : MonoBehaviour
         _damageAndHealUIManager = GameObject.Find("DamageAndHealUI").GetComponent<DamageAndHealUIManager>();
 
         _attackIntervalTimer = Time.time;
+
+        _chainObject.SetActive(false);
     }
 
     void Update()
@@ -138,10 +143,16 @@ public class EnemyManager : MonoBehaviour
             }
 
             transform.localScale = new Vector2(_firstScale.x * Mathf.Sign(_player.transform.position.x - transform.position.x), transform.localScale.y);
+
+            if (_chainObject.activeSelf)
+            {
+                _chainObject.SetActive(false);
+            }
         }
         else
         {
             _rigidbody2D.velocity = Vector2.zero;
+            _chainObject.SetActive(true);
         }
 
         if (_enemyKind == EnemyKind.BomberEnemy && Vector2.Distance(transform.position, _player.transform.position) < _bomberDistanceToExplosion && !_bomberExplosionActive)

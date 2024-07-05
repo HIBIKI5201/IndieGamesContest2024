@@ -44,11 +44,7 @@ public class EnemyBulletManager : MonoBehaviour
                 circleCollider = GetComponent<CircleCollider2D>();
                 circleCollider.radius = _explosionRange;
 
-                GameObject particleGO = transform.GetChild(0).gameObject;
-                GameObject go = Instantiate(particleGO, transform.position, Quaternion.identity);
-                go.SetActive(true);
-
-                Invoke(nameof(Destroy), 0.25f);
+                Invoke(nameof(Destroy), 0.4f);
                 break;
         }
 
@@ -92,7 +88,17 @@ public class EnemyBulletManager : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             collision.GetComponent<PlayerController>().HitDamage(_bulletDamage);
-            Destroy();
+            switch (_enemyBulletKind)
+            {
+                case EnemyBulletKind.normalBullet:
+                case EnemyBulletKind.followBullet:
+                    Destroy(gameObject);
+                    break;
+
+                case EnemyBulletKind.bomberExplosion:
+                    circleCollider.enabled = false;
+                    break;
+            }
         }
     }
 

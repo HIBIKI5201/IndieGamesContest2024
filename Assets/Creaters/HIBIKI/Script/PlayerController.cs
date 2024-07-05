@@ -281,6 +281,8 @@ public class PlayerController : MonoBehaviour
     float _skillFourShieldTime = 10;
     [SerializeField, Tooltip("玄武スキルのシールド量")]
     float _skillFourShieldQuantityPerHit;
+    [SerializeField, Tooltip("玄武スキルのバフの基礎量")]
+    float _skillFourBuffBaseQuantity = 100f;
 
 
     [Header("アニメーション関係")]
@@ -845,10 +847,10 @@ public class PlayerController : MonoBehaviour
         _skillFourBuffActive = true;
         _skillFourBuffTimer = _skillFourShieldTime;
 
-        _skillFourShieldQuantity = _skillFourShieldQuantityPerHit * closestEnemies.Length;
+        _skillFourShieldQuantity = _skillFourShieldQuantityPerHit * closestEnemies.Length + _skillFourBuffBaseQuantity;
 
         _skillFourBuffText.text = _skillFourShieldQuantity.ToString();
-        ShieldGauge.fillAmount = _skillFourShieldQuantity / (_skillFourShieldQuantityPerHit * _skillFourHitValue);
+        ShieldGauge.fillAmount = _skillFourShieldQuantity / (_skillFourShieldQuantityPerHit * _skillFourHitValue + _skillFourBuffBaseQuantity);
 
         yield return new WaitForSeconds(_skillFourActivationTime);
 
@@ -894,7 +896,7 @@ public class PlayerController : MonoBehaviour
             {
                 _skillFourShieldQuantity -= damage;
 
-                ShieldGauge.fillAmount = _skillFourShieldQuantity / (_skillFourShieldQuantityPerHit * _skillFourHitValue);
+                ShieldGauge.fillAmount = _skillFourShieldQuantity / (_skillFourShieldQuantityPerHit * _skillFourHitValue + _skillFourBuffBaseQuantity);
 
                 if (_skillFourShieldQuantity > 0)
                 {
