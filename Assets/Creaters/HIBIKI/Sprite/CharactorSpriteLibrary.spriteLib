@@ -129,11 +129,11 @@ MonoBehaviour:
       m_SpriteOverride: {fileID: 21300000, guid: 6ab894086fc1a4b4a9ccd1a9b8f67edb, type: 3}
     - m_Name: FallMoon
       m_Hash: 645870069
-      m_Sprite: {fileID: 0}
+      m_Sprite: {fileID: 21300000, guid: bb2f48c92f9c06044a1f770e355dc115, type: 3}
       m_FromMain: 0
-      m_SpriteOverride: {fileID: 0}
+      m_SpriteOverride: {fileID: 21300000, guid: bb2f48c92f9c06044a1f770e355dc115, type: 3}
     m_FromMain: 0
     m_EntryOverrideCount: 23
   m_PrimaryLibraryGUID: 
-  m_ModificationHash: 638557179647854542
+  m_ModificationHash: 638557777287734613
   m_Version: 1

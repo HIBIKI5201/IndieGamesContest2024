@@ -13,7 +13,7 @@ public class SkillOneManager : MonoBehaviour
 
     void Start()
     {
-        Invoke("DestroyTime", _skillOneDuration);
+        Invoke(nameof(DestroyTime), _skillOneDuration);
     }
 
     // Update is called once per frame
