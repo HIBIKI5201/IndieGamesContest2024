@@ -272,7 +272,7 @@ public class EnemyManager : MonoBehaviour
             bulletManager._explosionRange = _bomberExplosionRange;
         }
 
-        SceneChanger.KillEnemy();
+        WaveManager.KillEnemy();
         Destroy(this.gameObject);
     }
 }

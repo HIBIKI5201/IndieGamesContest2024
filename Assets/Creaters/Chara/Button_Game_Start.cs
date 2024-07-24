@@ -9,10 +9,10 @@ public class Button_Game_Start : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        this.GetComponent<Button>().onClick.AddListener(pushed);
+        this.GetComponent<Button>().onClick.AddListener(Pushed);
     }
 
-    void pushed()
+    void Pushed()
     {
         SceneManager.LoadScene("HIBIKIScene");
     }

@@ -12,6 +12,8 @@ public class BulletManager : MonoBehaviour
     [ReadOnly, Tooltip("’eŠÛ‚ª”­ŽË‚³‚ê‚½’n“_")]
     public Vector2 _firstPos;
 
+  
+
     public void StartDestroy(float bulletDestroyTime)
     {
         _firstPos = transform.position;
